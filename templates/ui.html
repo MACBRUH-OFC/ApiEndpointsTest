@@ -1,349 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Free Fire API Explorer</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
 @font-face{
-    font-family:'GFF';
-    src:url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
-}
-
-:root{
-    --yellow:#ffde00;
-    --bg:#050505;
-    --card:#101010;
-    --border:#232323;
-    --green:#00ffa3;
-    --red:#ff4747;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+font-family:'GFF';
+src:url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
 }
 
 body{
-    background:#000;
-    color:#fff;
-    font-family:Inter,sans-serif;
-    background-image:url('https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/bg_pc.617c669.jpg');
-    background-size:cover;
-    background-attachment:fixed;
-    overflow-x:hidden;
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter,sans-serif;
+background-image:url('https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/bg_pc.617c669.jpg');
+background-size:cover;
+background-attachment:fixed;
 }
 
 body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.92);
-    z-index:-1;
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.92);
+z-index:-1;
 }
 
 .gff{
-    font-family:'GFF',sans-serif;
+font-family:'GFF';
 }
 
-header{
-    height:64px;
-    border-bottom:2px solid var(--yellow);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#000;
-    position:sticky;
-    top:0;
-    z-index:100;
+.container{
+max-width:560px;
+margin:auto;
+padding:18px;
 }
 
-header img{
-    height:28px;
+.logo{
+height:70px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-bottom:2px solid #ffde00;
+background:#000;
 }
 
-.main{
-    width:100%;
-    max-width:560px;
-    margin:auto;
-    padding:18px;
+.logo img{
+height:28px;
 }
 
 .hero{
-    text-align:center;
-    margin:28px 0;
+text-align:center;
+margin:28px 0;
 }
 
 .hero h1{
-    font-size:48px;
-    line-height:.9;
-    font-style:italic;
+font-size:52px;
+line-height:.9;
+font-style:italic;
+margin:0;
 }
 
-.hero .yellow{
-    color:var(--yellow);
+.hero .y{
+color:#ffde00;
 }
 
 .panel{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:20px;
-    box-shadow:0 20px 60px rgba(0,0,0,.7);
-    position:relative;
-}
-
-.panel::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    width:4px;
-    height:100%;
-    background:var(--yellow);
-    border-radius:24px 0 0 24px;
+background:#101010;
+border:1px solid #232323;
+border-radius:24px;
+padding:20px;
+box-shadow:0 20px 50px rgba(0,0,0,.7);
 }
 
 .label{
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:2px;
-    color:#8b8b8b;
-    margin-bottom:8px;
-    font-family:'GFF';
+font-size:11px;
+color:#999;
+margin-bottom:8px;
+letter-spacing:2px;
 }
 
 .input{
-    width:100%;
-    height:58px;
-    border-radius:16px;
-    background:#141414;
-    border:1px solid #2b2b2b;
-    color:#fff;
-    padding:0 18px;
-    outline:none;
-    font-size:14px;
+width:100%;
+height:56px;
+background:#161616;
+border:1px solid #2c2c2c;
+border-radius:16px;
+padding:0 16px;
+color:#fff;
+outline:none;
+margin-bottom:14px;
 }
 
 .input:focus{
-    border-color:var(--yellow);
-}
-
-.select-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
+border-color:#ffde00;
 }
 
 .btn{
-    width:100%;
-    height:60px;
-    border:none;
-    border-radius:16px;
-    background:var(--yellow);
-    color:#000;
-    font-family:'GFF';
-    font-size:18px;
-    font-style:italic;
-    cursor:pointer;
-    margin-top:18px;
-    box-shadow:0 5px 0 #c8ae00;
-    transition:.1s;
-}
-
-.btn:active{
-    transform:translateY(2px);
-    box-shadow:0 3px 0 #c8ae00;
-}
-
-.topbar{
-    display:flex;
-    gap:10px;
-    margin-top:16px;
-}
-
-.mini-btn{
-    flex:1;
-    height:48px;
-    border-radius:14px;
-    border:1px solid #2c2c2c;
-    background:#161616;
-    color:#fff;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:700;
-}
-
-.mini-btn.active{
-    border-color:var(--yellow);
-    color:var(--yellow);
+width:100%;
+height:58px;
+border:none;
+border-radius:16px;
+background:#ffde00;
+color:#000;
+font-size:18px;
+font-family:'GFF';
+font-style:italic;
+cursor:pointer;
+margin-top:8px;
 }
 
 .stats{
-    margin-top:18px;
-    background:#131313;
-    border:1px solid #232323;
-    border-radius:18px;
-    padding:14px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.stats-left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:var(--green);
-    box-shadow:0 0 10px var(--green);
+margin-top:16px;
+padding:14px;
+background:#171717;
+border-radius:16px;
+display:flex;
+justify-content:space-between;
+font-size:13px;
 }
 
 .results{
-    margin-top:18px;
-    background:#121212;
-    border:1px solid #242424;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.toolbar{
-    padding:12px;
-    border-bottom:1px solid #242424;
-    display:flex;
-    gap:10px;
+margin-top:18px;
+background:#111;
+border:1px solid #252525;
+border-radius:18px;
+overflow:hidden;
 }
 
 .search{
-    flex:1;
-    height:42px;
-    border-radius:12px;
-    border:1px solid #2b2b2b;
-    background:#181818;
-    color:#fff;
-    padding:0 14px;
-    outline:none;
+width:100%;
+height:50px;
+background:#181818;
+border:none;
+outline:none;
+padding:0 14px;
+color:#fff;
+border-bottom:1px solid #252525;
 }
 
-.result-box{
-    max-height:70vh;
-    overflow:auto;
-    padding:12px;
+.box{
+max-height:70vh;
+overflow:auto;
+padding:12px;
 }
 
-.link-card{
-    background:#171717;
-    border:1px solid #262626;
-    border-radius:16px;
-    padding:12px;
-    margin-bottom:12px;
-    transition:.2s;
+.card{
+background:#171717;
+border:1px solid #282828;
+border-radius:14px;
+padding:12px;
+margin-bottom:12px;
 }
 
-.link-card:hover{
-    border-color:#404040;
-}
-
-.link-type{
-    font-size:10px;
-    color:var(--yellow);
-    letter-spacing:1px;
-    margin-bottom:6px;
-    font-family:'GFF';
-}
-
-.link-url{
-    font-size:12px;
-    word-break:break-all;
-    color:#e5e5e5;
-    line-height:1.5;
-}
-
-.actions{
-    margin-top:12px;
-    display:flex;
-    gap:10px;
-}
-
-.action{
-    flex:1;
-    height:38px;
-    border:none;
-    border-radius:10px;
-    background:#242424;
-    color:#fff;
-    cursor:pointer;
-    font-size:12px;
+.url{
+word-break:break-all;
+font-size:12px;
+line-height:1.5;
 }
 
 .preview{
-    margin-top:10px;
-    width:100%;
-    border-radius:12px;
-    display:none;
-    border:1px solid #2d2d2d;
+width:100%;
+margin-top:10px;
+border-radius:12px;
+display:none;
+}
+
+.row{
+display:flex;
+gap:10px;
+margin-top:12px;
+}
+
+.small{
+flex:1;
+height:40px;
+border:none;
+border-radius:10px;
+background:#242424;
+color:#fff;
+cursor:pointer;
 }
 
 .loading{
-    text-align:center;
-    padding:40px 20px;
-}
-
-.spin{
-    font-size:34px;
-    color:var(--yellow);
-    animation:spin 2s linear infinite;
-}
-
-@keyframes spin{
-    100%{
-        transform:rotate(360deg);
-    }
-}
-
-.empty{
-    padding:60px 20px;
-    text-align:center;
-    color:#777;
-}
-
-.footer-space{
-    height:30px;
+padding:60px 20px;
+text-align:center;
+color:#999;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<header>
+<div class="logo">
 <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png">
-</header>
+</div>
 
-<div class="main">
+<div class="container">
 
 <div class="hero gff">
 <h1>API</h1>
-<h1 class="yellow">EXPLORER</h1>
+<h1 class="y">EXPLORER</h1>
 </div>
 
 <div class="panel">
 
-<div class="label">Region & Endpoint</div>
-
-<div class="select-grid">
+<div class="label gff">REGION</div>
 
 <select class="input" id="region">
 <option value="ind">IND</option>
@@ -359,47 +233,27 @@ header img{
 <option value="bd">BD</option>
 </select>
 
-<input class="input" id="endpoint" placeholder="Endpoint">
-</div>
+<div class="label gff">ENDPOINT</div>
 
-<div style="margin-top:14px">
-<div class="label">Detected CDN Base</div>
-<input class="input" id="baseLink" readonly>
-</div>
+<input class="input" id="endpoint" placeholder="major/login">
 
-<button class="btn" onclick="runRequest()">
-<i class="fa-solid fa-bolt"></i>
+<button class="btn" onclick="scanLinks()">
 SCAN LINKS
 </button>
 
-<div class="topbar">
-<button class="mini-btn active" id="imgBtn" onclick="toggleImages()">IMAGE PREVIEW</button>
-<button class="mini-btn" onclick="copyAll()">COPY ALL</button>
-<button class="mini-btn" onclick="downloadTxt()">DOWNLOAD</button>
-</div>
-
 <div class="stats">
-<div class="stats-left">
-<div class="dot"></div>
-<div>
-<div style="font-size:12px;font-weight:700" id="statusText">READY</div>
-<div style="font-size:11px;color:#7f7f7f" id="countText">0 links</div>
-</div>
-</div>
-
-<div style="font-size:12px;color:#8f8f8f" id="timeText">0 ms</div>
+<div id="status">READY</div>
+<div id="count">0 links</div>
 </div>
 
 <div class="results">
 
-<div class="toolbar">
-<input class="search" placeholder="Find links..." id="searchInput" oninput="filterLinks()">
-</div>
+<input class="search" id="search" placeholder="Find links..." oninput="filterLinks()">
 
-<div class="result-box" id="results">
+<div class="box" id="results">
 
-<div class="empty">
-No results loaded
+<div class="loading">
+No links loaded
 </div>
 
 </div>
@@ -407,241 +261,138 @@ No results loaded
 </div>
 
 </div>
-
-<div class="footer-space"></div>
 
 </div>
 
 <script>
 
-const regionMap = {
-    ind:'https://dl-tata.freefireind.in/common/',
-    br:'https://dl.dir.freefiremobile.com/common/',
-    na:'https://dl.dir.freefiremobile.com/common/',
-    eu:'https://dl.dir.freefiremobile.com/common/',
-    sg:'https://dl.dir.freefiremobile.com/common/',
-    vn:'https://dl.dir.freefiremobile.com/common/',
-    th:'https://dl.dir.freefiremobile.com/common/',
-    tw:'https://dl.dir.freefiremobile.com/common/',
-    id:'https://dl.dir.freefiremobile.com/common/',
-    pk:'https://dl.dir.freefiremobile.com/common/',
-    bd:'https://dl.dir.freefiremobile.com/common/'
-};
-
 let allLinks = [];
-let imagePreview = true;
 
-const regionSelect = document.getElementById('region');
-const baseInput = document.getElementById('baseLink');
+async function scanLinks(){
 
-function updateBase(){
-    baseInput.value = regionMap[regionSelect.value];
+const endpoint = document.getElementById('endpoint').value.trim();
+
+const region = document.getElementById('region').value;
+
+if(!endpoint){
+alert("Enter endpoint");
+return;
 }
 
-updateBase();
+document.getElementById('status').innerText = 'SCANNING';
 
-regionSelect.addEventListener('change',updateBase);
+document.getElementById('results').innerHTML = `
+<div class="loading">
+<i class="fa-solid fa-spinner fa-spin"></i>
+<br><br>
+Scanning assets...
+</div>
+`;
 
-function cleanLink(link){
+try{
 
-    link = link.trim();
+const response = await fetch(`/run_script?server=${region}&name=${encodeURIComponent(endpoint)}`);
 
-    link = link.replace(/^[^a-zA-Z0-9]+/,'');
-    link = link.replace(/[^\w\-./:?=&]+$/,'');
+const data = await response.json();
 
-    link = link.replace(/0$/,'');
-    link = link.replace(/X$/,'');
-    link = link.replace(/J$/,'');
-    link = link.replace(/B#$/,'');
-
-    return link;
+if(data.error){
+throw new Error(data.error);
 }
 
-function buildLink(raw){
+allLinks = data.strings || [];
 
-    raw = cleanLink(raw);
+renderLinks(allLinks);
 
-    if(raw.startsWith('http')){
-        return raw;
-    }
+document.getElementById('status').innerText = 'SUCCESS';
 
-    if(raw.match(/^OB\d+/i)){
-        return regionMap[regionSelect.value] + raw;
-    }
+document.getElementById('count').innerText = allLinks.length + ' links';
 
-    return null;
+}catch(e){
+
+document.getElementById('status').innerText = 'ERROR';
+
+document.getElementById('results').innerHTML = `
+<div class="loading">
+${e.message}
+</div>
+`;
+
 }
 
-async function runRequest(){
-
-    const endpoint = document.getElementById('endpoint').value.trim();
-
-    if(!endpoint){
-        alert('Enter endpoint');
-        return;
-    }
-
-    const start = Date.now();
-
-    document.getElementById('results').innerHTML = `
-        <div class="loading">
-            <i class="fa-solid fa-spinner spin"></i>
-            <div style="margin-top:16px;color:#888">Scanning assets...</div>
-        </div>
-    `;
-
-    document.getElementById('statusText').innerText = 'SCANNING';
-
-    try{
-
-        const res = await fetch(`/run_script?server=${regionSelect.value}&name=${encodeURIComponent(endpoint)}`);
-
-        const data = await res.json();
-
-        if(data.error){
-            throw new Error(data.error);
-        }
-
-        const found = [];
-
-        data.strings.forEach(item=>{
-
-            const built = buildLink(item);
-
-            if(!built) return;
-
-            if(
-                built.includes('.png') ||
-                built.includes('.jpg') ||
-                built.includes('.jpeg') ||
-                built.includes('.webp') ||
-                built.includes('.ktx') ||
-                built.includes('.html') ||
-                built.includes('.json') ||
-                built.includes('.ff_extend')
-            ){
-                found.push(cleanLink(built));
-            }
-
-        });
-
-        allLinks = [...new Set(found)];
-
-        renderLinks(allLinks);
-
-        document.getElementById('countText').innerText = allLinks.length + ' links';
-        document.getElementById('statusText').innerText = 'SUCCESS';
-
-        document.getElementById('timeText').innerText = (Date.now()-start)+' ms';
-
-    }catch(err){
-
-        document.getElementById('results').innerHTML = `
-            <div class="empty">
-                ${err.message}
-            </div>
-        `;
-
-        document.getElementById('statusText').innerText = 'ERROR';
-    }
 }
 
 function renderLinks(arr){
 
-    if(arr.length===0){
+if(arr.length === 0){
 
-        document.getElementById('results').innerHTML = `
-            <div class="empty">
-                No valid links found
-            </div>
-        `;
+document.getElementById('results').innerHTML = `
+<div class="loading">
+No valid links found
+</div>
+`;
 
-        return;
-    }
-
-    let html = '';
-
-    arr.forEach((link,index)=>{
-
-        const isImage =
-            link.includes('.png') ||
-            link.includes('.jpg') ||
-            link.includes('.jpeg') ||
-            link.includes('.webp');
-
-        html += `
-        <div class="link-card">
-
-            <div class="link-type">
-                ${isImage ? 'IMAGE ASSET' : 'RESOURCE'}
-            </div>
-
-            <div class="link-url">${link}</div>
-
-            ${isImage && imagePreview ? `
-            <img class="preview" src="${link}" loading="lazy"
-            onload="this.style.display='block'"
-            onerror="this.style.display='none'">
-            ` : ''}
-
-            <div class="actions">
-                <button class="action" onclick="copyLink('${link}')">
-                COPY
-                </button>
-
-                <button class="action" onclick="window.open('${link}','_blank')">
-                OPEN
-                </button>
-            </div>
-
-        </div>
-        `;
-    });
-
-    document.getElementById('results').innerHTML = html;
+return;
 }
 
-function filterLinks(){
+let html = '';
 
-    const q = document.getElementById('searchInput').value.toLowerCase();
+arr.forEach(link=>{
 
-    const filtered = allLinks.filter(x=>x.toLowerCase().includes(q));
+const isImage =
+link.includes('.png') ||
+link.includes('.jpg') ||
+link.includes('.jpeg') ||
+link.includes('.webp');
 
-    renderLinks(filtered);
+html += `
+<div class="card">
+
+<div class="url">${link}</div>
+
+${isImage ? `
+<img
+class="preview"
+src="${link}"
+loading="lazy"
+onload="this.style.display='block'"
+>
+` : ''}
+
+<div class="row">
+
+<button class="small" onclick="copyLink('${link}')">
+COPY
+</button>
+
+<button class="small" onclick="window.open('${link}','_blank')">
+OPEN
+</button>
+
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById('results').innerHTML = html;
+
 }
 
 function copyLink(link){
 
-    navigator.clipboard.writeText(link);
+navigator.clipboard.writeText(link);
 
 }
 
-function copyAll(){
+function filterLinks(){
 
-    navigator.clipboard.writeText(allLinks.join('\n'));
+const q = document.getElementById('search').value.toLowerCase();
 
-}
+const filtered = allLinks.filter(x=>x.toLowerCase().includes(q));
 
-function downloadTxt(){
+renderLinks(filtered);
 
-    const blob = new Blob([allLinks.join('\n')],{type:'text/plain'});
-
-    const a = document.createElement('a');
-
-    a.href = URL.createObjectURL(blob);
-
-    a.download = 'links.txt';
-
-    a.click();
-}
-
-function toggleImages(){
-
-    imagePreview = !imagePreview;
-
-    document.getElementById('imgBtn').classList.toggle('active');
-
-    renderLinks(allLinks);
 }
 
 </script>
