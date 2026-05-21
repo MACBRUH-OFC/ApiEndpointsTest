@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+
+<title>FREE FIRE API TOOL</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#090909;
+    color:#ffffff;
+    font-family:
+    Arial,
+    sans-serif;
+
+    min-height:100vh;
+
+    padding:20px;
+}
+
+.container{
+
+    width:100%;
+    max-width:1450px;
+
+    margin:auto;
+}
+
+.title{
+
+    text-align:center;
+
+    margin-bottom:25px;
+}
+
+.title h1{
+
+    font-size:42px;
+    font-weight:900;
+    letter-spacing:3px;
+
+    color:#ffffff;
+}
+
+.title p{
+
+    margin-top:10px;
+
+    color:#999;
+}
+
+.panel{
+
+    background:#141414;
+
+    border:
+    1px solid #262626;
+
+    border-radius:18px;
+
+    padding:20px;
+}
+
+.top-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 180px;
+
+    gap:15px;
+
+    margin-bottom:20px;
+}
+
+.input{
+
+    width:100%;
+
+    background:#1f1f1f;
+
+    border:
+    1px solid #333;
+
+    border-radius:12px;
+
+    padding:16px;
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+}
+
+.input:focus{
+
+    border-color:#4da3ff;
+}
+
+.server-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(150px,1fr));
+
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.server-btn{
+
+    border:none;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1e1e1e,
+        #2d2d2d
+    );
+
+    color:white;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    transition:.2s;
+
+    font-size:14px;
+}
+
+.server-btn:hover{
+
+    transform:translateY(-2px);
+
+    border:
+    1px solid #4da3ff;
+}
+
+.server-btn.active{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0066ff,
+        #00a2ff
+    );
+}
+
+.action-bar{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.action-btn{
+
+    flex:1;
+
+    min-width:180px;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:14px;
+
+    transition:.2s;
+}
+
+.run-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0066ff,
+        #00a2ff
+    );
+
+    color:white;
+}
+
+.copy-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #18a558,
+        #21d07a
+    );
+
+    color:white;
+}
+
+.download-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9800,
+        #ffbc42
+    );
+
+    color:white;
+}
+
+.clear-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff3b3b,
+        #ff6666
+    );
+
+    color:white;
+}
+
+.action-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+.stats{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:15px;
+
+    flex-wrap:wrap;
+}
+
+.stat-box{
+
+    background:#1b1b1b;
+
+    border:
+    1px solid #2c2c2c;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    flex:1;
+
+    min-width:150px;
+}
+
+.stat-title{
+
+    color:#999;
+
+    font-size:13px;
+
+    margin-bottom:6px;
+}
+
+.stat-value{
+
+    font-size:22px;
+
+    font-weight:800;
+}
+
+.output{
+
+    background:#050505;
+
+    border:
+    1px solid #1f1f1f;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    height:600px;
+
+    overflow:auto;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    font-family:
+    Consolas,
+    monospace;
+
+    line-height:1.6;
+
+    font-size:14px;
+}
+
+.footer{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+    .top-grid{
+
+        grid-template-columns:
+        1fr;
+    }
+
+    .title h1{
+
+        font-size:28px;
+    }
+
+    .output{
+
+        height:450px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">
+
+<h1>
+FREE FIRE API TOOL
+</h1>
+
+<p>
+Advanced API Response Extractor
+</p>
+
+</div>
+
+<div class="panel">
+
+<div class="top-grid">
+
+<input
+id="apiName"
+class="input"
+placeholder="Enter API Name"
+/>
+
+<input
+id="version"
+class="input"
+value="OB53"
+/>
+
+</div>
+
+<div
+class="server-grid"
+id="servers">
+
+</div>
+
+<div class="action-bar">
+
+<button
+class="action-btn run-btn"
+onclick="runSelected()">
+
+RUN API
+
+</button>
+
+<button
+class="action-btn copy-btn"
+onclick="copyResults()">
+
+COPY RESULTS
+
+</button>
+
+<button
+class="action-btn download-btn"
+onclick="downloadResults()">
+
+DOWNLOAD TXT
+
+</button>
+
+<button
+class="action-btn clear-btn"
+onclick="clearOutput()">
+
+CLEAR
+
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-box">
+
+<div class="stat-title">
+SERVER
+</div>
+
+<div
+class="stat-value"
+id="serverStat">
+
+NONE
+
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div class="stat-title">
+STRINGS
+</div>
+
+<div
+class="stat-value"
+id="countStat">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div class="stat-title">
+STATUS
+</div>
+
+<div
+class="stat-value"
+id="statusStat">
+
+READY
+
+</div>
+
+</div>
+
+</div>
+
+<div
+class="output"
+id="output">
+
+READY
+
+</div>
+
+<div class="footer">
+
+Built For Testing & Analysis
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const servers = [
+
+["ind","INDIA"],
+["mea","MEA"],
+["id","INDONESIA"],
+["cis","CIS"],
+["br","BRAZIL"],
+["latam","LATAM"],
+["vn","VIETNAM"],
+["tw","TAIWAN"],
+["th","THAILAND"],
+["sg","SINGAPORE"],
+["eu","EUROPE"],
+["na","NORTH AMERICA"],
+["pk","PAKISTAN"],
+["bd","BANGLADESH"]
+
+]
+
+let selectedServer = null
+let lastResults = []
+
+const serverContainer =
+document.getElementById("servers")
+
+servers.forEach(server => {
+
+    const btn =
+    document.createElement("button")
+
+    btn.className =
+    "server-btn"
+
+    btn.innerText =
+    server[1]
+
+    btn.onclick = () => {
+
+        document
+        .querySelectorAll(".server-btn")
+        .forEach(
+            b => b.classList.remove("active")
+        )
+
+        btn.classList.add("active")
+
+        selectedServer = server[0]
+
+        document
+        .getElementById("serverStat")
+        .innerText =
+        server[1]
+    }
+
+    serverContainer.appendChild(btn)
+
+})
+
+async function runSelected(){
+
+    if(!selectedServer){
+
+        alert("Select Server")
+        return
+    }
+
+    const apiName =
+    document
+    .getElementById("apiName")
+    .value
+    .trim()
+
+    const version =
+    document
+    .getElementById("version")
+    .value
+    .trim()
+
+    if(!apiName){
+
+        alert("Enter API Name")
+        return
+    }
+
+    const output =
+    document
+    .getElementById("output")
+
+    output.innerText =
+    "Loading..."
+
+    document
+    .getElementById("statusStat")
+    .innerText =
+    "RUNNING"
+
+    try{
+
+        const response =
+        await fetch(
+
+            `/run?server=${selectedServer}`
+            + `&name=${encodeURIComponent(apiName)}`
+            + `&version=${encodeURIComponent(version)}`
+
+        )
+
+        const data =
+        await response.json()
+
+        if(data.error){
+
+            output.innerText =
+            data.error
+
+            document
+            .getElementById("statusStat")
+            .innerText =
+            "ERROR"
+
+            return
+        }
+
+        lastResults =
+        data.strings || []
+
+        output.innerText =
+        lastResults.join("\n")
+
+        document
+        .getElementById("countStat")
+        .innerText =
+        data.count || 0
+
+        document
+        .getElementById("statusStat")
+        .innerText =
+        "SUCCESS"
+
+    }catch(err){
+
+        output.innerText =
+        "Request Failed"
+
+        document
+        .getElementById("statusStat")
+        .innerText =
+        "FAILED"
+    }
+}
+
+function copyResults(){
+
+    if(!lastResults.length){
+
+        alert("No Results")
+        return
+    }
+
+    navigator.clipboard.writeText(
+        lastResults.join("\n")
+    )
+
+    alert("Copied")
+}
+
+function downloadResults(){
+
+    if(!lastResults.length){
+
+        alert("No Results")
+        return
+    }
+
+    const blob =
+    new Blob(
+        [lastResults.join("\n")],
+        {
+            type:"text/plain"
+        }
+    )
+
+    const a =
+    document.createElement("a")
+
+    a.href =
+    URL.createObjectURL(blob)
+
+    a.download =
+    "results.txt"
+
+    a.click()
+}
+
+function clearOutput(){
+
+    lastResults = []
+
+    document
+    .getElementById("output")
+    .innerText =
+    "CLEARED"
+
+    document
+    .getElementById("countStat")
+    .innerText =
+    "0"
+
+    document
+    .getElementById("statusStat")
+    .innerText =
+    "READY"
+}
+
+</script>
+
+</body>
+</html>
