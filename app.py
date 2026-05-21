@@ -3,6 +3,7 @@ import requests
 import gzip
 import binascii
 import re
+import json
 
 app = Flask(__name__)
 
@@ -38,10 +39,8 @@ API_DOMAINS = {
 
 server_tokens = {}
 
-BASE_LINKS = {
-    "ind": "https://dl-tata.freefireind.in/common/",
-    "default": "https://dl.dir.freefiremobile.com/common/"
-}
+BASE_LINK_DEFAULT = "https://dl.dir.freefiremobile.com/common/"
+BASE_LINK_IND = "https://dl-tata.freefireind.in/common/"
 
 
 @app.route("/")
@@ -49,37 +48,49 @@ def home():
     return render_template("ui.html")
 
 
-def get_token(server):
+def get_base(region):
+    if region == "ind":
+        return BASE_LINK_IND
+    return BASE_LINK_DEFAULT
 
-    if server in server_tokens:
-        return server_tokens[server]
 
-    try:
+def get_token(region):
 
-        creds = UID_PASSWORDS[server]
+    if region in server_tokens:
+        return server_tokens[region]
 
-        url = f"{TOKEN_BASE_URL}?uid={creds['uid']}&password={creds['password']}"
+    creds = UID_PASSWORDS[region]
 
-        response = requests.get(url, timeout=15)
+    url = f"{TOKEN_BASE_URL}?uid={creds['uid']}&password={creds['password']}"
 
-        data = response.json()
+    response = requests.get(url, timeout=20)
 
-        text = str(data)
+    text = response.text
 
-        match = re.search(r'token\s*:\s*"([^"]+)"', text)
+    token = None
+
+    patterns = [
+        r'"token"\s*:\s*"([^"]+)"',
+        r'token\s*:\s*"([^"]+)"',
+        r'Bearer\s+([A-Za-z0-9\-_.]+)'
+    ]
+
+    for pattern in patterns:
+
+        match = re.search(pattern, text)
 
         if match:
             token = match.group(1)
-            server_tokens[server] = token
-            return token
+            break
 
-    except Exception as e:
-        print(e)
+    if token:
+        server_tokens[region] = token
+        return token
 
     return None
 
 
-def normalize_link(link, region):
+def cleanup_link(link):
 
     if not link:
         return None
@@ -88,20 +99,80 @@ def normalize_link(link, region):
 
     link = re.sub(r'^[^a-zA-Z0-9]+', '', link)
 
-    link = re.sub(r'[\s<>"`]+$', '', link)
+    while link.endswith(("0", "X", "J", "B", "@", "#", "`")):
+        link = link[:-1]
 
-    link = re.sub(r'[0XJ]+$', '', link)
+    link = link.strip()
 
-    if link.startswith("http"):
+    return link
+
+
+def fix_link(link, region):
+
+    link = cleanup_link(link)
+
+    if not link:
+        return None
+
+    if link.startswith("http://"):
+        link = link.replace("http://", "https://")
+
+    if link.startswith("https://"):
         return link
 
     if re.match(r'^OB\d+', link, re.IGNORECASE):
-
-        base = BASE_LINKS["ind"] if region == "ind" else BASE_LINKS["default"]
-
-        return base + link
+        return get_base(region) + link
 
     return None
+
+
+def extract_assets(text, region):
+
+    results = []
+
+    patterns = [
+
+        r'https?://[^\s"\']+',
+
+        r'OB\d+/[^\s"\']+\.(?:png|jpg|jpeg|webp|ktx|json|html|ff_extend)',
+
+        r'OB\d+/[^\s"\']+',
+
+    ]
+
+    for pattern in patterns:
+
+        matches = re.findall(pattern, text, re.IGNORECASE)
+
+        for m in matches:
+
+            fixed = fix_link(m, region)
+
+            if fixed:
+                results.append(fixed)
+
+    cleaned = []
+
+    for r in results:
+
+        r = cleanup_link(r)
+
+        if not r:
+            continue
+
+        if any(ext in r.lower() for ext in [
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".webp",
+            ".ktx",
+            ".json",
+            ".html",
+            ".ff_extend"
+        ]):
+            cleaned.append(r)
+
+    return list(dict.fromkeys(cleaned))
 
 
 @app.route("/run_script")
@@ -109,80 +180,83 @@ def run_script():
 
     try:
 
-        server = request.args.get("server")
+        region = request.args.get("server")
         endpoint = request.args.get("name")
 
-        if not server or not endpoint:
-            return jsonify({"error": "Missing parameters"})
+        if not region or not endpoint:
+            return jsonify({
+                "error": "Missing parameters"
+            })
 
-        token = get_token(server)
+        token = get_token(region)
 
         if not token:
-            return jsonify({"error": "Failed to get token"})
+            return jsonify({
+                "error": "Token fetch failed"
+            })
+
+        url = API_DOMAINS[region].rstrip("/") + "/" + endpoint.lstrip("/")
 
         headers = {
             "Authorization": f"Bearer {token}",
+            "Accept": "*/*",
             "Content-Type": "application/x-www-form-urlencoded",
             "User-Agent": "UnityPlayer/2022.3.47f1",
             "ReleaseVersion": "OB53",
             "X-Unity-Version": "2022.3.47f1"
         }
 
-        payload = binascii.unhexlify("8533b7e1d34a5dfd9a830ee5cc36664e")
-
-        url = API_DOMAINS[server].rstrip("/") + "/" + endpoint.lstrip("/")
+        payload = binascii.unhexlify(
+            "8533b7e1d34a5dfd9a830ee5cc36664e"
+        )
 
         response = requests.post(
             url,
             headers=headers,
             data=payload,
-            timeout=20
+            timeout=25
         )
 
-        content = response.content
+        raw_content = response.content
+
+        decompressed = False
 
         try:
-            if content[:2] == b'\x1f\x8b':
-                content = gzip.decompress(content)
+            if raw_content[:2] == b'\x1f\x8b':
+                raw_content = gzip.decompress(raw_content)
+                decompressed = True
         except:
             pass
 
-        raw_strings = re.findall(rb"[ -~]{4,}", content)
+        decoded_text = raw_content.decode(
+            "utf-8",
+            errors="ignore"
+        )
 
-        final_links = []
-
-        for item in raw_strings:
-
-            try:
-
-                decoded = item.decode("utf-8", errors="ignore")
-
-                fixed = normalize_link(decoded, server)
-
-                if not fixed:
-                    continue
-
-                if any(ext in fixed.lower() for ext in [
-                    ".png",
-                    ".jpg",
-                    ".jpeg",
-                    ".webp",
-                    ".ktx",
-                    ".html",
-                    ".json",
-                    ".ff_extend"
-                ]):
-                    final_links.append(fixed)
-
-            except:
-                pass
-
-        final_links = list(dict.fromkeys(final_links))
+        assets = extract_assets(decoded_text, region)
 
         return jsonify({
+
             "success": True,
-            "count": len(final_links),
-            "strings": final_links
+
+            "status_code": response.status_code,
+
+            "endpoint": endpoint,
+
+            "region": region,
+
+            "decompressed": decompressed,
+
+            "total_assets": len(assets),
+
+            "strings": assets,
+
+            "debug": {
+                "response_length": len(decoded_text),
+                "token_exists": bool(token),
+                "sample": decoded_text[:3000]
+            }
+
         })
 
     except Exception as e:
