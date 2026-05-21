@@ -48,8 +48,8 @@ BASE_LINK = "https://dl.dir.freefiremobile.com/common/"
 
 VALID_EXTENSIONS = [
     "png", "jpg", "jpeg", "webp", "gif",
-    "bmp", "ktx", "html", "json", "mp4",
-    "mp3", "wav", "ogg", "webm"
+    "bmp", "ktx", "html", "json",
+    "mp4", "mp3", "wav", "ogg", "webm"
 ]
 
 
@@ -117,8 +117,6 @@ def remove_binary_trash(text):
 
     text = re.sub(r'[\x00-\x1f]+', '', text)
 
-    text = re.sub(r'[^\x20-\x7E]+', '', text)
-
     return text
 
 
@@ -160,6 +158,13 @@ def fix_common_errors(url):
     )
 
     url = re.sub(
+        r'/common/GREATS[0-9\-]+Local/',
+        '/common/Local/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    url = re.sub(
         r'/common/common/',
         '/common/',
         url,
@@ -186,9 +191,49 @@ def trim_after_extension(url):
 
         if match:
 
-            end_pos = match.end()
+            return url[:match.end()]
 
-            return url[:end_pos]
+    for ext in VALID_EXTENSIONS:
+
+        pattern = rf'(\.{ext})[A-Z]+'
+
+        match = re.search(pattern, url, re.IGNORECASE)
+
+        if match:
+
+            return url[:match.start(1) + len(match.group(1))]
+
+    return url
+
+
+def fix_social_links(url):
+
+    discord_match = re.search(
+        r'(https?://discord\.gg/[A-Za-z0-9]+)',
+        url,
+        re.IGNORECASE
+    )
+
+    if discord_match:
+        return discord_match.group(1)
+
+    youtube_match = re.search(
+        r'(https?://youtu\.be/[A-Za-z0-9\-_]+)',
+        url,
+        re.IGNORECASE
+    )
+
+    if youtube_match:
+        return youtube_match.group(1)
+
+    instagram_match = re.search(
+        r'(https?://(?:www\.)?instagram\.com/[A-Za-z0-9_.]+)',
+        url,
+        re.IGNORECASE
+    )
+
+    if instagram_match:
+        return instagram_match.group(1)
 
     return url
 
@@ -211,6 +256,8 @@ def clean_url(url):
 
     url = trim_after_extension(url)
 
+    url = fix_social_links(url)
+
     url = re.sub(r'[<>{}|"\'`\[\]]+', '', url)
 
     url = url.strip()
@@ -225,18 +272,6 @@ def looks_valid(url):
 
     if len(url) < 10:
         return False
-
-    bad_patterns = [
-        "undefined",
-        "null",
-        "example.com",
-        "localhost",
-        "127.0.0.1"
-    ]
-
-    for bad in bad_patterns:
-        if bad in url.lower():
-            return False
 
     return True
 
@@ -398,12 +433,54 @@ def run_script():
 
         urls = extract_urls(decoded)
 
+        grouped = {
+            "images": [],
+            "videos": [],
+            "audio": [],
+            "html": [],
+            "social": [],
+            "other": []
+        }
+
+        for item in urls:
+
+            lower = item.lower()
+
+            if any(lower.endswith(x) for x in [".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".ktx"]):
+                grouped["images"].append(item)
+
+            elif any(lower.endswith(x) for x in [".mp4", ".webm"]):
+                grouped["videos"].append(item)
+
+            elif any(lower.endswith(x) for x in [".mp3", ".wav", ".ogg"]):
+                grouped["audio"].append(item)
+
+            elif lower.endswith(".html"):
+                grouped["html"].append(item)
+
+            elif any(x in lower for x in [
+                "discord.gg",
+                "instagram.com",
+                "youtube.com",
+                "youtu.be",
+                "facebook.com",
+                "twitter.com",
+                "x.com",
+                "linktr.ee",
+                "whatsapp.com"
+            ]):
+                grouped["social"].append(item)
+
+            else:
+                grouped["other"].append(item)
+
         return jsonify({
             "success": True,
             "count": len(decoded_strings),
             "raw_count": len(urls),
             "strings": decoded_strings,
             "urls": urls,
+            "groups": grouped,
             "raw_response": decoded
         })
 
