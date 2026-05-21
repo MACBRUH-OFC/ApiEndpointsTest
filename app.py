@@ -42,30 +42,29 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-server_tokens = {key: None for key in UID_PASSWORDS.keys()}
-
+server_tokens = {}
 
 def get_token(server):
 
-    if server_tokens[server]:
-        return server_tokens[server]
-
     try:
+
+        if server in server_tokens:
+            return server_tokens[server]
 
         uid = UID_PASSWORDS[server]["uid"]
         password = UID_PASSWORDS[server]["password"]
 
-        response = requests.get(
-            f"{TOKEN_BASE_URL}?uid={uid}&password={password}",
-            timeout=20
-        )
+        token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
 
-        data = response.json()
+        response = requests.get(token_url, timeout=20)
 
-        text = str(data)
+        if response.status_code != 200:
+            return None
+
+        text = response.text
 
         match = re.search(
-            r'token\s*:\s*"([^"]+)"',
+            r'token\s*[:=]\s*"([^"]+)"',
             text
         )
 
@@ -75,43 +74,124 @@ def get_token(server):
                 text
             )
 
+        if not match:
+            match = re.search(
+                r'eyJ[A-Za-z0-9._-]+',
+                text
+            )
+
         if match:
-            token = match.group(1)
+
+            token = match.group(1) if match.lastindex else match.group(0)
+
             server_tokens[server] = token
+
             return token
 
-    except Exception as e:
-        print(e)
+        return None
 
-    return None
+    except Exception:
+        return None
+
+
+def fetch_api(server, api_name):
+
+    token = get_token(server)
+
+    if not token:
+        return {
+            "success": False,
+            "error": "Token fetch failed"
+        }
+
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "ReleaseVersion": "OB53",
+        "User-Agent": "UnityPlayer/2022.3.47f1",
+        "X-GA": "v1 1",
+        "X-Unity-Version": "2022.3.47f1",
+        "Authorization": f"Bearer {token}"
+    }
+
+    payload = binascii.unhexlify(
+        "8533b7e1d34a5dfd9a830ee5cc36664e"
+    )
+
+    url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
+
+    try:
+
+        response = requests.post(
+            url,
+            headers=headers,
+            data=payload,
+            timeout=20
+        )
+
+        raw = response.content
+
+        if raw[:2] == b"\x1f\x8b":
+            try:
+                raw = gzip.decompress(raw)
+            except:
+                pass
+
+        return {
+            "success": True,
+            "status": response.status_code,
+            "raw": raw
+        }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 
 def clean_link(link):
 
     link = link.strip()
 
-    while link.endswith(("0", "@", "X", "J")):
-        link = link[:-1]
+    bad_endings = ["@", "0", "X", "J"]
 
-    if "http" not in link and "OB" in link:
+    changed = True
 
-        link = (
-            "https://dl.dir.freefiremobile.com/common/"
-            + link
-        )
+    while changed:
+
+        changed = False
+
+        for bad in bad_endings:
+
+            if link.endswith(bad):
+                link = link[:-1]
+                changed = True
 
     return link
 
 
-def extract_links(content):
+def extract_links(raw):
 
     results = []
 
     patterns = [
 
-        rb'https?://[^\s\x00"\']+',
+        rb'https?://[^\s\'"<>()]+',
 
-        rb'OB\d+/[^\s\x00"\']+\.(?:png|jpg|jpeg|webp|gif|ktx|ff_extend|html|json)',
+        rb'dl\.[^\s\'"<>()]+',
+
+        rb'ffredirect\.[^\s\'"<>()]+',
+
+        rb'discord\.gg/[^\s\'"<>()]+',
+
+        rb'whatsapp\.com/[^\s\'"<>()]+',
+
+        rb'instagram\.com/[^\s\'"<>()]+',
+
+        rb'OB\d+/[^\s\'"<>()]+\.(png|jpg|jpeg|webp|gif|ktx|html|json|ff_extend)',
 
     ]
 
@@ -119,24 +199,49 @@ def extract_links(content):
 
         try:
 
-            matches = re.findall(
-                pattern,
-                content,
-                re.IGNORECASE
-            )
+            matches = re.findall(pattern, raw, re.IGNORECASE)
 
             for match in matches:
 
                 try:
-                    link = match.decode(
+
+                    if isinstance(match, tuple):
+                        match = match[0]
+
+                    text = match.decode(
                         "utf-8",
                         errors="ignore"
                     )
 
-                    link = clean_link(link)
+                    if not text.startswith("http"):
 
-                    if link not in results:
-                        results.append(link)
+                        if text.startswith("dl."):
+                            text = "https://" + text
+
+                        elif text.startswith("ffredirect."):
+                            text = "https://" + text
+
+                        elif text.startswith("discord.gg"):
+                            text = "https://" + text
+
+                        elif text.startswith("instagram.com"):
+                            text = "https://" + text
+
+                        elif text.startswith("whatsapp.com"):
+                            text = "https://" + text
+
+                        elif text.startswith("OB"):
+                            text = (
+                                "https://dl.dir.freefiremobile.com/common/"
+                                + text
+                            )
+
+                    text = clean_link(text)
+
+                    if len(text) > 10:
+
+                        if text not in results:
+                            results.append(text)
 
                 except:
                     pass
@@ -148,7 +253,7 @@ def extract_links(content):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template("ui.html")
 
 
@@ -158,67 +263,54 @@ def run_script():
     server = request.args.get("server")
     api_name = request.args.get("name")
 
-    if server not in UID_PASSWORDS:
+    if not server or server not in UID_PASSWORDS:
         return jsonify({
+            "success": False,
             "error": "Invalid server"
         })
 
-    headers = {
-        "Accept": "*/*",
-        "Accept-Encoding": "gzip",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "ReleaseVersion": "OB53",
-        "User-Agent": "UnityPlayer/2022.3.47f1",
-        "X-Unity-Version": "2022.3.47f1"
-    }
-
-    payload = binascii.unhexlify(
-        "8533b7e1d34a5dfd9a830ee5cc36664e"
-    )
-
-    token = get_token(server)
-
-    if not token:
+    if not api_name:
         return jsonify({
-            "error": "Token fetch failed"
+            "success": False,
+            "error": "API name missing"
         })
 
-    headers["Authorization"] = f"Bearer {token}"
+    api_response = fetch_api(server, api_name)
 
-    try:
+    if not api_response["success"]:
+        return jsonify(api_response)
 
-        response = requests.post(
-            API_DOMAINS[server] + api_name,
-            headers=headers,
-            data=payload,
-            timeout=20
-        )
+    raw = api_response["raw"]
 
-        content = response.content
+    links = extract_links(raw)
+
+    strings = re.findall(rb"[ -~]{4,}", raw)
+
+    decoded = []
+
+    for s in strings:
 
         try:
-
-            if content[:2] == b'\x1f\x8b':
-                content = gzip.decompress(content)
-
+            decoded.append(
+                s.decode("utf-8", errors="ignore")
+            )
         except:
             pass
 
-        links = extract_links(content)
-
-        return jsonify({
-            "success": True,
-            "count": len(links),
-            "links": links,
-            "size": len(content)
-        })
-
-    except Exception as e:
-
-        return jsonify({
-            "error": str(e)
-        })
+    return jsonify({
+        "success": True,
+        "status": api_response["status"],
+        "links": links,
+        "count": len(links),
+        "strings_count": len(decoded),
+        "raw_size": len(raw),
+        "strings": decoded[:200]
+    })
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
