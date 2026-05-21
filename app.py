@@ -47,79 +47,74 @@ server_tokens = {key: None for key in UID_PASSWORDS.keys()}
 
 def get_token(server):
 
-    if server_tokens[server]:
-        return server_tokens[server]
+    if server_tokens[server] is None:
 
-    try:
+        try:
 
-        uid = UID_PASSWORDS[server]["uid"]
-        password = UID_PASSWORDS[server]["password"]
+            uid = UID_PASSWORDS[server]["uid"]
+            password = UID_PASSWORDS[server]["password"]
 
-        token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
+            token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
 
-        response = requests.get(token_url, timeout=20)
+            print(f"Fetching token for {server}")
 
-        if response.status_code != 200:
-            return None
+            response = requests.get(token_url, timeout=15)
 
-        token_res = response.json()
+            if response.status_code != 200:
+                print(f"HTTP {response.status_code}")
+                return None
 
-        response_text = token_res.get("response", "")
+            token_res = response.json()
 
-        match = re.search(r'token\\s*:\\s*"([^"]+)"', response_text)
+            response_text = token_res.get("response", "")
 
-        if match:
-            token = match.group(1)
-            server_tokens[server] = token
-            return token
+            print(response_text[:300])
 
-        return None
+            match = re.search(
+                r'token\s*:\s*"([^"]+)"',
+                response_text
+            )
 
-    except Exception:
-        return None
+            if match:
+
+                token = match.group(1)
+
+                server_tokens[server] = token
+
+                print(f"Token success for {server}")
+
+            else:
+
+                print(f"Token missing for {server}")
+
+        except Exception as e:
+
+            print(f"Token error: {e}")
+
+    return server_tokens[server]
 
 
-def fetch_api(server, api_name):
-
-    token = get_token(server)
-
-    if not token:
-        return {"error": "Token fetch failed"}
+def fetch_api_with_token_refresh(
+    server,
+    api_name,
+    binary_payload,
+    base_headers
+):
 
     url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
 
-    headers = {
-        "Accept": "*/*",
-        "Accept-Encoding": "deflate, gzip",
-        "Content-Length": "16",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "ReleaseVersion": "OB53",
-        "User-Agent": "UnityPlayer/2022.3.47f1",
-        "X-GA": "v1 1",
-        "X-Unity-Version": "2022.3.47f1",
-        "Authorization": f"Bearer {token}"
-    }
+    for attempt in range(2):
 
-    try:
+        token = get_token(server)
 
-        hex_payload = "8533b7e1d34a5dfd9a830ee5cc36664e"
+        if token is None:
+            return {"error": f"Failed to fetch token for {server}"}
 
-        binary_payload = binascii.unhexlify(hex_payload)
+        headers = base_headers.copy()
 
-        response = requests.post(
-            url,
-            headers=headers,
-            data=binary_payload,
-            timeout=20
-        )
+        headers["Authorization"] = f"Bearer {token}"
 
-        if response.status_code == 401:
-
-            server_tokens[server] = None
-
-            token = get_token(server)
-
-            headers["Authorization"] = f"Bearer {token}"
+        try:
 
             response = requests.post(
                 url,
@@ -128,21 +123,36 @@ def fetch_api(server, api_name):
                 timeout=20
             )
 
-        response.raise_for_status()
+            if response.status_code == 401 and attempt == 0:
 
-        content = response.content
+                server_tokens[server] = None
 
-        if content[:2] == b'\\x1f\\x8b':
-            content = gzip.decompress(content)
+                continue
 
-        return content
+            response.raise_for_status()
 
-    except Exception as e:
-        return {"error": str(e)}
+            return response.content
+
+        except requests.HTTPError as e:
+
+            return {
+                "error": f"HTTP {response.status_code}: {e}"
+            }
+
+        except Exception as e:
+
+            return {
+                "error": f"API request failed: {e}"
+            }
+
+    return {
+        "error": "Failed after token refresh attempt"
+    }
 
 
 @app.route("/")
 def index():
+
     return render_template("ui.html")
 
 
@@ -150,40 +160,108 @@ def index():
 def run_script():
 
     server = request.args.get("server")
+
     api_name = request.args.get("name")
 
     if server not in UID_PASSWORDS:
+
         return jsonify({
-            "success": False,
             "error": "Invalid server"
         })
 
     if not api_name:
+
         return jsonify({
-            "success": False,
-            "error": "Enter API Name"
+            "error": "Missing API name"
         })
 
-    content = fetch_api(server, api_name)
+    headers_base = {
+        "Accept": "*/*",
+        "Accept-Encoding": "deflate, gzip",
+        "Content-Length": "16",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "ReleaseVersion": "OB53",
+        "User-Agent": "UnityPlayer/2022.3.47f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)",
+        "X-GA": "v1 1",
+        "X-Unity-Version": "2022.3.47f1"
+    }
+
+    hex_payload = "8533b7e1d34a5dfd9a830ee5cc36664e"
+
+    binary_payload = binascii.unhexlify(hex_payload)
+
+    content = fetch_api_with_token_refresh(
+        server,
+        api_name,
+        binary_payload,
+        headers_base
+    )
 
     if isinstance(content, dict):
+
+        return jsonify(content)
+
+    try:
+
+        if content[:2] == b'\x1f\x8b':
+
+            content = gzip.decompress(content)
+
+    except Exception as e:
+
         return jsonify({
-            "success": False,
-            "error": content["error"]
+            "error": f"Gzip decompress failed: {e}"
         })
 
-    strings = re.findall(rb"[ -~]{4,}", content)
+    raw_strings = re.findall(rb"[ -~]{4,}", content)
 
-    decoded_strings = [
-        s.decode("utf-8", errors="ignore")
-        for s in strings
-    ]
+    decoded_strings = []
+
+    for s in raw_strings:
+
+        try:
+
+            text = s.decode("utf-8", errors="ignore").strip()
+
+            if text:
+
+                decoded_strings.append(text)
+
+        except:
+            pass
+
+    links = []
+
+    link_regex = re.findall(
+        r'https?://[^\s"<>()]+',
+        "\n".join(decoded_strings)
+    )
+
+    for link in link_regex:
+
+        cleaned = link.strip()
+
+        cleaned = cleaned.replace("\\", "")
+
+        if len(cleaned) > 8:
+
+            links.append(cleaned)
+
+    links = list(dict.fromkeys(links))
 
     return jsonify({
         "success": True,
-        "strings": decoded_strings
+        "count": len(decoded_strings),
+        "link_count": len(links),
+        "strings": decoded_strings,
+        "links": links
     })
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
