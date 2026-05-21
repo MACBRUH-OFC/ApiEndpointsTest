@@ -107,7 +107,14 @@ def get_token(server):
     return None
 
 
-def fix_broken_common_path(url):
+def fix_common_errors(url):
+
+    url = re.sub(
+        r'/common/[a-z]{2,8}/common/',
+        '/common/',
+        url,
+        flags=re.IGNORECASE
+    )
 
     url = re.sub(
         r'/common/[A-Z0-9]+Local/',
@@ -130,6 +137,13 @@ def fix_broken_common_path(url):
         flags=re.IGNORECASE
     )
 
+    url = re.sub(
+        r'/common/common/',
+        '/common/',
+        url,
+        flags=re.IGNORECASE
+    )
+
     return url
 
 
@@ -142,7 +156,7 @@ def clean_url(url):
     url = url.replace(".ff_extend", ".jpg")
     url = url.replace(".ktxp", ".png")
 
-    url = fix_broken_common_path(url)
+    url = fix_common_errors(url)
 
     url = re.sub(
         r'(\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3))(?:[0-9]+)',
