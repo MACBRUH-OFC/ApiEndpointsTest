@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request, render_template
 import requests
 import gzip
 import binascii
@@ -42,201 +42,12 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-server_tokens = {}
-
-UI_HTML = """
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FF API TOOL</title>
-
-<style>
-
-body{
-background:#050505;
-color:white;
-font-family:Arial;
-padding:20px;
-}
-
-input{
-width:100%;
-padding:14px;
-background:#111;
-border:1px solid #333;
-border-radius:14px;
-color:white;
-margin-bottom:16px;
-}
-
-button{
-padding:12px;
-border:none;
-border-radius:12px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.server{
-background:#111;
-color:white;
-margin:4px;
-}
-
-.server.active{
-background:#ffde00;
-color:black;
-}
-
-.run{
-background:#ffde00;
-color:black;
-width:100%;
-}
-
-#results{
-margin-top:20px;
-white-space:pre-wrap;
-word-break:break-word;
-}
-
-.link{
-padding:10px;
-margin-bottom:8px;
-background:#111;
-border-radius:12px;
-}
-
-a{
-color:#59d0ff;
-text-decoration:none;
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>FF API TOOL</h1>
-
-<input id="api" placeholder="Enter API name">
-
-<div id="servers"></div>
-
-<button class="run" onclick="runAPI()">
-RUN
-</button>
-
-<div id="results"></div>
-
-<script>
-
-const servers = [
-"ind","mea","id","cis","br","latam",
-"vn","tw","th","sg","eu","na","pk","bd"
-]
-
-let current = "ind"
-
-const box = document.getElementById("servers")
-
-servers.forEach(s=>{
-
-const btn = document.createElement("button")
-
-btn.innerText = s.toUpperCase()
-
-btn.className = "server"
-
-if(s==="ind"){
-btn.classList.add("active")
-}
-
-btn.onclick=()=>{
-
-document.querySelectorAll(".server")
-.forEach(x=>x.classList.remove("active"))
-
-btn.classList.add("active")
-
-current=s
-
-}
-
-box.appendChild(btn)
-
-})
-
-async function runAPI(){
-
-const api = document.getElementById("api").value
-
-if(!api){
-alert("Enter API")
-return
-}
-
-document.getElementById("results").innerHTML="Loading..."
-
-try{
-
-const r = await fetch(
-`/run_script?server=${current}&name=${encodeURIComponent(api)}`
-)
-
-const data = await r.json()
-
-if(!data.success){
-
-document.getElementById("results").innerHTML =
-data.error
-
-return
-
-}
-
-let html = ""
-
-data.links.forEach(link=>{
-
-html += `
-<div class="link">
-<a href="${link}" target="_blank">
-${link}
-</a>
-</div>
-`
-
-})
-
-document.getElementById("results").innerHTML =
-html
-
-}catch(e){
-
-document.getElementById("results").innerHTML =
-e
-
-}
-
-}
-
-</script>
-
-</body>
-</html>
-"""
-
-@app.route("/")
-def home():
-    return Response(UI_HTML, mimetype="text/html")
+server_tokens = {key: None for key in UID_PASSWORDS.keys()}
 
 
 def get_token(server):
 
-    if server in server_tokens:
+    if server_tokens[server]:
         return server_tokens[server]
 
     try:
@@ -244,145 +55,134 @@ def get_token(server):
         uid = UID_PASSWORDS[server]["uid"]
         password = UID_PASSWORDS[server]["password"]
 
-        response = requests.get(
-            f"{TOKEN_BASE_URL}?uid={uid}&password={password}",
+        token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
+
+        response = requests.get(token_url, timeout=20)
+
+        if response.status_code != 200:
+            return None
+
+        token_res = response.json()
+
+        response_text = token_res.get("response", "")
+
+        match = re.search(r'token\\s*:\\s*"([^"]+)"', response_text)
+
+        if match:
+            token = match.group(1)
+            server_tokens[server] = token
+            return token
+
+        return None
+
+    except Exception:
+        return None
+
+
+def fetch_api(server, api_name):
+
+    token = get_token(server)
+
+    if not token:
+        return {"error": "Token fetch failed"}
+
+    url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
+
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "deflate, gzip",
+        "Content-Length": "16",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "ReleaseVersion": "OB53",
+        "User-Agent": "UnityPlayer/2022.3.47f1",
+        "X-GA": "v1 1",
+        "X-Unity-Version": "2022.3.47f1",
+        "Authorization": f"Bearer {token}"
+    }
+
+    try:
+
+        hex_payload = "8533b7e1d34a5dfd9a830ee5cc36664e"
+
+        binary_payload = binascii.unhexlify(hex_payload)
+
+        response = requests.post(
+            url,
+            headers=headers,
+            data=binary_payload,
             timeout=20
         )
 
-        text = response.text
+        if response.status_code == 401:
 
-        token_match = re.search(
-            r'eyJ[a-zA-Z0-9_\-\.]+',
-            text
-        )
+            server_tokens[server] = None
 
-        if token_match:
+            token = get_token(server)
 
-            token = token_match.group(0)
+            headers["Authorization"] = f"Bearer {token}"
 
-            server_tokens[server] = token
+            response = requests.post(
+                url,
+                headers=headers,
+                data=binary_payload,
+                timeout=20
+            )
 
-            return token
+        response.raise_for_status()
+
+        content = response.content
+
+        if content[:2] == b'\\x1f\\x8b':
+            content = gzip.decompress(content)
+
+        return content
 
     except Exception as e:
-        print(e)
-
-    return None
+        return {"error": str(e)}
 
 
-def clean_link(link):
-
-    link = link.strip()
-
-    link = re.sub(r'[\x00-\x1F]+', '', link)
-
-    link = re.sub(
-        r'(\.png|\.jpg|\.jpeg|\.webp|\.gif|\.ktx|\.ktxp|\.mp4|\.html|\.json|\.ff_extend)0+$',
-        r'\1',
-        link
-    )
-
-    return link
-
-
-def extract_links(text):
-
-    pattern = r'https?://[^\s<>"\'\\]+'
-
-    found = re.findall(pattern, text)
-
-    final = []
-
-    seen = set()
-
-    for link in found:
-
-        link = clean_link(link)
-
-        if len(link) < 8:
-            continue
-
-        if link in seen:
-            continue
-
-        seen.add(link)
-
-        final.append(link)
-
-    return final
+@app.route("/")
+def index():
+    return render_template("ui.html")
 
 
 @app.route("/run_script")
 def run_script():
 
-    try:
+    server = request.args.get("server")
+    api_name = request.args.get("name")
 
-        server = request.args.get("server")
-        api_name = request.args.get("name")
-
-        if server not in UID_PASSWORDS:
-            return jsonify({
-                "success": False,
-                "error": "Invalid server"
-            })
-
-        token = get_token(server)
-
-        if not token:
-            return jsonify({
-                "success": False,
-                "error": "Token fetch failed"
-            })
-
-        url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
-
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "User-Agent": "UnityPlayer/2022.3.47f1",
-            "ReleaseVersion": "OB53"
-        }
-
-        payload = binascii.unhexlify(
-            "8533b7e1d34a5dfd9a830ee5cc36664e"
-        )
-
-        response = requests.post(
-            url,
-            headers=headers,
-            data=payload,
-            timeout=30
-        )
-
-        raw = response.content
-
-        try:
-            if raw[:2] == b"\x1f\x8b":
-                raw = gzip.decompress(raw)
-        except:
-            pass
-
-        try:
-            decoded = raw.decode(
-                "utf-8",
-                errors="ignore"
-            )
-        except:
-            decoded = str(raw)
-
-        links = extract_links(decoded)
-
-        return jsonify({
-            "success": True,
-            "status": response.status_code,
-            "links": links
-        })
-
-    except Exception as e:
-
+    if server not in UID_PASSWORDS:
         return jsonify({
             "success": False,
-            "error": str(e)
+            "error": "Invalid server"
         })
+
+    if not api_name:
+        return jsonify({
+            "success": False,
+            "error": "Enter API Name"
+        })
+
+    content = fetch_api(server, api_name)
+
+    if isinstance(content, dict):
+        return jsonify({
+            "success": False,
+            "error": content["error"]
+        })
+
+    strings = re.findall(rb"[ -~]{4,}", content)
+
+    decoded_strings = [
+        s.decode("utf-8", errors="ignore")
+        for s in strings
+    ]
+
+    return jsonify({
+        "success": True,
+        "strings": decoded_strings
+    })
 
 
 if __name__ == "__main__":
