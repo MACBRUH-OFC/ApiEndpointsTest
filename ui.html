@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
@@ -7,7 +7,7 @@
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1"
+content="width=device-width, initial-scale=1.0"
 />
 
 <title>
@@ -26,18 +26,22 @@ body{
 
     background:#050505;
 
-    color:white;
+    color:#ffffff;
 
     font-family:
     Arial,
     sans-serif;
 
-    padding:20px;
+    min-height:100vh;
+
+    padding:18px;
 }
 
 .container{
 
-    max-width:1500px;
+    width:100%;
+
+    max-width:1600px;
 
     margin:auto;
 }
@@ -51,38 +55,40 @@ body{
 
 .header h1{
 
-    font-size:38px;
+    font-size:40px;
 
     font-weight:900;
 
     letter-spacing:2px;
+
+    margin-bottom:10px;
 }
 
 .header p{
 
     color:#888;
 
-    margin-top:10px;
+    font-size:14px;
 }
 
 .panel{
 
-    background:#101010;
+    background:#0f0f0f;
 
     border:
-    1px solid #222;
+    1px solid #1f1f1f;
 
-    border-radius:20px;
+    border-radius:22px;
 
     padding:20px;
 }
 
-.input-grid{
+.topbar{
 
     display:grid;
 
     grid-template-columns:
-    140px
+    150px
     1fr
     120px;
 
@@ -93,16 +99,18 @@ body{
 
 .input{
 
+    width:100%;
+
     background:#181818;
 
     border:
-    1px solid #2a2a2a;
+    1px solid #292929;
+
+    border-radius:14px;
+
+    padding:16px;
 
     color:white;
-
-    padding:15px;
-
-    border-radius:12px;
 
     outline:none;
 
@@ -120,6 +128,10 @@ body{
 
     border:none;
 
+    border-radius:14px;
+
+    padding:16px;
+
     background:
     linear-gradient(
         135deg,
@@ -129,20 +141,18 @@ body{
 
     color:white;
 
-    padding:15px;
-
-    border-radius:12px;
+    font-weight:900;
 
     cursor:pointer;
 
-    font-weight:800;
-
     margin-bottom:18px;
+
+    transition:.2s;
 }
 
 .run-btn:hover{
 
-    opacity:.9;
+    transform:translateY(-2px);
 }
 
 .stats{
@@ -150,7 +160,7 @@ body{
     display:grid;
 
     grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
+    repeat(auto-fit,minmax(200px,1fr));
 
     gap:12px;
 
@@ -162,11 +172,11 @@ body{
     background:#161616;
 
     border:
-    1px solid #272727;
+    1px solid #252525;
 
-    padding:15px;
+    border-radius:16px;
 
-    border-radius:14px;
+    padding:16px;
 }
 
 .stat-title{
@@ -180,14 +190,24 @@ body{
 
 .stat-value{
 
-    font-size:22px;
+    font-size:24px;
 
     font-weight:900;
 }
 
-.search{
+.search-box{
 
-    margin-bottom:15px;
+    margin-bottom:18px;
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:18px;
 }
 
 .section{
@@ -197,27 +217,32 @@ body{
     border:
     1px solid #1c1c1c;
 
-    border-radius:16px;
+    border-radius:18px;
 
-    padding:15px;
-
-    margin-bottom:20px;
+    overflow:hidden;
 }
 
-.section-title{
+.section-header{
 
-    font-size:18px;
+    padding:16px;
+
+    background:#121212;
+
+    border-bottom:
+    1px solid #1e1e1e;
 
     font-weight:900;
 
-    margin-bottom:15px;
+    font-size:16px;
 
     color:#00a2ff;
 }
 
 .output{
 
-    max-height:500px;
+    padding:15px;
+
+    height:620px;
 
     overflow:auto;
 
@@ -234,86 +259,163 @@ body{
     line-height:1.6;
 }
 
-.link-item{
+.link-card{
 
     background:#141414;
 
     border:
-    1px solid #252525;
+    1px solid #262626;
+
+    border-radius:12px;
 
     padding:12px;
-
-    border-radius:10px;
 
     margin-bottom:10px;
 }
 
-.link-item a{
+.link-card a{
 
     color:#55b6ff;
 
     text-decoration:none;
 }
 
-.link-item a:hover{
+.link-card a:hover{
 
     text-decoration:underline;
+}
+
+.link-type{
+
+    display:inline-block;
+
+    padding:5px 10px;
+
+    border-radius:999px;
+
+    font-size:11px;
+
+    font-weight:900;
+
+    margin-bottom:10px;
+}
+
+.image{
+
+    background:#0f3d1d;
+
+    color:#6dff9b;
+}
+
+.other{
+
+    background:#3d310f;
+
+    color:#ffd86d;
 }
 
 .actions{
 
     display:flex;
 
-    gap:10px;
-
-    margin-top:15px;
-
     flex-wrap:wrap;
+
+    gap:12px;
+
+    margin-top:18px;
 }
 
-.action{
+.action-btn{
 
     flex:1;
 
-    min-width:150px;
+    min-width:180px;
 
     border:none;
 
-    padding:13px;
+    border-radius:14px;
 
-    border-radius:12px;
+    padding:15px;
 
-    font-weight:800;
+    color:white;
+
+    font-weight:900;
 
     cursor:pointer;
 
-    color:white;
+    transition:.2s;
 }
 
-.copy{
-    background:#18a558;
+.action-btn:hover{
+
+    transform:translateY(-2px);
 }
 
-.download{
-    background:#ff9800;
+.copy-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #18a558,
+        #21d07a
+    );
 }
 
-.clear{
-    background:#ff3b3b;
+.download-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff9800,
+        #ffbc42
+    );
+}
+
+.clear-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff3b3b,
+        #ff6666
+    );
 }
 
 .footer{
 
-    margin-top:15px;
+    margin-top:18px;
 
     text-align:center;
 
     color:#666;
+
+    font-size:13px;
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#333;
+
+    border-radius:999px;
+}
+
+@media(max-width:1100px){
+
+    .grid{
+
+        grid-template-columns:
+        1fr;
+    }
 }
 
 @media(max-width:700px){
 
-    .input-grid{
+    .topbar{
 
         grid-template-columns:
         1fr;
@@ -322,6 +424,11 @@ body{
     .header h1{
 
         font-size:28px;
+    }
+
+    .output{
+
+        height:450px;
     }
 }
 
@@ -340,14 +447,14 @@ FF API LINK EXTRACTOR
 </h1>
 
 <p>
-Auto Detect CDN Assets & Links
+Extract CDN Assets, Images, URLs & Raw API Strings
 </p>
 
 </div>
 
 <div class="panel">
 
-<div class="input-grid">
+<div class="topbar">
 
 <select
 id="server"
@@ -357,16 +464,56 @@ class="input">
 IND
 </option>
 
+<option value="mea">
+MEA
+</option>
+
+<option value="id">
+ID
+</option>
+
+<option value="cis">
+CIS
+</option>
+
 <option value="br">
 BR
+</option>
+
+<option value="latam">
+LATAM
+</option>
+
+<option value="vn">
+VN
+</option>
+
+<option value="tw">
+TW
+</option>
+
+<option value="th">
+TH
+</option>
+
+<option value="sg">
+SG
+</option>
+
+<option value="eu">
+EU
 </option>
 
 <option value="na">
 NA
 </option>
 
-<option value="sg">
-SG
+<option value="pk">
+PK
+</option>
+
+<option value="bd">
+BD
 </option>
 
 </select>
@@ -389,7 +536,7 @@ value="OB53"
 class="run-btn"
 onclick="runApi()">
 
-RUN API
+RUN API REQUEST
 
 </button>
 
@@ -398,12 +545,12 @@ RUN API
 <div class="stat">
 
 <div class="stat-title">
-LINKS FOUND
+TOTAL LINKS
 </div>
 
 <div
-class="stat-value"
-id="linkCount">
+id="totalLinks"
+class="stat-value">
 
 0
 
@@ -414,12 +561,12 @@ id="linkCount">
 <div class="stat">
 
 <div class="stat-title">
-STRINGS FOUND
+RAW STRINGS
 </div>
 
 <div
-class="stat-value"
-id="stringCount">
+id="totalStrings"
+class="stat-value">
 
 0
 
@@ -434,8 +581,8 @@ STATUS
 </div>
 
 <div
-class="stat-value"
-id="status">
+id="status"
+class="stat-value">
 
 READY
 
@@ -443,18 +590,40 @@ READY
 
 </div>
 
+<div class="stat">
+
+<div class="stat-title">
+VERSION
 </div>
+
+<div
+id="versionView"
+class="stat-value">
+
+OB53
+
+</div>
+
+</div>
+
+</div>
+
+<div class="search-box">
 
 <input
 id="search"
-class="input search"
-placeholder="Find links or strings..."
+class="input"
+placeholder="Search links or raw strings..."
 oninput="filterResults()"
 />
 
+</div>
+
+<div class="grid">
+
 <div class="section">
 
-<div class="section-title">
+<div class="section-header">
 
 EXTRACTED LINKS
 
@@ -472,7 +641,7 @@ No Data
 
 <div class="section">
 
-<div class="section-title">
+<div class="section-header">
 
 RAW RESPONSE
 
@@ -488,10 +657,12 @@ No Data
 
 </div>
 
+</div>
+
 <div class="actions">
 
 <button
-class="action copy"
+class="action-btn copy-btn"
 onclick="copyLinks()">
 
 COPY LINKS
@@ -499,18 +670,18 @@ COPY LINKS
 </button>
 
 <button
-class="action download"
+class="action-btn download-btn"
 onclick="downloadLinks()">
 
-DOWNLOAD
+DOWNLOAD LINKS
 
 </button>
 
 <button
-class="action clear"
+class="action-btn clear-btn"
 onclick="clearAll()">
 
-CLEAR
+CLEAR OUTPUT
 
 </button>
 
@@ -518,7 +689,7 @@ CLEAR
 
 <div class="footer">
 
-Powered By Flask + Vercel
+Built For Asset Extraction & Endpoint Testing
 
 </div>
 
@@ -528,8 +699,9 @@ Powered By Flask + Vercel
 
 <script>
 
-let currentLinks = []
-let currentStrings = []
+let imageLinks = []
+let otherLinks = []
+let rawStrings = []
 
 async function runApi(){
 
@@ -561,6 +733,11 @@ async function runApi(){
     .innerText =
     "LOADING"
 
+    document
+    .getElementById("versionView")
+    .innerText =
+    version
+
     try{
 
         const response =
@@ -587,34 +764,37 @@ async function runApi(){
             return
         }
 
-        currentLinks =
-        data.links || []
+        imageLinks =
+        data.image_links || []
 
-        currentStrings =
-        data.strings || []
+        otherLinks =
+        data.other_links || []
+
+        rawStrings =
+        data.raw_strings || []
+
+        const totalLinks =
+        imageLinks.length
+        + otherLinks.length
 
         document
-        .getElementById("linkCount")
+        .getElementById("totalLinks")
         .innerText =
-        currentLinks.length
+        totalLinks
 
         document
-        .getElementById("stringCount")
+        .getElementById("totalStrings")
         .innerText =
-        currentStrings.length
+        rawStrings.length
 
         document
         .getElementById("status")
         .innerText =
         "SUCCESS"
 
-        renderLinks(
-            currentLinks
-        )
+        renderLinks()
 
-        renderRaw(
-            currentStrings
-        )
+        renderRaw(rawStrings)
 
     }catch(err){
 
@@ -627,23 +807,24 @@ async function runApi(){
     }
 }
 
-function renderLinks(links){
+function renderLinks(){
 
     const container =
     document.getElementById("links")
 
-    if(!links.length){
+    let html = ""
 
-        container.innerHTML =
-        "No Links Found"
+    imageLinks.forEach(link => {
 
-        return
-    }
+        html += `
 
-    container.innerHTML =
-    links.map(link => `
+        <div class="link-card">
 
-        <div class="link-item">
+        <div class="link-type image">
+
+        IMAGE
+
+        </div>
 
         <a
         href="${link}"
@@ -655,7 +836,40 @@ function renderLinks(links){
 
         </div>
 
-    `).join("")
+        `
+    })
+
+    otherLinks.forEach(link => {
+
+        html += `
+
+        <div class="link-card">
+
+        <div class="link-type other">
+
+        URL
+
+        </div>
+
+        <a
+        href="${link}"
+        target="_blank">
+
+        ${link}
+
+        </a>
+
+        </div>
+
+        `
+    })
+
+    if(!html){
+
+        html = "No Links Found"
+    }
+
+    container.innerHTML = html
 }
 
 function renderRaw(strings){
@@ -668,31 +882,107 @@ function renderRaw(strings){
 
 function filterResults(){
 
-    const q =
+    const query =
     document
     .getElementById("search")
     .value
     .toLowerCase()
 
-    const filteredLinks =
-    currentLinks.filter(
-        x => x.toLowerCase().includes(q)
+    const filteredImages =
+    imageLinks.filter(
+        x => x.toLowerCase().includes(query)
+    )
+
+    const filteredOthers =
+    otherLinks.filter(
+        x => x.toLowerCase().includes(query)
     )
 
     const filteredStrings =
-    currentStrings.filter(
-        x => x.toLowerCase().includes(q)
+    rawStrings.filter(
+        x => x.toLowerCase().includes(query)
     )
 
-    renderLinks(filteredLinks)
+    const container =
+    document.getElementById("links")
+
+    let html = ""
+
+    filteredImages.forEach(link => {
+
+        html += `
+
+        <div class="link-card">
+
+        <div class="link-type image">
+
+        IMAGE
+
+        </div>
+
+        <a
+        href="${link}"
+        target="_blank">
+
+        ${link}
+
+        </a>
+
+        </div>
+
+        `
+    })
+
+    filteredOthers.forEach(link => {
+
+        html += `
+
+        <div class="link-card">
+
+        <div class="link-type other">
+
+        URL
+
+        </div>
+
+        <a
+        href="${link}"
+        target="_blank">
+
+        ${link}
+
+        </a>
+
+        </div>
+
+        `
+    })
+
+    if(!html){
+
+        html = "No Results"
+    }
+
+    container.innerHTML = html
 
     renderRaw(filteredStrings)
 }
 
 function copyLinks(){
 
+    const allLinks = [
+        ...imageLinks,
+        ...otherLinks
+    ]
+
+    if(!allLinks.length){
+
+        alert("No Links")
+        return
+    }
+
     navigator.clipboard.writeText(
-        currentLinks.join("\n")
+        allLinks.join("\n")
     )
 
     alert("Copied")
@@ -700,12 +990,26 @@ function copyLinks(){
 
 function downloadLinks(){
 
+    const allLinks = [
+        ...imageLinks,
+        ...otherLinks
+    ]
+
+    if(!allLinks.length){
+
+        alert("No Links")
+        return
+    }
+
     const blob =
     new Blob(
-        [currentLinks.join("\n")],
+
+        [allLinks.join("\n")],
+
         {
             type:"text/plain"
         }
+
     )
 
     const a =
@@ -715,15 +1019,16 @@ function downloadLinks(){
     URL.createObjectURL(blob)
 
     a.download =
-    "links.txt"
+    "ff_links.txt"
 
     a.click()
 }
 
 function clearAll(){
 
-    currentLinks = []
-    currentStrings = []
+    imageLinks = []
+    otherLinks = []
+    rawStrings = []
 
     document
     .getElementById("links")
@@ -736,19 +1041,19 @@ function clearAll(){
     "No Data"
 
     document
+    .getElementById("totalLinks")
+    .innerText =
+    "0"
+
+    document
+    .getElementById("totalStrings")
+    .innerText =
+    "0"
+
+    document
     .getElementById("status")
     .innerText =
     "READY"
-
-    document
-    .getElementById("linkCount")
-    .innerText =
-    "0"
-
-    document
-    .getElementById("stringCount")
-    .innerText =
-    "0"
 }
 
 </script>
