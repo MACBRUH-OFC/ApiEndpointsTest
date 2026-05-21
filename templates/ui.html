@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+
+<title>
+FF API LINK EXTRACTOR
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet"
+/>
+
+<style>
+
+:root{
+
+    --bg:#050505;
+    --card:#101010;
+    --card2:#171717;
+    --border:#242424;
+    --text:#ffffff;
+    --sub:#9d9d9d;
+
+    --blue:#0a84ff;
+    --green:#22c55e;
+    --orange:#ff9500;
+    --red:#ff3b30;
+
+    --shadow:
+    0 10px 40px rgba(0,0,0,.45);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:
+    radial-gradient(
+        circle at top,
+        #141414,
+        #050505 40%
+    );
+
+    color:var(--text);
+
+    font-family:'Inter',sans-serif;
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+}
+
+.container{
+
+    width:100%;
+
+    max-width:1700px;
+
+    margin:auto;
+
+    padding:18px;
+}
+
+.header{
+
+    background:rgba(16,16,16,.85);
+
+    backdrop-filter:blur(20px);
+
+    border:
+    1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:24px;
+
+    margin-bottom:18px;
+
+    box-shadow:var(--shadow);
+}
+
+.top-flex{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.logo-box{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0a84ff,
+        #00d4ff
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    font-weight:900;
+}
+
+.title h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+}
+
+.title p{
+
+    color:var(--sub);
+
+    margin-top:4px;
+
+    font-size:14px;
+}
+
+.badges{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+}
+
+.badge{
+
+    background:#181818;
+
+    border:
+    1px solid #292929;
+
+    border-radius:999px;
+
+    padding:10px 14px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#bcbcbc;
+}
+
+.main-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    420px 1fr;
+
+    gap:18px;
+}
+
+.sidebar{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.card{
+
+    background:rgba(15,15,15,.9);
+
+    border:
+    1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:22px;
+
+    box-shadow:var(--shadow);
+}
+
+.card-title{
+
+    font-size:15px;
+
+    font-weight:800;
+
+    color:#bdbdbd;
+
+    margin-bottom:18px;
+
+    letter-spacing:.5px;
+}
+
+.input-group{
+
+    margin-bottom:15px;
+}
+
+.label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#9f9f9f;
+
+    font-size:13px;
+
+    font-weight:700;
+}
+
+.input,
+.select{
+
+    width:100%;
+
+    background:#171717;
+
+    border:
+    1px solid #2a2a2a;
+
+    color:white;
+
+    padding:15px 16px;
+
+    border-radius:18px;
+
+    outline:none;
+
+    font-size:14px;
+
+    transition:.2s;
+}
+
+.input:focus,
+.select:focus{
+
+    border-color:#0a84ff;
+
+    box-shadow:
+    0 0 0 4px rgba(10,132,255,.15);
+}
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:12px;
+}
+
+.run-btn{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:20px;
+
+    padding:18px;
+
+    margin-top:6px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0a84ff,
+        #00b7ff
+    );
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.run-btn:hover{
+
+    transform:translateY(-2px);
+
+    filter:brightness(1.08);
+}
+
+.switches{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.switch-row{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+.switch-row span{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#cfcfcf;
+}
+
+.switch{
+
+    position:relative;
+
+    width:58px;
+
+    height:32px;
+}
+
+.switch input{
+
+    display:none;
+}
+
+.slider{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#2d2d2d;
+
+    border-radius:999px;
+
+    transition:.2s;
+}
+
+.slider::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:24px;
+
+    height:24px;
+
+    background:white;
+
+    border-radius:50%;
+
+    top:4px;
+
+    left:4px;
+
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+
+    background:#22c55e;
+}
+
+.switch input:checked + .slider::before{
+
+    transform:translateX(26px);
+}
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:12px;
+}
+
+.stat{
+
+    background:#171717;
+
+    border:
+    1px solid #272727;
+
+    border-radius:22px;
+
+    padding:18px;
+}
+
+.stat-label{
+
+    color:#8d8d8d;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+}
+
+.stat-value{
+
+    font-size:28px;
+
+    font-weight:900;
+}
+
+.content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.tabs{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+.tab{
+
+    background:#161616;
+
+    border:
+    1px solid #292929;
+
+    color:#bcbcbc;
+
+    padding:13px 18px;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    transition:.2s;
+}
+
+.tab.active{
+
+    background:#0a84ff;
+
+    color:white;
+
+    border-color:#0a84ff;
+}
+
+.search-bar{
+
+    width:100%;
+}
+
+.viewer{
+
+    background:#0d0d0d;
+
+    border:
+    1px solid #202020;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    min-height:820px;
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+.viewer-top{
+
+    padding:18px;
+
+    border-bottom:
+    1px solid #202020;
+
+    background:#141414;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.viewer-title{
+
+    font-size:16px;
+
+    font-weight:900;
+}
+
+.viewer-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+.small-btn{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 15px;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    color:white;
+}
+
+.copy-btn{
+
+    background:#22c55e;
+}
+
+.download-btn{
+
+    background:#ff9500;
+}
+
+.clear-btn{
+
+    background:#ff3b30;
+}
+
+.small-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+.output{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:18px;
+}
+
+.link-card{
+
+    background:#151515;
+
+    border:
+    1px solid #252525;
+
+    border-radius:20px;
+
+    padding:16px;
+
+    margin-bottom:14px;
+
+    transition:.2s;
+}
+
+.link-card:hover{
+
+    border-color:#0a84ff;
+
+    transform:translateY(-1px);
+}
+
+.link-type{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 12px;
+
+    border-radius:999px;
+
+    font-size:11px;
+
+    font-weight:900;
+
+    margin-bottom:12px;
+}
+
+.image{
+
+    background:rgba(34,197,94,.15);
+
+    color:#6eff9d;
+}
+
+.url{
+
+    background:rgba(255,149,0,.15);
+
+    color:#ffbe5c;
+}
+
+.raw{
+
+    background:rgba(10,132,255,.15);
+
+    color:#6dc0ff;
+}
+
+.link{
+
+    color:#64b8ff;
+
+    text-decoration:none;
+
+    word-break:break-all;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+.link:hover{
+
+    text-decoration:underline;
+}
+
+.raw-box{
+
+    background:#111;
+
+    border:
+    1px solid #222;
+
+    border-radius:18px;
+
+    padding:14px;
+
+    margin-bottom:12px;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    font-family:Consolas,monospace;
+
+    font-size:12px;
+
+    line-height:1.6;
+
+    color:#d0d0d0;
+}
+
+.preview-image{
+
+    width:100%;
+
+    margin-top:15px;
+
+    border-radius:18px;
+
+    border:
+    1px solid #2d2d2d;
+
+    display:none;
+}
+
+.footer{
+
+    text-align:center;
+
+    color:#767676;
+
+    margin-top:18px;
+
+    font-size:13px;
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2f2f2f;
+
+    border-radius:999px;
+}
+
+@media(max-width:1200px){
+
+    .main-grid{
+
+        grid-template-columns:
+        1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .title h1{
+
+        font-size:25px;
+    }
+
+    .viewer{
+
+        min-height:650px;
+    }
+
+    .stats{
+
+        grid-template-columns:
+        1fr;
+    }
+
+    .row{
+
+        grid-template-columns:
+        1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<div class="top-flex">
+
+<div class="logo">
+
+<div class="logo-box">
+FF
+</div>
+
+<div class="title">
+
+<h1>
+FF API LINK EXTRACTOR
+</h1>
+
+<p>
+Advanced Free Fire Endpoint Tester & CDN Asset Extractor
+</p>
+
+</div>
+
+</div>
+
+<div class="badges">
+
+<div class="badge">
+AUTO LINK FIX
+</div>
+
+<div class="badge">
+SMART CLEANER
+</div>
+
+<div class="badge">
+LIVE PREVIEW
+</div>
+
+<div class="badge">
+RAW RESPONSE
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="main-grid">
+
+<div class="sidebar">
+
+<div class="card">
+
+<div class="card-title">
+API REQUEST
+</div>
+
+<div class="input-group">
+
+<label class="label">
+REGION
+</label>
+
+<select
+id="server"
+class="select">
+
+<option value="ind">
+IND
+</option>
+
+<option value="mea">
+MEA
+</option>
+
+<option value="id">
+ID
+</option>
+
+<option value="cis">
+CIS
+</option>
+
+<option value="br">
+BR
+</option>
+
+<option value="latam">
+LATAM
+</option>
+
+<option value="vn">
+VN
+</option>
+
+<option value="tw">
+TW
+</option>
+
+<option value="th">
+TH
+</option>
+
+<option value="sg">
+SG
+</option>
+
+<option value="eu">
+EU
+</option>
+
+<option value="na">
+NA
+</option>
+
+<option value="pk">
+PK
+</option>
+
+<option value="bd">
+BD
+</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label class="label">
+ENDPOINT
+</label>
+
+<input
+id="endpoint"
+class="input"
+placeholder="Enter API Endpoint"
+/>
+
+</div>
+
+<div class="row">
+
+<div class="input-group">
+
+<label class="label">
+VERSION
+</label>
+
+<input
+id="version"
+class="input"
+value="OB53"
+/>
+
+</div>
+
+<div class="input-group">
+
+<label class="label">
+TIMEOUT
+</label>
+
+<input
+id="timeout"
+class="input"
+value="30"
+/>
+
+</div>
+
+</div>
+
+<button
+class="run-btn"
+onclick="runApi()">
+
+RUN API REQUEST
+
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+VIEW SETTINGS
+</div>
+
+<div class="switches">
+
+<div class="switch-row">
+
+<span>
+IMAGE PREVIEW
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="imagePreview"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<div class="switch-row">
+
+<span>
+SHOW RAW RESPONSE
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="showRaw"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<div class="switch-row">
+
+<span>
+AUTO SCROLL
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="autoScroll"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+LIVE STATS
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="stat-label">
+TOTAL LINKS
+</div>
+
+<div
+id="totalLinks"
+class="stat-value">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+RAW STRINGS
+</div>
+
+<div
+id="totalStrings"
+class="stat-value">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+STATUS
+</div>
+
+<div
+id="status"
+class="stat-value">
+
+READY
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-label">
+TIME
+</div>
+
+<div
+id="timeTaken"
+class="stat-value">
+
+0ms
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="content">
+
+<div class="tabs">
+
+<div
+class="tab active"
+onclick="switchTab('links')">
+
+LINKS
+
+</div>
+
+<div
+class="tab"
+onclick="switchTab('raw')">
+
+RAW RESPONSE
+
+</div>
+
+</div>
+
+<input
+id="search"
+class="input search-bar"
+placeholder="Search Links, URLs, Images, OB Paths..."
+oninput="filterResults()"
+/>
+
+<div class="viewer">
+
+<div class="viewer-top">
+
+<div class="viewer-title">
+
+OUTPUT VIEWER
+
+</div>
+
+<div class="viewer-actions">
+
+<button
+class="small-btn copy-btn"
+onclick="copyResults()">
+
+COPY
+
+</button>
+
+<button
+class="small-btn download-btn"
+onclick="downloadResults()">
+
+DOWNLOAD
+
+</button>
+
+<button
+class="small-btn clear-btn"
+onclick="clearResults()">
+
+CLEAR
+
+</button>
+
+</div>
+
+</div>
+
+<div
+id="output"
+class="output">
+
+<div class="raw-box">
+Waiting For API Request...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+Built For Testing • Asset Hunting • CDN Extraction • Endpoint Analysis
+
+</div>
+
+</div>
+
+<script>
+
+let currentTab = "links"
+
+let imageLinks = []
+
+let otherLinks = []
+
+let rawStrings = []
+
+function switchTab(tab){
+
+    currentTab = tab
+
+    document
+    .querySelectorAll(".tab")
+    .forEach(x => x.classList.remove("active"))
+
+    if(tab === "links"){
+
+        document
+        .querySelectorAll(".tab")[0]
+        .classList.add("active")
+
+    }else{
+
+        document
+        .querySelectorAll(".tab")[1]
+        .classList.add("active")
+    }
+
+    renderOutput()
+}
+
+async function runApi(){
+
+    const server =
+    document
+    .getElementById("server")
+    .value
+
+    const endpoint =
+    document
+    .getElementById("endpoint")
+    .value
+    .trim()
+
+    const version =
+    document
+    .getElementById("version")
+    .value
+    .trim()
+
+    if(!endpoint){
+
+        alert("Enter Endpoint")
+
+        return
+    }
+
+    document
+    .getElementById("status")
+    .innerText =
+    "LOADING"
+
+    const output =
+    document
+    .getElementById("output")
+
+    output.innerHTML = `
+    <div class="raw-box">
+    Loading Response...
+    </div>
+    `
+
+    try{
+
+        const response =
+        await fetch(
+
+            `/run?server=${server}`
+            + `&endpoint=${encodeURIComponent(endpoint)}`
+            + `&version=${encodeURIComponent(version)}`
+
+        )
+
+        const data =
+        await response.json()
+
+        if(data.error){
+
+            document
+            .getElementById("status")
+            .innerText =
+            "ERROR"
+
+            output.innerHTML = `
+            <div class="raw-box">
+            ${data.error}
+            </div>
+            `
+
+            return
+        }
+
+        imageLinks =
+        data.image_links || []
+
+        otherLinks =
+        data.other_links || []
+
+        rawStrings =
+        data.raw_strings || []
+
+        document
+        .getElementById("totalLinks")
+        .innerText =
+        imageLinks.length + otherLinks.length
+
+        document
+        .getElementById("totalStrings")
+        .innerText =
+        rawStrings.length
+
+        document
+        .getElementById("status")
+        .innerText =
+        data.status_code
+
+        document
+        .getElementById("timeTaken")
+        .innerText =
+        data.response_time + "ms"
+
+        renderOutput()
+
+    }catch(err){
+
+        document
+        .getElementById("status")
+        .innerText =
+        "FAILED"
+
+        output.innerHTML = `
+        <div class="raw-box">
+        Request Failed
+        </div>
+        `
+    }
+}
+
+function renderOutput(){
+
+    const output =
+    document
+    .getElementById("output")
+
+    output.innerHTML = ""
+
+    if(currentTab === "links"){
+
+        const allLinks = [
+            ...imageLinks,
+            ...otherLinks
+        ]
+
+        if(!allLinks.length){
+
+            output.innerHTML = `
+            <div class="raw-box">
+            No Links Found
+            </div>
+            `
+
+            return
+        }
+
+        allLinks.forEach(link => {
+
+            const isImage =
+            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
+            .test(link)
+
+            const card =
+            document.createElement("div")
+
+            card.className =
+            "link-card"
+
+            card.innerHTML = `
+
+            <div class="link-type ${isImage ? 'image' : 'url'}">
+
+            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
+
+            </div>
+
+            <a
+            href="${link}"
+            target="_blank"
+            class="link">
+
+            ${link}
+
+            </a>
+
+            ${isImage &&
+            document.getElementById("imagePreview").checked
+            ?
+
+            `<img
+            src="${link}"
+            class="preview-image"
+            onload="this.style.display='block'"
+            />`
+
+            :
+
+            ""
+            }
+
+            `
+
+            output.appendChild(card)
+        })
+
+    }else{
+
+        if(!rawStrings.length){
+
+            output.innerHTML = `
+            <div class="raw-box">
+            No Raw Response
+            </div>
+            `
+
+            return
+        }
+
+        rawStrings.forEach(item => {
+
+            const div =
+            document.createElement("div")
+
+            div.className =
+            "raw-box"
+
+            div.innerText =
+            item
+
+            output.appendChild(div)
+        })
+    }
+
+    if(
+        document
+        .getElementById("autoScroll")
+        .checked
+    ){
+
+        output.scrollTop = 0
+    }
+}
+
+function filterResults(){
+
+    const query =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase()
+
+    const output =
+    document
+    .getElementById("output")
+
+    output.innerHTML = ""
+
+    if(currentTab === "links"){
+
+        const links = [
+            ...imageLinks,
+            ...otherLinks
+        ].filter(
+            x => x.toLowerCase().includes(query)
+        )
+
+        links.forEach(link => {
+
+            const isImage =
+            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
+            .test(link)
+
+            const card =
+            document.createElement("div")
+
+            card.className =
+            "link-card"
+
+            card.innerHTML = `
+
+            <div class="link-type ${isImage ? 'image' : 'url'}">
+
+            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
+
+            </div>
+
+            <a
+            href="${link}"
+            target="_blank"
+            class="link">
+
+            ${link}
+
+            </a>
+
+            ${isImage &&
+            document.getElementById("imagePreview").checked
+            ?
+
+            `<img
+            src="${link}"
+            class="preview-image"
+            onload="this.style.display='block'"
+            />`
+
+            :
+
+            ""
+            }
+
+            `
+
+            output.appendChild(card)
+        })
+
+    }else{
+
+        const filtered =
+        rawStrings.filter(
+            x => x.toLowerCase().includes(query)
+        )
+
+        filtered.forEach(item => {
+
+            const div =
+            document.createElement("div")
+
+            div.className =
+            "raw-box"
+
+            div.innerText =
+            item
+
+            output.appendChild(div)
+        })
+    }
+}
+
+function copyResults(){
+
+    const all = [
+        ...imageLinks,
+        ...otherLinks
+    ]
+
+    navigator
+    .clipboard
+    .writeText(all.join("\n"))
+
+    alert("Copied")
+}
+
+function downloadResults(){
+
+    const all = [
+        ...imageLinks,
+        ...otherLinks
+    ]
+
+    const blob =
+    new Blob(
+        [all.join("\n")],
+        {
+            type:"text/plain"
+        }
+    )
+
+    const a =
+    document.createElement("a")
+
+    a.href =
+    URL.createObjectURL(blob)
+
+    a.download =
+    "ff_links.txt"
+
+    a.click()
+}
+
+function clearResults(){
+
+    imageLinks = []
+
+    otherLinks = []
+
+    rawStrings = []
+
+    document
+    .getElementById("output")
+    .innerHTML =
+    `
+    <div class="raw-box">
+    Cleared
+    </div>
+    `
+
+    document
+    .getElementById("totalLinks")
+    .innerText =
+    "0"
+
+    document
+    .getElementById("totalStrings")
+    .innerText =
+    "0"
+
+    document
+    .getElementById("status")
+    .innerText =
+    "READY"
+
+    document
+    .getElementById("timeTaken")
+    .innerText =
+    "0ms"
+}
+
+</script>
+
+</body>
+</html>
