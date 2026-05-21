@@ -64,8 +64,6 @@ def get_token(server):
 
         token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
 
-        print(f"Fetching token for {server}")
-
         response = requests.get(
             token_url,
             timeout=15,
@@ -76,18 +74,11 @@ def get_token(server):
         )
 
         if response.status_code != 200:
-            print(f"Token HTTP Error: {response.status_code}")
             return None
 
-        try:
-            token_res = response.json()
-        except Exception:
-            print("Invalid JSON response")
-            return None
+        token_res = response.json()
 
         response_text = str(token_res.get("response", ""))
-
-        print(response_text[:500])
 
         match = re.search(
             r'token\s*:\s*"([^"]+)"',
@@ -96,7 +87,6 @@ def get_token(server):
         )
 
         if not match:
-
             match = re.search(
                 r'"token"\s*:\s*"([^"]+)"',
                 response_text,
@@ -109,19 +99,38 @@ def get_token(server):
 
             server_tokens[server] = token
 
-            print(f"Token loaded for {server}")
-
             return token
 
-        print("Token regex failed")
-
-        return None
-
     except Exception as e:
+        print(e)
 
-        print(f"Token Error: {e}")
+    return None
 
-        return None
+
+def fix_broken_common_path(url):
+
+    url = re.sub(
+        r'/common/[A-Z0-9]+Local/',
+        '/common/Local/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    url = re.sub(
+        r'/common/[0-9]+OB([0-9]+)/',
+        r'/common/OB\1/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    url = re.sub(
+        r'/common/[A-Z]+OB([0-9]+)/',
+        r'/common/OB\1/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    return url
 
 
 def clean_url(url):
@@ -132,6 +141,8 @@ def clean_url(url):
 
     url = url.replace(".ff_extend", ".jpg")
     url = url.replace(".ktxp", ".png")
+
+    url = fix_broken_common_path(url)
 
     url = re.sub(
         r'(\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3))(?:[0-9]+)',
