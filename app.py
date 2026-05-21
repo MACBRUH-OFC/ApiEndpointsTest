@@ -224,7 +224,16 @@ def get_token(server):
 @app.route("/")
 def index():
 
-    return render_template("ui.html")
+    try:
+
+        return render_template("ui.html")
+
+    except Exception as e:
+
+        return f"""
+        <h1>Template Error</h1>
+        <pre>{str(e)}</pre>
+        """
 
 
 @app.route("/run")
@@ -284,9 +293,14 @@ def run():
 
         content = response.content
 
-        if content[:2] == b'\x1f\x8b':
+        try:
 
-            content = gzip.decompress(content)
+            if content[:2] == b'\x1f\x8b':
+
+                content = gzip.decompress(content)
+
+        except:
+            pass
 
         strings = re.findall(
             rb"[ -~]{4,}",
@@ -340,9 +354,9 @@ def run():
                     ".png",
                     ".jpg",
                     ".jpeg",
-                    ".ktx",
                     ".gif",
-                    ".webp"
+                    ".webp",
+                    ".ktx"
                 ]
             ):
 
@@ -382,3 +396,5 @@ if __name__ == "__main__":
         port=5000,
         debug=True
     )
+
+app = app
