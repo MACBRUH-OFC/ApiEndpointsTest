@@ -54,7 +54,7 @@ def home():
 
 def get_token(server):
 
-    if server_tokens[server] is not None:
+    if server_tokens[server]:
         return server_tokens[server]
 
     try:
@@ -117,8 +117,15 @@ def fix_common_errors(url):
     )
 
     url = re.sub(
-        r'/common/[A-Z0-9]+Local/',
+        r'/common/[A-Z0-9\-_]+Local/',
         '/common/Local/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    url = re.sub(
+        r'/common/-OB([0-9]+)/',
+        r'/common/OB\1/',
         url,
         flags=re.IGNORECASE
     )
@@ -131,7 +138,7 @@ def fix_common_errors(url):
     )
 
     url = re.sub(
-        r'/common/[A-Z]+OB([0-9]+)/',
+        r'/common/[A-Z\-_]+OB([0-9]+)/',
         r'/common/OB\1/',
         url,
         flags=re.IGNORECASE
@@ -139,6 +146,13 @@ def fix_common_errors(url):
 
     url = re.sub(
         r'/common/common/',
+        '/common/',
+        url,
+        flags=re.IGNORECASE
+    )
+
+    url = re.sub(
+        r'/common/+/common/',
         '/common/',
         url,
         flags=re.IGNORECASE
