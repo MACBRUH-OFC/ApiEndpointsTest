@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Free Fire API Tool</title>
+<title>FF API TOOL</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -15,24 +15,25 @@ body{
 background:#050505;
 color:white;
 font-family:Arial,sans-serif;
-padding:20px;
+padding:16px;
 }
 
-.card{
-background:#111;
+.panel{
+background:#101010;
 border:1px solid #222;
 border-radius:18px;
-padding:18px;
+padding:16px;
 }
 
 .server-btn{
 padding:12px;
 border-radius:12px;
-background:#191919;
+background:#171717;
 border:1px solid #2a2a2a;
+font-size:13px;
+font-weight:bold;
 cursor:pointer;
 transition:.2s;
-font-size:13px;
 }
 
 .server-btn:hover{
@@ -45,22 +46,62 @@ background:#ffde00;
 color:black;
 }
 
-.link{
-background:#0d0d0d;
-border:1px solid #1e1e1e;
-padding:10px;
-border-radius:12px;
-word-break:break-all;
-}
-
 input{
-background:#0c0c0c;
-border:1px solid #222;
+width:100%;
 padding:14px;
 border-radius:14px;
-width:100%;
+background:#0b0b0b;
+border:1px solid #222;
 outline:none;
 color:white;
+}
+
+.result-card{
+background:#0d0d0d;
+border:1px solid #202020;
+border-radius:16px;
+padding:14px;
+overflow:hidden;
+}
+
+.raw-box{
+background:#070707;
+border:1px solid #1d1d1d;
+padding:12px;
+border-radius:12px;
+font-size:12px;
+white-space:pre-wrap;
+word-break:break-word;
+max-height:260px;
+overflow:auto;
+color:#cfcfcf;
+}
+
+.toggle{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:14px;
+}
+
+.preview-img{
+margin-top:12px;
+border-radius:12px;
+border:1px solid #2a2a2a;
+max-height:240px;
+}
+
+.small-btn{
+padding:10px 14px;
+border-radius:12px;
+background:#1a1a1a;
+border:1px solid #2a2a2a;
+font-size:13px;
+cursor:pointer;
+}
+
+.small-btn:hover{
+background:#2a2a2a;
 }
 
 </style>
@@ -77,13 +118,13 @@ color:white;
 FF API TOOL
 </h1>
 
-<p class="text-zinc-400 mt-2">
-Link Extractor + Raw Debug
+<p class="text-zinc-500 mt-2">
+Advanced Link Extractor + Raw Viewer
 </p>
 
 </div>
 
-<div class="card space-y-5">
+<div class="panel space-y-5">
 
 <input
 id="api"
@@ -96,7 +137,7 @@ class="grid grid-cols-2 md:grid-cols-4 gap-3"
 ></div>
 
 <button
-onclick="run()"
+onclick="runAPI()"
 class="w-full bg-yellow-400 text-black font-black p-4 rounded-2xl"
 >
 RUN API
@@ -104,22 +145,22 @@ RUN API
 
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-<div class="card">
+<div class="panel">
 <div class="text-zinc-500 text-sm">LINKS</div>
 <div id="count" class="text-3xl font-bold">0</div>
 </div>
 
-<div class="card">
+<div class="panel">
 <div class="text-zinc-500 text-sm">STATUS</div>
 <div id="status" class="text-3xl font-bold">0</div>
 </div>
 
-<div class="card">
+<div class="panel">
 <div class="text-zinc-500 text-sm">RAW SIZE</div>
 <div id="rawsize" class="text-3xl font-bold">0</div>
 </div>
 
-<div class="card">
+<div class="panel">
 <div class="text-zinc-500 text-sm">STRINGS</div>
 <div id="stringscount" class="text-3xl font-bold">0</div>
 </div>
@@ -128,48 +169,72 @@ RUN API
 
 <input
 id="search"
-placeholder="Search links..."
-oninput="renderLinks()"
+placeholder="Search..."
+oninput="renderResults()"
 />
 
-<div class="flex gap-5 flex-wrap">
+<div class="flex flex-wrap gap-5">
 
-<label>
+<label class="toggle">
 <input type="checkbox" id="preview" checked>
- Preview
+Preview Images
 </label>
 
-<label>
+<label class="toggle">
+<input type="checkbox" id="linksOnly" checked>
+Links Only
+</label>
+
+<label class="toggle">
+<input type="checkbox" id="showRaw">
+Show Raw Strings
+</label>
+
+<label class="toggle">
 <input type="checkbox" id="images" checked>
- Images
+Images
 </label>
 
-<label>
-<input type="checkbox" id="html" checked>
- HTML
-</label>
-
-<label>
+<label class="toggle">
 <input type="checkbox" id="json" checked>
- JSON
+JSON
+</label>
+
+<label class="toggle">
+<input type="checkbox" id="html" checked>
+HTML
 </label>
 
 </div>
 
-<div class="flex gap-3">
+<div class="flex flex-wrap gap-3">
 
 <button
-onclick="downloadLinks()"
-class="bg-zinc-800 px-5 py-3 rounded-xl"
+onclick="copyAllLinks()"
+class="small-btn"
 >
-Download Links
+COPY ALL LINKS
 </button>
 
 <button
-onclick="downloadStrings()"
-class="bg-zinc-800 px-5 py-3 rounded-xl"
+onclick="copyRawStrings()"
+class="small-btn"
 >
-Download Strings
+COPY RAW
+</button>
+
+<button
+onclick="downloadLinks()"
+class="small-btn"
+>
+DOWNLOAD LINKS
+</button>
+
+<button
+onclick="downloadRaw()"
+class="small-btn"
+>
+DOWNLOAD RAW
 </button>
 
 </div>
@@ -178,7 +243,7 @@ Download Strings
 
 <div
 id="results"
-class="space-y-3"
+class="space-y-4"
 ></div>
 
 </div>
@@ -192,11 +257,10 @@ const regions = [
 
 let selectedServer = "ind"
 
-let currentLinks = []
+let allLinks = []
+let allStrings = []
 
-let currentStrings = []
-
-const servers = document.getElementById("servers")
+const serverBox = document.getElementById("servers")
 
 regions.forEach(region=>{
 
@@ -222,11 +286,11 @@ selectedServer = region
 
 }
 
-servers.appendChild(btn)
+serverBox.appendChild(btn)
 
 })
 
-async function run(){
+async function runAPI(){
 
 const api = document
 .getElementById("api")
@@ -234,8 +298,11 @@ const api = document
 .trim()
 
 if(!api){
+
 alert("Enter API")
+
 return
+
 }
 
 document.getElementById("results").innerHTML =
@@ -258,9 +325,9 @@ return
 
 }
 
-currentLinks = data.links || []
+allLinks = data.links || []
 
-currentStrings = data.strings || []
+allStrings = data.strings || []
 
 document.getElementById("count").innerText =
 data.count
@@ -274,7 +341,7 @@ data.raw_size
 document.getElementById("stringscount").innerText =
 data.strings_count
 
-renderLinks()
+renderResults()
 
 }catch(err){
 
@@ -285,31 +352,36 @@ document.getElementById("results").innerHTML =
 
 }
 
-function renderLinks(){
+function renderResults(){
 
-const search = document
-.getElementById("search")
+const results = document.getElementById("results")
+
+results.innerHTML = ""
+
+const search =
+document.getElementById("search")
 .value
 .toLowerCase()
 
 const preview =
 document.getElementById("preview").checked
 
+const linksOnly =
+document.getElementById("linksOnly").checked
+
+const showRaw =
+document.getElementById("showRaw").checked
+
 const images =
 document.getElementById("images").checked
-
-const html =
-document.getElementById("html").checked
 
 const json =
 document.getElementById("json").checked
 
-const results =
-document.getElementById("results")
+const html =
+document.getElementById("html").checked
 
-results.innerHTML = ""
-
-let filtered = currentLinks.filter(link=>{
+let filteredLinks = allLinks.filter(link=>{
 
 if(search && !link.toLowerCase().includes(search)){
 return false
@@ -323,17 +395,17 @@ return false
 
 }
 
-if(!html){
+if(!json){
 
-if(link.includes(".html")){
+if(link.includes(".json")){
 return false
 }
 
 }
 
-if(!json){
+if(!html){
 
-if(link.includes(".json")){
+if(link.includes(".html")){
 return false
 }
 
@@ -343,35 +415,28 @@ return true
 
 })
 
-if(filtered.length===0){
+if(linksOnly){
 
-results.innerHTML =
-"<div class='text-zinc-500'>No links found</div>"
+filteredLinks.forEach(link=>{
 
-return
+const card = document.createElement("div")
 
-}
+card.className = "result-card"
 
-filtered.forEach(link=>{
-
-const div = document.createElement("div")
-
-div.className = "link"
-
-div.innerHTML = `
+card.innerHTML = `
 
 <div class="flex justify-between gap-3">
 
 <a
 href="${link}"
 target="_blank"
-class="text-cyan-400"
+class="text-cyan-400 break-all"
 >
 ${link}
 </a>
 
 <button
-onclick="copyLink('${link}')"
+onclick="copyText('${link}')"
 class="text-yellow-400"
 >
 COPY
@@ -379,24 +444,70 @@ COPY
 
 </div>
 
-${preview ? getPreview(link) : ""}
+${preview ? previewHTML(link) : ""}
 
 `
 
-results.appendChild(div)
+results.appendChild(card)
+
+})
+
+}else{
+
+allStrings.forEach(str=>{
+
+if(search && !str.toLowerCase().includes(search)){
+return
+}
+
+const card = document.createElement("div")
+
+card.className = "result-card"
+
+card.innerHTML = `
+
+<div class="raw-box">${escapeHTML(str)}</div>
+
+`
+
+results.appendChild(card)
 
 })
 
 }
 
-function getPreview(link){
+if(showRaw){
+
+const rawCard = document.createElement("div")
+
+rawCard.className = "result-card"
+
+rawCard.innerHTML = `
+
+<div class="text-yellow-400 font-bold mb-3">
+RAW STRINGS
+</div>
+
+<div class="raw-box">
+${escapeHTML(allStrings.join("\n"))}
+</div>
+
+`
+
+results.appendChild(rawCard)
+
+}
+
+}
+
+function previewHTML(link){
 
 if(link.match(/\.(png|jpg|jpeg|webp|gif)$/i)){
 
 return `
 <img
 src="${link}"
-class="mt-3 rounded-xl border border-zinc-800 max-h-72"
+class="preview-img"
 />
 `
 
@@ -406,20 +517,32 @@ return ""
 
 }
 
-function copyLink(link){
+function copyText(text){
 
-navigator.clipboard.writeText(link)
+navigator.clipboard.writeText(text)
+
+}
+
+function copyAllLinks(){
+
+navigator.clipboard.writeText(
+allLinks.join("\n")
+)
+
+}
+
+function copyRawStrings(){
+
+navigator.clipboard.writeText(
+allStrings.join("\n")
+)
 
 }
 
 function downloadLinks(){
 
-if(currentLinks.length===0){
-return
-}
-
 const blob = new Blob(
-[currentLinks.join("\n")],
+[allLinks.join("\n")],
 {type:"text/plain"}
 )
 
@@ -433,14 +556,10 @@ a.click()
 
 }
 
-function downloadStrings(){
-
-if(currentStrings.length===0){
-return
-}
+function downloadRaw(){
 
 const blob = new Blob(
-[currentStrings.join("\n")],
+[allStrings.join("\n")],
 {type:"text/plain"}
 )
 
@@ -448,9 +567,18 @@ const a = document.createElement("a")
 
 a.href = URL.createObjectURL(blob)
 
-a.download = "strings.txt"
+a.download = "raw_strings.txt"
 
 a.click()
+
+}
+
+function escapeHTML(text){
+
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
 
 }
 
