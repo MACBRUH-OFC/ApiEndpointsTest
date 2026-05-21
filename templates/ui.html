@@ -5,69 +5,62 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>FF API Extractor</title>
+<title>Free Fire API Tool</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 
-@font-face{
-font-family:'GFF';
-src:url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
-}
-
 body{
-background:#000;
-color:#fff;
-font-family:Inter,sans-serif;
-}
-
-.gff{
-font-family:'GFF';
+background:#050505;
+color:white;
+font-family:Arial,sans-serif;
+padding:20px;
 }
 
 .card{
 background:#111;
 border:1px solid #222;
-border-radius:22px;
+border-radius:18px;
+padding:18px;
 }
 
-.server{
-padding:10px;
-border-radius:12px;
-background:#1a1a1a;
-border:1px solid #2a2a2a;
-font-size:12px;
-cursor:pointer;
-transition:.2s;
-}
-
-.server:hover{
-background:#ffde00;
-color:#000;
-}
-
-.server.active{
-background:#ffde00;
-color:#000;
-}
-
-.linkbox{
-background:#0f0f0f;
-border:1px solid #1f1f1f;
+.server-btn{
 padding:12px;
 border-radius:12px;
+background:#191919;
+border:1px solid #2a2a2a;
+cursor:pointer;
+transition:.2s;
+font-size:13px;
+}
+
+.server-btn:hover{
+background:#ffde00;
+color:black;
+}
+
+.server-btn.active{
+background:#ffde00;
+color:black;
+}
+
+.link{
+background:#0d0d0d;
+border:1px solid #1e1e1e;
+padding:10px;
+border-radius:12px;
 word-break:break-all;
-font-size:12px;
 }
 
 input{
-background:#0d0d0d;
+background:#0c0c0c;
 border:1px solid #222;
+padding:14px;
+border-radius:14px;
+width:100%;
 outline:none;
+color:white;
 }
 
 </style>
@@ -76,26 +69,25 @@ outline:none;
 
 <body>
 
-<div class="max-w-6xl mx-auto p-4">
+<div class="max-w-7xl mx-auto space-y-5">
 
-<div class="text-center py-8">
+<div class="text-center">
 
-<div class="gff text-5xl italic">
-FF API
+<h1 class="text-5xl font-black text-yellow-400">
+FF API TOOL
+</h1>
+
+<p class="text-zinc-400 mt-2">
+Link Extractor + Raw Debug
+</p>
+
 </div>
 
-<div class="gff text-yellow-400 text-5xl italic">
-EXTRACTOR
-</div>
-
-</div>
-
-<div class="card p-5 space-y-5">
+<div class="card space-y-5">
 
 <input
 id="api"
 placeholder="Enter API Name"
-class="w-full p-4 rounded-xl"
 />
 
 <div
@@ -103,34 +95,33 @@ id="servers"
 class="grid grid-cols-2 md:grid-cols-4 gap-3"
 ></div>
 
-<div class="flex gap-3">
-
 <button
 onclick="run()"
-class="flex-1 bg-yellow-400 text-black font-bold p-4 rounded-xl"
+class="w-full bg-yellow-400 text-black font-black p-4 rounded-2xl"
 >
 RUN API
 </button>
 
-<button
-onclick="downloadTxt()"
-class="bg-zinc-800 px-6 rounded-xl"
->
-<i class="fa fa-download"></i>
-</button>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-</div>
-
-<div class="grid grid-cols-2 gap-4">
-
-<div class="card p-4">
-<div class="text-zinc-400 text-sm">LINKS</div>
+<div class="card">
+<div class="text-zinc-500 text-sm">LINKS</div>
 <div id="count" class="text-3xl font-bold">0</div>
 </div>
 
-<div class="card p-4">
-<div class="text-zinc-400 text-sm">RAW SIZE</div>
-<div id="size" class="text-3xl font-bold">0</div>
+<div class="card">
+<div class="text-zinc-500 text-sm">STATUS</div>
+<div id="status" class="text-3xl font-bold">0</div>
+</div>
+
+<div class="card">
+<div class="text-zinc-500 text-sm">RAW SIZE</div>
+<div id="rawsize" class="text-3xl font-bold">0</div>
+</div>
+
+<div class="card">
+<div class="text-zinc-500 text-sm">STRINGS</div>
+<div id="stringscount" class="text-3xl font-bold">0</div>
 </div>
 
 </div>
@@ -138,10 +129,10 @@ class="bg-zinc-800 px-6 rounded-xl"
 <input
 id="search"
 placeholder="Search links..."
-class="w-full p-4 rounded-xl"
+oninput="renderLinks()"
 />
 
-<div class="flex gap-4 flex-wrap text-sm">
+<div class="flex gap-5 flex-wrap">
 
 <label>
 <input type="checkbox" id="preview" checked>
@@ -154,14 +145,34 @@ class="w-full p-4 rounded-xl"
 </label>
 
 <label>
-<input type="checkbox" id="htmls" checked>
+<input type="checkbox" id="html" checked>
  HTML
 </label>
 
 <label>
-<input type="checkbox" id="jsons" checked>
+<input type="checkbox" id="json" checked>
  JSON
 </label>
+
+</div>
+
+<div class="flex gap-3">
+
+<button
+onclick="downloadLinks()"
+class="bg-zinc-800 px-5 py-3 rounded-xl"
+>
+Download Links
+</button>
+
+<button
+onclick="downloadStrings()"
+class="bg-zinc-800 px-5 py-3 rounded-xl"
+>
+Download Strings
+</button>
+
+</div>
 
 </div>
 
@@ -172,8 +183,6 @@ class="space-y-3"
 
 </div>
 
-</div>
-
 <script>
 
 const regions = [
@@ -181,42 +190,48 @@ const regions = [
 "vn","tw","th","sg","eu","na","pk","bd"
 ]
 
-let current = "ind"
+let selectedServer = "ind"
 
-let allLinks = []
+let currentLinks = []
+
+let currentStrings = []
 
 const servers = document.getElementById("servers")
 
 regions.forEach(region=>{
 
-const div = document.createElement("div")
+const btn = document.createElement("button")
 
-div.className = "server"
+btn.className = "server-btn"
+
+btn.innerText = region.toUpperCase()
 
 if(region==="ind"){
-div.classList.add("active")
+btn.classList.add("active")
 }
 
-div.innerText = region.toUpperCase()
+btn.onclick = ()=>{
 
-div.onclick=()=>{
-
-document.querySelectorAll(".server")
+document
+.querySelectorAll(".server-btn")
 .forEach(x=>x.classList.remove("active"))
 
-div.classList.add("active")
+btn.classList.add("active")
 
-current=region
+selectedServer = region
 
 }
 
-servers.appendChild(div)
+servers.appendChild(btn)
 
 })
 
 async function run(){
 
-const api = document.getElementById("api").value.trim()
+const api = document
+.getElementById("api")
+.value
+.trim()
 
 if(!api){
 alert("Enter API")
@@ -228,13 +243,13 @@ document.getElementById("results").innerHTML =
 
 try{
 
-const res = await fetch(
-`/run_script?server=${current}&name=${api}`
+const response = await fetch(
+`/run_script?server=${selectedServer}&name=${encodeURIComponent(api)}`
 )
 
-const data = await res.json()
+const data = await response.json()
 
-if(data.error){
+if(!data.success){
 
 document.getElementById("results").innerHTML =
 `<div class="text-red-500">${data.error}</div>`
@@ -243,15 +258,23 @@ return
 
 }
 
-allLinks = data.links || []
+currentLinks = data.links || []
+
+currentStrings = data.strings || []
 
 document.getElementById("count").innerText =
-data.count || 0
+data.count
 
-document.getElementById("size").innerText =
-data.size || 0
+document.getElementById("status").innerText =
+data.status
 
-render()
+document.getElementById("rawsize").innerText =
+data.raw_size
+
+document.getElementById("stringscount").innerText =
+data.strings_count
+
+renderLinks()
 
 }catch(err){
 
@@ -262,15 +285,12 @@ document.getElementById("results").innerHTML =
 
 }
 
-function render(){
+function renderLinks(){
 
-const results = document.getElementById("results")
-
-results.innerHTML = ""
-
-const search =
-document.getElementById("search")
-.value.toLowerCase()
+const search = document
+.getElementById("search")
+.value
+.toLowerCase()
 
 const preview =
 document.getElementById("preview").checked
@@ -278,13 +298,18 @@ document.getElementById("preview").checked
 const images =
 document.getElementById("images").checked
 
-const htmls =
-document.getElementById("htmls").checked
+const html =
+document.getElementById("html").checked
 
-const jsons =
-document.getElementById("jsons").checked
+const json =
+document.getElementById("json").checked
 
-let filtered = allLinks.filter(link=>{
+const results =
+document.getElementById("results")
+
+results.innerHTML = ""
+
+let filtered = currentLinks.filter(link=>{
 
 if(search && !link.toLowerCase().includes(search)){
 return false
@@ -292,18 +317,26 @@ return false
 
 if(!images){
 
-if(link.match(/\.(png|jpg|jpeg|webp|gif|ktx)/i)){
+if(link.match(/\.(png|jpg|jpeg|webp|gif|ktx)$/i)){
 return false
 }
 
 }
 
-if(!htmls && link.includes(".html")){
+if(!html){
+
+if(link.includes(".html")){
 return false
 }
 
-if(!jsons && link.includes(".json")){
+}
+
+if(!json){
+
+if(link.includes(".json")){
 return false
+}
+
 }
 
 return true
@@ -321,11 +354,12 @@ return
 
 filtered.forEach(link=>{
 
-const box = document.createElement("div")
+const div = document.createElement("div")
 
-box.className = "linkbox"
+div.className = "link"
 
-box.innerHTML = `
+div.innerHTML = `
+
 <div class="flex justify-between gap-3">
 
 <a
@@ -345,23 +379,24 @@ COPY
 
 </div>
 
-${preview ? previewHTML(link) : ""}
+${preview ? getPreview(link) : ""}
+
 `
 
-results.appendChild(box)
+results.appendChild(div)
 
 })
 
 }
 
-function previewHTML(link){
+function getPreview(link){
 
 if(link.match(/\.(png|jpg|jpeg|webp|gif)$/i)){
 
 return `
 <img
 src="${link}"
-class="mt-3 rounded-xl max-h-48 border border-zinc-800"
+class="mt-3 rounded-xl border border-zinc-800 max-h-72"
 />
 `
 
@@ -377,14 +412,14 @@ navigator.clipboard.writeText(link)
 
 }
 
-function downloadTxt(){
+function downloadLinks(){
 
-if(allLinks.length===0){
+if(currentLinks.length===0){
 return
 }
 
 const blob = new Blob(
-[allLinks.join("\\n")],
+[currentLinks.join("\n")],
 {type:"text/plain"}
 )
 
@@ -398,13 +433,26 @@ a.click()
 
 }
 
-document
-.getElementById("search")
-.addEventListener("input",render)
+function downloadStrings(){
 
-document
-.querySelectorAll("input[type='checkbox']")
-.forEach(x=>x.addEventListener("change",render))
+if(currentStrings.length===0){
+return
+}
+
+const blob = new Blob(
+[currentStrings.join("\n")],
+{type:"text/plain"}
+)
+
+const a = document.createElement("a")
+
+a.href = URL.createObjectURL(blob)
+
+a.download = "strings.txt"
+
+a.click()
+
+}
 
 </script>
 
