@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
@@ -7,10 +7,12 @@
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0"
+content="width=device-width, initial-scale=1"
 />
 
-<title>FREE FIRE API TOOL</title>
+<title>
+FF API LINK EXTRACTOR
+</title>
 
 <style>
 
@@ -22,187 +24,102 @@ content="width=device-width, initial-scale=1.0"
 
 body{
 
-    background:#090909;
-    color:#ffffff;
+    background:#050505;
+
+    color:white;
+
     font-family:
     Arial,
     sans-serif;
-
-    min-height:100vh;
 
     padding:20px;
 }
 
 .container{
 
-    width:100%;
-    max-width:1450px;
+    max-width:1500px;
 
     margin:auto;
 }
 
-.title{
+.header{
 
     text-align:center;
 
     margin-bottom:25px;
 }
 
-.title h1{
+.header h1{
 
-    font-size:42px;
+    font-size:38px;
+
     font-weight:900;
-    letter-spacing:3px;
 
-    color:#ffffff;
+    letter-spacing:2px;
 }
 
-.title p{
+.header p{
+
+    color:#888;
 
     margin-top:10px;
-
-    color:#999;
 }
 
 .panel{
 
-    background:#141414;
+    background:#101010;
 
     border:
-    1px solid #262626;
+    1px solid #222;
 
-    border-radius:18px;
+    border-radius:20px;
 
     padding:20px;
 }
 
-.top-grid{
+.input-grid{
 
     display:grid;
 
     grid-template-columns:
-    1fr 180px;
+    140px
+    1fr
+    120px;
 
-    gap:15px;
+    gap:12px;
 
-    margin-bottom:20px;
+    margin-bottom:18px;
 }
 
 .input{
 
-    width:100%;
-
-    background:#1f1f1f;
+    background:#181818;
 
     border:
-    1px solid #333;
-
-    border-radius:12px;
-
-    padding:16px;
+    1px solid #2a2a2a;
 
     color:white;
 
-    font-size:15px;
+    padding:15px;
+
+    border-radius:12px;
 
     outline:none;
+
+    font-size:14px;
 }
 
 .input:focus{
 
-    border-color:#4da3ff;
-}
-
-.server-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(150px,1fr));
-
-    gap:12px;
-
-    margin-bottom:20px;
-}
-
-.server-btn{
-
-    border:none;
-
-    background:
-    linear-gradient(
-        135deg,
-        #1e1e1e,
-        #2d2d2d
-    );
-
-    color:white;
-
-    padding:16px;
-
-    border-radius:14px;
-
-    cursor:pointer;
-
-    font-weight:700;
-
-    transition:.2s;
-
-    font-size:14px;
-}
-
-.server-btn:hover{
-
-    transform:translateY(-2px);
-
-    border:
-    1px solid #4da3ff;
-}
-
-.server-btn.active{
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #00a2ff
-    );
-}
-
-.action-bar{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    margin-bottom:20px;
-}
-
-.action-btn{
-
-    flex:1;
-
-    min-width:180px;
-
-    border:none;
-
-    border-radius:12px;
-
-    padding:15px;
-
-    cursor:pointer;
-
-    font-weight:700;
-
-    font-size:14px;
-
-    transition:.2s;
+    border-color:#00a2ff;
 }
 
 .run-btn{
 
+    width:100%;
+
+    border:none;
+
     background:
     linear-gradient(
         135deg,
@@ -211,104 +128,96 @@ body{
     );
 
     color:white;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:800;
+
+    margin-bottom:18px;
 }
 
-.copy-btn{
+.run-btn:hover{
 
-    background:
-    linear-gradient(
-        135deg,
-        #18a558,
-        #21d07a
-    );
-
-    color:white;
-}
-
-.download-btn{
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff9800,
-        #ffbc42
-    );
-
-    color:white;
-}
-
-.clear-btn{
-
-    background:
-    linear-gradient(
-        135deg,
-        #ff3b3b,
-        #ff6666
-    );
-
-    color:white;
-}
-
-.action-btn:hover{
-
-    transform:translateY(-2px);
+    opacity:.9;
 }
 
 .stats{
 
-    display:flex;
+    display:grid;
 
-    gap:15px;
+    grid-template-columns:
+    repeat(auto-fit,minmax(180px,1fr));
 
-    margin-bottom:15px;
+    gap:12px;
 
-    flex-wrap:wrap;
+    margin-bottom:18px;
 }
 
-.stat-box{
+.stat{
 
-    background:#1b1b1b;
+    background:#161616;
 
     border:
-    1px solid #2c2c2c;
+    1px solid #272727;
 
-    padding:14px;
+    padding:15px;
 
-    border-radius:12px;
-
-    flex:1;
-
-    min-width:150px;
+    border-radius:14px;
 }
 
 .stat-title{
 
-    color:#999;
+    color:#888;
 
-    font-size:13px;
+    font-size:12px;
 
-    margin-bottom:6px;
+    margin-bottom:8px;
 }
 
 .stat-value{
 
     font-size:22px;
 
-    font-weight:800;
+    font-weight:900;
+}
+
+.search{
+
+    margin-bottom:15px;
+}
+
+.section{
+
+    background:#0a0a0a;
+
+    border:
+    1px solid #1c1c1c;
+
+    border-radius:16px;
+
+    padding:15px;
+
+    margin-bottom:20px;
+}
+
+.section-title{
+
+    font-size:18px;
+
+    font-weight:900;
+
+    margin-bottom:15px;
+
+    color:#00a2ff;
 }
 
 .output{
 
-    background:#050505;
-
-    border:
-    1px solid #1f1f1f;
-
-    border-radius:16px;
-
-    padding:18px;
-
-    height:600px;
+    max-height:500px;
 
     overflow:auto;
 
@@ -320,9 +229,77 @@ body{
     Consolas,
     monospace;
 
-    line-height:1.6;
+    font-size:13px;
 
-    font-size:14px;
+    line-height:1.6;
+}
+
+.link-item{
+
+    background:#141414;
+
+    border:
+    1px solid #252525;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    margin-bottom:10px;
+}
+
+.link-item a{
+
+    color:#55b6ff;
+
+    text-decoration:none;
+}
+
+.link-item a:hover{
+
+    text-decoration:underline;
+}
+
+.actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:15px;
+
+    flex-wrap:wrap;
+}
+
+.action{
+
+    flex:1;
+
+    min-width:150px;
+
+    border:none;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    color:white;
+}
+
+.copy{
+    background:#18a558;
+}
+
+.download{
+    background:#ff9800;
+}
+
+.clear{
+    background:#ff3b3b;
 }
 
 .footer{
@@ -332,26 +309,19 @@ body{
     text-align:center;
 
     color:#666;
-
-    font-size:13px;
 }
 
 @media(max-width:700px){
 
-    .top-grid{
+    .input-grid{
 
         grid-template-columns:
         1fr;
     }
 
-    .title h1{
+    .header h1{
 
         font-size:28px;
-    }
-
-    .output{
-
-        height:450px;
     }
 }
 
@@ -363,26 +333,48 @@ body{
 
 <div class="container">
 
-<div class="title">
+<div class="header">
 
 <h1>
-FREE FIRE API TOOL
+FF API LINK EXTRACTOR
 </h1>
 
 <p>
-Advanced API Response Extractor
+Auto Detect CDN Assets & Links
 </p>
 
 </div>
 
 <div class="panel">
 
-<div class="top-grid">
+<div class="input-grid">
+
+<select
+id="server"
+class="input">
+
+<option value="ind">
+IND
+</option>
+
+<option value="br">
+BR
+</option>
+
+<option value="na">
+NA
+</option>
+
+<option value="sg">
+SG
+</option>
+
+</select>
 
 <input
-id="apiName"
+id="endpoint"
 class="input"
-placeholder="Enter API Name"
+placeholder="Enter Endpoint"
 />
 
 <input
@@ -393,75 +385,25 @@ value="OB53"
 
 </div>
 
-<div
-class="server-grid"
-id="servers">
-
-</div>
-
-<div class="action-bar">
-
 <button
-class="action-btn run-btn"
-onclick="runSelected()">
+class="run-btn"
+onclick="runApi()">
 
 RUN API
 
 </button>
 
-<button
-class="action-btn copy-btn"
-onclick="copyResults()">
-
-COPY RESULTS
-
-</button>
-
-<button
-class="action-btn download-btn"
-onclick="downloadResults()">
-
-DOWNLOAD TXT
-
-</button>
-
-<button
-class="action-btn clear-btn"
-onclick="clearOutput()">
-
-CLEAR
-
-</button>
-
-</div>
-
 <div class="stats">
 
-<div class="stat-box">
+<div class="stat">
 
 <div class="stat-title">
-SERVER
+LINKS FOUND
 </div>
 
 <div
 class="stat-value"
-id="serverStat">
-
-NONE
-
-</div>
-
-</div>
-
-<div class="stat-box">
-
-<div class="stat-title">
-STRINGS
-</div>
-
-<div
-class="stat-value"
-id="countStat">
+id="linkCount">
 
 0
 
@@ -469,7 +411,23 @@ id="countStat">
 
 </div>
 
-<div class="stat-box">
+<div class="stat">
+
+<div class="stat-title">
+STRINGS FOUND
+</div>
+
+<div
+class="stat-value"
+id="stringCount">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat">
 
 <div class="stat-title">
 STATUS
@@ -477,27 +435,90 @@ STATUS
 
 <div
 class="stat-value"
-id="statusStat">
+id="status">
 
 READY
 
 </div>
 
 </div>
+
+</div>
+
+<input
+id="search"
+class="input search"
+placeholder="Find links or strings..."
+oninput="filterResults()"
+/>
+
+<div class="section">
+
+<div class="section-title">
+
+EXTRACTED LINKS
 
 </div>
 
 <div
-class="output"
-id="output">
+id="links"
+class="output">
 
-READY
+No Data
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+
+RAW RESPONSE
+
+</div>
+
+<div
+id="raw"
+class="output">
+
+No Data
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="action copy"
+onclick="copyLinks()">
+
+COPY LINKS
+
+</button>
+
+<button
+class="action download"
+onclick="downloadLinks()">
+
+DOWNLOAD
+
+</button>
+
+<button
+class="action clear"
+onclick="clearAll()">
+
+CLEAR
+
+</button>
 
 </div>
 
 <div class="footer">
 
-Built For Testing & Analysis
+Powered By Flask + Vercel
 
 </div>
 
@@ -507,75 +528,19 @@ Built For Testing & Analysis
 
 <script>
 
-const servers = [
+let currentLinks = []
+let currentStrings = []
 
-["ind","INDIA"],
-["mea","MEA"],
-["id","INDONESIA"],
-["cis","CIS"],
-["br","BRAZIL"],
-["latam","LATAM"],
-["vn","VIETNAM"],
-["tw","TAIWAN"],
-["th","THAILAND"],
-["sg","SINGAPORE"],
-["eu","EUROPE"],
-["na","NORTH AMERICA"],
-["pk","PAKISTAN"],
-["bd","BANGLADESH"]
+async function runApi(){
 
-]
-
-let selectedServer = null
-let lastResults = []
-
-const serverContainer =
-document.getElementById("servers")
-
-servers.forEach(server => {
-
-    const btn =
-    document.createElement("button")
-
-    btn.className =
-    "server-btn"
-
-    btn.innerText =
-    server[1]
-
-    btn.onclick = () => {
-
-        document
-        .querySelectorAll(".server-btn")
-        .forEach(
-            b => b.classList.remove("active")
-        )
-
-        btn.classList.add("active")
-
-        selectedServer = server[0]
-
-        document
-        .getElementById("serverStat")
-        .innerText =
-        server[1]
-    }
-
-    serverContainer.appendChild(btn)
-
-})
-
-async function runSelected(){
-
-    if(!selectedServer){
-
-        alert("Select Server")
-        return
-    }
-
-    const apiName =
+    const server =
     document
-    .getElementById("apiName")
+    .getElementById("server")
+    .value
+
+    const endpoint =
+    document
+    .getElementById("endpoint")
     .value
     .trim()
 
@@ -585,31 +550,24 @@ async function runSelected(){
     .value
     .trim()
 
-    if(!apiName){
+    if(!endpoint){
 
-        alert("Enter API Name")
+        alert("Enter Endpoint")
         return
     }
 
-    const output =
     document
-    .getElementById("output")
-
-    output.innerText =
-    "Loading..."
-
-    document
-    .getElementById("statusStat")
+    .getElementById("status")
     .innerText =
-    "RUNNING"
+    "LOADING"
 
     try{
 
         const response =
         await fetch(
 
-            `/run?server=${selectedServer}`
-            + `&name=${encodeURIComponent(apiName)}`
+            `/run?server=${server}`
+            + `&endpoint=${encodeURIComponent(endpoint)}`
             + `&version=${encodeURIComponent(version)}`
 
         )
@@ -619,71 +577,132 @@ async function runSelected(){
 
         if(data.error){
 
-            output.innerText =
-            data.error
-
             document
-            .getElementById("statusStat")
+            .getElementById("status")
             .innerText =
             "ERROR"
+
+            alert(data.error)
 
             return
         }
 
-        lastResults =
+        currentLinks =
+        data.links || []
+
+        currentStrings =
         data.strings || []
 
-        output.innerText =
-        lastResults.join("\n")
-
         document
-        .getElementById("countStat")
+        .getElementById("linkCount")
         .innerText =
-        data.count || 0
+        currentLinks.length
 
         document
-        .getElementById("statusStat")
+        .getElementById("stringCount")
+        .innerText =
+        currentStrings.length
+
+        document
+        .getElementById("status")
         .innerText =
         "SUCCESS"
 
+        renderLinks(
+            currentLinks
+        )
+
+        renderRaw(
+            currentStrings
+        )
+
     }catch(err){
 
-        output.innerText =
-        "Request Failed"
-
         document
-        .getElementById("statusStat")
+        .getElementById("status")
         .innerText =
         "FAILED"
+
+        alert("Request Failed")
     }
 }
 
-function copyResults(){
+function renderLinks(links){
 
-    if(!lastResults.length){
+    const container =
+    document.getElementById("links")
 
-        alert("No Results")
+    if(!links.length){
+
+        container.innerHTML =
+        "No Links Found"
+
         return
     }
 
+    container.innerHTML =
+    links.map(link => `
+
+        <div class="link-item">
+
+        <a
+        href="${link}"
+        target="_blank">
+
+        ${link}
+
+        </a>
+
+        </div>
+
+    `).join("")
+}
+
+function renderRaw(strings){
+
+    document
+    .getElementById("raw")
+    .innerText =
+    strings.join("\n")
+}
+
+function filterResults(){
+
+    const q =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase()
+
+    const filteredLinks =
+    currentLinks.filter(
+        x => x.toLowerCase().includes(q)
+    )
+
+    const filteredStrings =
+    currentStrings.filter(
+        x => x.toLowerCase().includes(q)
+    )
+
+    renderLinks(filteredLinks)
+
+    renderRaw(filteredStrings)
+}
+
+function copyLinks(){
+
     navigator.clipboard.writeText(
-        lastResults.join("\n")
+        currentLinks.join("\n")
     )
 
     alert("Copied")
 }
 
-function downloadResults(){
-
-    if(!lastResults.length){
-
-        alert("No Results")
-        return
-    }
+function downloadLinks(){
 
     const blob =
     new Blob(
-        [lastResults.join("\n")],
+        [currentLinks.join("\n")],
         {
             type:"text/plain"
         }
@@ -696,29 +715,40 @@ function downloadResults(){
     URL.createObjectURL(blob)
 
     a.download =
-    "results.txt"
+    "links.txt"
 
     a.click()
 }
 
-function clearOutput(){
+function clearAll(){
 
-    lastResults = []
+    currentLinks = []
+    currentStrings = []
 
     document
-    .getElementById("output")
+    .getElementById("links")
+    .innerHTML =
+    "No Data"
+
+    document
+    .getElementById("raw")
     .innerText =
-    "CLEARED"
+    "No Data"
 
     document
-    .getElementById("countStat")
+    .getElementById("status")
+    .innerText =
+    "READY"
+
+    document
+    .getElementById("linkCount")
     .innerText =
     "0"
 
     document
-    .getElementById("statusStat")
+    .getElementById("stringCount")
     .innerText =
-    "READY"
+    "0"
 }
 
 </script>
