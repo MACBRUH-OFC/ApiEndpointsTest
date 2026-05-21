@@ -1,111 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>FF API TOOL</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Free Fire API Tool</title>
 
 <style>
 
 body{
-background:#050505;
-color:white;
+background:#f5f5f5;
 font-family:Arial,sans-serif;
-padding:16px;
-}
-
-.main{
-max-width:1400px;
+padding:15px;
+max-width:1000px;
 margin:auto;
 }
 
-.card{
-background:#101010;
-border:1px solid #202020;
-border-radius:18px;
-padding:16px;
+h2{
+text-align:center;
+margin-bottom:15px;
 }
 
-.input{
+input{
+padding:10px;
 width:100%;
-padding:16px;
-background:#090909;
-border:1px solid #262626;
-border-radius:16px;
-color:white;
-outline:none;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+margin-bottom:12px;
+box-sizing:border-box;
 }
 
-.server{
-padding:12px;
-border-radius:14px;
-background:#171717;
-border:1px solid #292929;
-font-size:13px;
-font-weight:bold;
+.btn-container{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+}
+
+.server-btn{
+flex:1 1 120px;
+padding:10px;
+border:none;
+border-radius:6px;
+background:#007BFF;
+color:white;
 cursor:pointer;
 transition:.2s;
 }
 
-.server:hover{
-background:#ffde00;
-color:black;
+.server-btn:hover{
+background:#0056b3;
 }
 
-.server.active{
-background:#ffde00;
-color:black;
+.server-btn.active{
+background:#28a745;
 }
 
-.run{
-background:#ffde00;
-color:black;
-padding:16px;
-border-radius:16px;
-font-weight:900;
-width:100%;
-font-size:18px;
-}
-
-.result{
-background:#0c0c0c;
-border:1px solid #1f1f1f;
-padding:14px;
-border-radius:16px;
-overflow:hidden;
-}
-
-.preview{
-margin-top:12px;
-border-radius:14px;
-max-height:220px;
-border:1px solid #2a2a2a;
-}
-
-.raw{
+pre{
+background:#1e1e1e;
+color:#eaeaea;
+padding:12px;
+border-radius:6px;
+height:450px;
+overflow-y:auto;
+font-size:14px;
 white-space:pre-wrap;
 word-break:break-word;
-font-size:12px;
-color:#d2d2d2;
-max-height:300px;
-overflow:auto;
 }
 
-.small{
-padding:10px 14px;
-background:#171717;
-border-radius:12px;
-font-size:13px;
+.download-btn{
+padding:12px;
+background:#ff9800;
+border:none;
+color:white;
+border-radius:6px;
 cursor:pointer;
+font-size:15px;
+width:100%;
+margin-top:12px;
 }
 
-.small:hover{
-background:#262626;
+.copy-btn{
+padding:12px;
+background:#28a745;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+width:100%;
+margin-top:12px;
+}
+
+.top-buttons{
+display:flex;
+gap:10px;
+}
+
+.status{
+margin-bottom:10px;
+font-weight:bold;
 }
 
 </style>
@@ -114,444 +111,170 @@ background:#262626;
 
 <body>
 
-<div class="main space-y-5">
+<h2>Free Fire API Tool</h2>
 
-<div class="text-center">
+<input
+type="text"
+id="name"
+placeholder="Enter API Name"
+>
 
-<h1 class="text-5xl font-black text-yellow-400">
-FF API TOOL
-</h1>
+<div class="btn-container">
 
-<p class="text-zinc-500 mt-2">
-Advanced Free Fire Link Extractor
-</p>
+<button class="server-btn active" id="ind" onclick="runServer('ind')">Indian</button>
+<button class="server-btn" id="mea" onclick="runServer('mea')">MEA</button>
+<button class="server-btn" id="id" onclick="runServer('id')">Indonesia</button>
+<button class="server-btn" id="cis" onclick="runServer('cis')">CIS</button>
+<button class="server-btn" id="br" onclick="runServer('br')">Brazil</button>
+<button class="server-btn" id="latam" onclick="runServer('latam')">Latam</button>
+<button class="server-btn" id="vn" onclick="runServer('vn')">Vietnam</button>
+<button class="server-btn" id="tw" onclick="runServer('tw')">Taiwan</button>
+<button class="server-btn" id="th" onclick="runServer('th')">Thailand</button>
+<button class="server-btn" id="sg" onclick="runServer('sg')">Singapore</button>
+<button class="server-btn" id="eu" onclick="runServer('eu')">Europe</button>
+<button class="server-btn" id="na" onclick="runServer('na')">North America</button>
+<button class="server-btn" id="pk" onclick="runServer('pk')">Pakistan</button>
+<button class="server-btn" id="bd" onclick="runServer('bd')">Bangladesh</button>
 
 </div>
 
-<div class="card space-y-5">
+<div class="status" id="status">
+Ready
+</div>
 
-<input
-id="api"
-class="input"
-placeholder="Enter API Name"
-/>
+<pre id="output">Results will appear here...</pre>
 
-<div
-id="servers"
-class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3"
-></div>
+<div class="top-buttons">
 
 <button
-class="run"
-onclick="runAPI()"
+class="copy-btn"
+onclick="copyResults()"
 >
-RUN API
+Copy All
 </button>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-
-<div class="card">
-<div class="text-zinc-500 text-sm">LINKS</div>
-<div id="count" class="text-3xl font-black">0</div>
-</div>
-
-<div class="card">
-<div class="text-zinc-500 text-sm">STATUS</div>
-<div id="status" class="text-3xl font-black">0</div>
-</div>
-
-<div class="card">
-<div class="text-zinc-500 text-sm">RAW SIZE</div>
-<div id="size" class="text-3xl font-black">0</div>
-</div>
-
-<div class="card">
-<div class="text-zinc-500 text-sm">RAW STRINGS</div>
-<div id="strings" class="text-3xl font-black">0</div>
-</div>
-
-</div>
-
-<input
-id="search"
-class="input"
-placeholder="Search Links..."
-oninput="renderResults()"
-/>
-
-<div class="flex flex-wrap gap-4">
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="preview" checked>
-Preview
-</label>
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="rawmode">
-Raw Mode
-</label>
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="images" checked>
-Images
-</label>
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="videos" checked>
-Videos
-</label>
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="htmls" checked>
-HTML
-</label>
-
-<label class="flex items-center gap-2">
-<input type="checkbox" id="jsons" checked>
-JSON
-</label>
-
-</div>
-
-<div class="flex flex-wrap gap-3">
-
-<button class="small" onclick="copyAll()">
-COPY ALL
+<button
+class="download-btn"
+onclick="downloadResults()"
+>
+Download Results
 </button>
-
-<button class="small" onclick="downloadLinks()">
-DOWNLOAD LINKS
-</button>
-
-<button class="small" onclick="downloadRaw()">
-DOWNLOAD RAW
-</button>
-
-<button class="small" onclick="openAll()">
-OPEN ALL
-</button>
-
-</div>
-
-</div>
-
-<div
-id="results"
-class="space-y-4"
-></div>
 
 </div>
 
 <script>
 
-const SERVERS = [
-"ind","mea","id","cis","br","latam",
-"vn","tw","th","sg","eu","na","pk","bd"
-]
+let selectedServer = "ind"
 
-let currentServer = "ind"
+let lastResults = []
 
-let ALL_LINKS = []
-let RAW_STRINGS = []
+function runServer(server){
 
-const serverBox = document.getElementById("servers")
+selectedServer = server
 
-SERVERS.forEach(server=>{
+document
+.querySelectorAll('.server-btn')
+.forEach(btn => btn.classList.remove('active'))
 
-const btn = document.createElement("button")
+document
+.getElementById(server)
+.classList.add('active')
 
-btn.className = "server"
+let name =
+document
+.getElementById('name')
+.value
+.trim()
 
-btn.innerText = server.toUpperCase()
-
-if(server==="ind"){
-btn.classList.add("active")
-}
-
-btn.onclick=()=>{
-
-document.querySelectorAll(".server")
-.forEach(x=>x.classList.remove("active"))
-
-btn.classList.add("active")
-
-currentServer = server
-
-}
-
-serverBox.appendChild(btn)
-
-})
-
-async function runAPI(){
-
-const api = document.getElementById("api").value.trim()
-
-if(!api){
-alert("Enter API Name")
+if(!name){
+alert("Enter API name")
 return
 }
 
-document.getElementById("results").innerHTML =
-"<div class='text-yellow-400'>Loading...</div>"
+document.getElementById('status').textContent =
+"Loading..."
 
-try{
+document.getElementById('output').textContent =
+"Loading results..."
 
-const response = await fetch(
-`/run_script?server=${currentServer}&name=${encodeURIComponent(api)}`
+lastResults = []
+
+fetch(`/run_script?server=${server}&name=${encodeURIComponent(name)}`)
+
+.then(res => res.json())
+
+.then(data => {
+
+if(data.error){
+
+document.getElementById('status').textContent =
+"Error"
+
+document.getElementById('output').textContent =
+"Error: " + data.error
+
+}else{
+
+lastResults = data.strings || []
+
+document.getElementById('status').textContent =
+"Loaded " + lastResults.length + " strings"
+
+document.getElementById('output').textContent =
+lastResults.join("\\n")
+
+}
+
+})
+
+.catch(err => {
+
+document.getElementById('status').textContent =
+"Request Failed"
+
+document.getElementById('output').textContent =
+err
+
+})
+
+}
+
+function downloadResults(){
+
+if(!lastResults.length){
+alert("No results")
+return
+}
+
+let blob = new Blob(
+[lastResults.join("\\n")],
+{
+type:"text/plain"
+}
 )
 
-const data = await response.json()
+let link = document.createElement("a")
 
-if(!data.success){
+link.href = URL.createObjectURL(blob)
 
-document.getElementById("results").innerHTML =
-`<div class='text-red-500'>${data.error}</div>`
+link.download = "results.txt"
 
-return
-
-}
-
-ALL_LINKS = data.links || []
-RAW_STRINGS = data.strings || []
-
-document.getElementById("count").innerText =
-ALL_LINKS.length
-
-document.getElementById("status").innerText =
-data.status
-
-document.getElementById("size").innerText =
-data.raw_size || 0
-
-document.getElementById("strings").innerText =
-RAW_STRINGS.length
-
-renderResults()
-
-}catch(err){
-
-document.getElementById("results").innerHTML =
-`<div class='text-red-500'>${err}</div>`
+link.click()
 
 }
 
-}
+function copyResults(){
 
-function renderResults(){
-
-const results = document.getElementById("results")
-
-results.innerHTML = ""
-
-const search =
-document.getElementById("search")
-.value
-.toLowerCase()
-
-const preview =
-document.getElementById("preview").checked
-
-const rawMode =
-document.getElementById("rawmode").checked
-
-const images =
-document.getElementById("images").checked
-
-const videos =
-document.getElementById("videos").checked
-
-const htmls =
-document.getElementById("htmls").checked
-
-const jsons =
-document.getElementById("jsons").checked
-
-if(rawMode){
-
-RAW_STRINGS.forEach(str=>{
-
-if(search && !str.toLowerCase().includes(search)){
+if(!lastResults.length){
+alert("No results")
 return
 }
-
-const div = document.createElement("div")
-
-div.className = "result"
-
-div.innerHTML = `
-<div class="raw">${escapeHTML(str)}</div>
-`
-
-results.appendChild(div)
-
-})
-
-return
-
-}
-
-ALL_LINKS.forEach(link=>{
-
-if(search && !link.toLowerCase().includes(search)){
-return
-}
-
-if(!images){
-
-if(link.match(/\\.(png|jpg|jpeg|webp|gif|ktx|ktxp)$/i)){
-return
-}
-
-}
-
-if(!videos){
-
-if(link.match(/\\.(mp4|webm)$/i)){
-return
-}
-
-}
-
-if(!htmls){
-
-if(link.includes(".html")){
-return
-}
-
-}
-
-if(!jsons){
-
-if(link.includes(".json")){
-return
-}
-
-}
-
-const div = document.createElement("div")
-
-div.className = "result"
-
-div.innerHTML = `
-
-<div class="flex justify-between gap-3">
-
-<a
-href="${link}"
-target="_blank"
-class="text-cyan-400 break-all"
->
-${link}
-</a>
-
-<button
-onclick="copyText('${link}')"
-class="text-yellow-400"
->
-COPY
-</button>
-
-</div>
-
-${preview ? getPreview(link) : ""}
-
-`
-
-results.appendChild(div)
-
-})
-
-}
-
-function getPreview(link){
-
-if(link.match(/\\.(png|jpg|jpeg|webp|gif)$/i)){
-
-return `
-<img src="${link}" class="preview">
-`
-
-}
-
-if(link.match(/\\.(mp4|webm)$/i)){
-
-return `
-<video
-src="${link}"
-controls
-class="preview"
-></video>
-`
-
-}
-
-return ""
-
-}
-
-function copyText(text){
-
-navigator.clipboard.writeText(text)
-
-}
-
-function copyAll(){
 
 navigator.clipboard.writeText(
-ALL_LINKS.join("\\n")
+lastResults.join("\\n")
 )
 
-}
-
-function downloadLinks(){
-
-const blob = new Blob(
-[ALL_LINKS.join("\\n")],
-{type:"text/plain"}
-)
-
-const a = document.createElement("a")
-
-a.href = URL.createObjectURL(blob)
-
-a.download = "links.txt"
-
-a.click()
-
-}
-
-function downloadRaw(){
-
-const blob = new Blob(
-[RAW_STRINGS.join("\\n")],
-{type:"text/plain"}
-)
-
-const a = document.createElement("a")
-
-a.href = URL.createObjectURL(blob)
-
-a.download = "raw.txt"
-
-a.click()
-
-}
-
-function openAll(){
-
-ALL_LINKS.slice(0,20).forEach(link=>{
-window.open(link,"_blank")
-})
-
-}
-
-function escapeHTML(text){
-
-return text
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
+alert("Copied")
 
 }
 
