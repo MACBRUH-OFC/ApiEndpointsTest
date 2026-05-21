@@ -3,7 +3,6 @@ import requests
 import gzip
 import binascii
 import re
-from urllib.parse import urlparse
 
 app = Flask(__name__)
 
@@ -54,42 +53,79 @@ def home():
 
 
 def get_token(server):
-    if server_tokens[server]:
+
+    if server_tokens[server] is not None:
         return server_tokens[server]
 
     try:
+
         uid = UID_PASSWORDS[server]["uid"]
         password = UID_PASSWORDS[server]["password"]
 
         token_url = f"{TOKEN_BASE_URL}?uid={uid}&password={password}"
 
-        response = requests.get(token_url, timeout=20)
+        print(f"Fetching token for {server}")
+
+        response = requests.get(
+            token_url,
+            timeout=15,
+            headers={
+                "User-Agent": "Mozilla/5.0",
+                "Accept": "*/*"
+            }
+        )
 
         if response.status_code != 200:
+            print(f"Token HTTP Error: {response.status_code}")
             return None
 
-        text = response.text
+        try:
+            token_res = response.json()
+        except Exception:
+            print("Invalid JSON response")
+            return None
 
-        match = re.search(r'"token"\s*:\s*"([^"]+)"', text)
+        response_text = str(token_res.get("response", ""))
+
+        print(response_text[:500])
+
+        match = re.search(
+            r'token\s*:\s*"([^"]+)"',
+            response_text,
+            re.DOTALL
+        )
 
         if not match:
-            match = re.search(r'token\s*:\s*"([^"]+)"', text)
 
-        if not match:
-            match = re.search(r'Bearer\s+([A-Za-z0-9\-\._]+)', text)
+            match = re.search(
+                r'"token"\s*:\s*"([^"]+)"',
+                response_text,
+                re.DOTALL
+            )
 
         if match:
-            token = match.group(1)
+
+            token = match.group(1).strip()
+
             server_tokens[server] = token
+
+            print(f"Token loaded for {server}")
+
             return token
 
-    except Exception as e:
-        print(e)
+        print("Token regex failed")
 
-    return None
+        return None
+
+    except Exception as e:
+
+        print(f"Token Error: {e}")
+
+        return None
 
 
 def clean_url(url):
+
     url = url.strip()
 
     url = re.sub(r'[\x00-\x1f]+', '', url)
@@ -111,14 +147,18 @@ def clean_url(url):
     )
 
     if ext_match:
+
         ext = ext_match.group(0)
+
         pos = url.lower().find(ext.lower())
+
         url = url[:pos + len(ext)]
 
     return url
 
 
 def extract_urls(text):
+
     urls = set()
 
     text = text.replace(".ff_extend", ".jpg")
@@ -131,6 +171,7 @@ def extract_urls(text):
     )
 
     for url in full_urls:
+
         cleaned = clean_url(url)
 
         if cleaned.startswith("http"):
@@ -143,11 +184,15 @@ def extract_urls(text):
     )
 
     for item in partials:
+
         path = item[0]
 
         if not path.startswith("http"):
+
             fixed = BASE_LINK + path.lstrip("/")
+
             fixed = clean_url(fixed)
+
             urls.add(fixed)
 
     return sorted(list(urls))
@@ -155,6 +200,7 @@ def extract_urls(text):
 
 @app.route("/run_script")
 def run_script():
+
     server = request.args.get("server")
     api_name = request.args.get("name")
 
@@ -187,6 +233,7 @@ def run_script():
     url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
 
     try:
+
         response = requests.post(
             url,
             headers=headers,
@@ -195,6 +242,7 @@ def run_script():
         )
 
         if response.status_code == 401:
+
             server_tokens[server] = None
 
             token = get_token(server)
@@ -216,8 +264,10 @@ def run_script():
         content = response.content
 
         try:
+
             if content[:2] == b'\x1f\x8b':
                 content = gzip.decompress(content)
+
         except:
             pass
 
@@ -242,10 +292,11 @@ def run_script():
         })
 
     except Exception as e:
+
         return jsonify({
             "error": str(e)
         })
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
