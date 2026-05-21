@@ -1,9 +1,8 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import requests
 import gzip
 import binascii
 import re
-import json
 
 app = Flask(__name__)
 
@@ -43,41 +42,12 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-CDN_DOMAINS = {
-    "ind": "https://dl-tata.freefireind.in/common/",
-    "default": "https://dl.dir.freefiremobile.com/common/"
-}
-
-server_tokens = {}
-
-
-@app.route("/")
-def home():
-    return render_template("ui.html")
-
-
-def extract_token(text):
-
-    patterns = [
-        r'"token"\s*:\s*"([^"]+)"',
-        r'token\s*:\s*"([^"]+)"',
-        r'"access_token"\s*:\s*"([^"]+)"',
-        r'Bearer\s+([A-Za-z0-9\-\._]+)',
-        r'(eyJ[A-Za-z0-9\-\._]+)'
-    ]
-
-    for pattern in patterns:
-        match = re.search(pattern, text)
-
-        if match:
-            return match.group(1)
-
-    return None
+server_tokens = {key: None for key in UID_PASSWORDS.keys()}
 
 
 def get_token(server):
 
-    if server in server_tokens:
+    if server_tokens[server]:
         return server_tokens[server]
 
     try:
@@ -86,197 +56,166 @@ def get_token(server):
         password = UID_PASSWORDS[server]["password"]
 
         response = requests.get(
-            TOKEN_BASE_URL,
-            params={
-                "uid": uid,
-                "password": password
-            },
+            f"{TOKEN_BASE_URL}?uid={uid}&password={password}",
             timeout=20
         )
 
-        raw = response.text
+        data = response.json()
 
-        try:
-            data = response.json()
+        text = str(data)
 
-            if isinstance(data, dict):
+        match = re.search(
+            r'token\s*:\s*"([^"]+)"',
+            text
+        )
 
-                raw = json.dumps(data)
+        if not match:
+            match = re.search(
+                r'"token"\s*:\s*"([^"]+)"',
+                text
+            )
 
-                if "token" in data:
-                    token = data["token"]
-                    server_tokens[server] = token
-                    return token
-
-        except:
-            pass
-
-        token = extract_token(raw)
-
-        if token:
+        if match:
+            token = match.group(1)
             server_tokens[server] = token
             return token
 
-        return None
+    except Exception as e:
+        print(e)
 
-    except:
-        return None
+    return None
 
 
 def clean_link(link):
 
     link = link.strip()
 
-    link = re.sub(r'^[^a-zA-Z0-9:/]+', '', link)
-
-    while len(link) > 0 and link[-1] in [
-        "0", "X", "J", "B",
-        "@", "#", "`", "*",
-        ";", ":", '"', "'"
-    ]:
+    while link.endswith(("0", "@", "X", "J")):
         link = link[:-1]
 
-    return link.strip()
+    if "http" not in link and "OB" in link:
+
+        link = (
+            "https://dl.dir.freefiremobile.com/common/"
+            + link
+        )
+
+    return link
 
 
-def convert_ob_link(link, server):
-
-    link = clean_link(link)
-
-    if link.startswith("http://"):
-        link = link.replace("http://", "https://")
-
-    if link.startswith("https://"):
-        return link
-
-    if re.match(r'^OB\d+', link, re.IGNORECASE):
-
-        base = CDN_DOMAINS.get(server)
-
-        if not base:
-            base = CDN_DOMAINS["default"]
-
-        return base + link
-
-    return None
-
-
-def extract_links(text, server):
+def extract_links(content):
 
     results = []
 
     patterns = [
 
-        r'https?://[^\s"\']+',
+        rb'https?://[^\s\x00"\']+',
 
-        r'OB\d+/[^\s"\']+\.(?:png|jpg|jpeg|webp|ktx|gif|json|html|ff_extend)',
+        rb'OB\d+/[^\s\x00"\']+\.(?:png|jpg|jpeg|webp|gif|ktx|ff_extend|html|json)',
 
-        r'OB\d+/[^\s"\']+'
     ]
 
     for pattern in patterns:
 
-        matches = re.findall(
-            pattern,
-            text,
-            re.IGNORECASE
-        )
+        try:
 
-        for item in matches:
+            matches = re.findall(
+                pattern,
+                content,
+                re.IGNORECASE
+            )
 
-            fixed = convert_ob_link(item, server)
+            for match in matches:
 
-            if fixed:
-                results.append(fixed)
+                try:
+                    link = match.decode(
+                        "utf-8",
+                        errors="ignore"
+                    )
 
-    final = []
+                    link = clean_link(link)
 
-    for item in results:
+                    if link not in results:
+                        results.append(link)
 
-        item = clean_link(item)
+                except:
+                    pass
 
-        if not item:
-            continue
+        except:
+            pass
 
-        if item not in final:
-            final.append(item)
+    return results
 
-    return final
+
+@app.route("/")
+def index():
+    return render_template("ui.html")
 
 
 @app.route("/run_script")
 def run_script():
 
+    server = request.args.get("server")
+    api_name = request.args.get("name")
+
+    if server not in UID_PASSWORDS:
+        return jsonify({
+            "error": "Invalid server"
+        })
+
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "ReleaseVersion": "OB53",
+        "User-Agent": "UnityPlayer/2022.3.47f1",
+        "X-Unity-Version": "2022.3.47f1"
+    }
+
+    payload = binascii.unhexlify(
+        "8533b7e1d34a5dfd9a830ee5cc36664e"
+    )
+
+    token = get_token(server)
+
+    if not token:
+        return jsonify({
+            "error": "Token fetch failed"
+        })
+
+    headers["Authorization"] = f"Bearer {token}"
+
     try:
 
-        server = request.args.get("server", "ind")
-        endpoint = request.args.get("name", "").strip()
-
-        if not endpoint:
-            return jsonify({
-                "success": False,
-                "error": "Endpoint missing"
-            })
-
-        token = get_token(server)
-
-        if not token:
-            return jsonify({
-                "success": False,
-                "error": "Token fetch failed"
-            })
-
-        url = API_DOMAINS[server].rstrip("/") + "/" + endpoint.lstrip("/")
-
-        headers = {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "ReleaseVersion": "OB53",
-            "User-Agent": "UnityPlayer/2022.3.47f1",
-            "X-Unity-Version": "2022.3.47f1",
-            "Authorization": f"Bearer {token}"
-        }
-
-        payload = binascii.unhexlify(
-            "8533b7e1d34a5dfd9a830ee5cc36664e"
-        )
-
         response = requests.post(
-            url,
+            API_DOMAINS[server] + api_name,
             headers=headers,
             data=payload,
-            timeout=25
+            timeout=20
         )
 
         content = response.content
 
         try:
+
             if content[:2] == b'\x1f\x8b':
                 content = gzip.decompress(content)
+
         except:
             pass
 
-        decoded = content.decode(
-            "utf-8",
-            errors="ignore"
-        )
-
-        links = extract_links(decoded, server)
+        links = extract_links(content)
 
         return jsonify({
             "success": True,
-            "endpoint": endpoint,
-            "server": server,
             "count": len(links),
-            "strings": links,
-            "preview": decoded[:5000]
+            "links": links,
+            "size": len(content)
         })
 
     except Exception as e:
 
         return jsonify({
-            "success": False,
             "error": str(e)
         })
 
