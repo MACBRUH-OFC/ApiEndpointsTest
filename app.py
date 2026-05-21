@@ -46,6 +46,12 @@ server_tokens = {key: None for key in UID_PASSWORDS.keys()}
 
 BASE_LINK = "https://dl.dir.freefiremobile.com/common/"
 
+VALID_EXTENSIONS = [
+    "png", "jpg", "jpeg", "webp", "gif",
+    "bmp", "ktx", "html", "json", "mp4",
+    "mp3", "wav", "ogg", "webm"
+]
+
 
 @app.route("/")
 def home():
@@ -107,10 +113,19 @@ def get_token(server):
     return None
 
 
+def remove_binary_trash(text):
+
+    text = re.sub(r'[\x00-\x1f]+', '', text)
+
+    text = re.sub(r'[^\x20-\x7E]+', '', text)
+
+    return text
+
+
 def fix_common_errors(url):
 
     url = re.sub(
-        r'/common/[a-z]{2,8}/common/',
+        r'/common/[a-z]{1,10}/common/',
         '/common/',
         url,
         flags=re.IGNORECASE
@@ -161,11 +176,26 @@ def fix_common_errors(url):
     return url
 
 
+def trim_after_extension(url):
+
+    for ext in VALID_EXTENSIONS:
+
+        pattern = rf'\.{ext}(?![a-zA-Z0-9])'
+
+        match = re.search(pattern, url, re.IGNORECASE)
+
+        if match:
+
+            end_pos = match.end()
+
+            return url[:end_pos]
+
+    return url
+
+
 def clean_url(url):
 
-    url = url.strip()
-
-    url = re.sub(r'[\x00-\x1f]+', '', url)
+    url = remove_binary_trash(url)
 
     url = url.replace(".ff_extend", ".jpg")
     url = url.replace(".ktxp", ".png")
@@ -173,27 +203,42 @@ def clean_url(url):
     url = fix_common_errors(url)
 
     url = re.sub(
-        r'(\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3))(?:[0-9]+)',
+        r'(\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm))[0-9]+',
         r'\1',
         url,
         flags=re.IGNORECASE
     )
 
-    ext_match = re.search(
-        r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3)',
-        url,
-        re.IGNORECASE
-    )
+    url = trim_after_extension(url)
 
-    if ext_match:
+    url = re.sub(r'[<>{}|"\'`\[\]]+', '', url)
 
-        ext = ext_match.group(0)
-
-        pos = url.lower().find(ext.lower())
-
-        url = url[:pos + len(ext)]
+    url = url.strip()
 
     return url
+
+
+def looks_valid(url):
+
+    if not url.startswith(("http://", "https://")):
+        return False
+
+    if len(url) < 10:
+        return False
+
+    bad_patterns = [
+        "undefined",
+        "null",
+        "example.com",
+        "localhost",
+        "127.0.0.1"
+    ]
+
+    for bad in bad_patterns:
+        if bad in url.lower():
+            return False
+
+    return True
 
 
 def extract_urls(text):
@@ -203,36 +248,57 @@ def extract_urls(text):
     text = text.replace(".ff_extend", ".jpg")
     text = text.replace(".ktxp", ".png")
 
+    text = remove_binary_trash(text)
+
     full_urls = re.findall(
-        r'https?://[^\s"<>\']+',
+        r'https?://[^\s<>"\']+',
         text,
         re.IGNORECASE
     )
 
-    for url in full_urls:
+    for raw_url in full_urls:
 
-        cleaned = clean_url(url)
+        cleaned = clean_url(raw_url)
 
-        if cleaned.startswith("http"):
+        if looks_valid(cleaned):
             urls.add(cleaned)
 
+    extension_pattern = "|".join(VALID_EXTENSIONS)
+
     partials = re.findall(
-        r'([A-Za-z0-9_\-/]+\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3))',
+        rf'([A-Za-z0-9_\-/]+\.(?:{extension_pattern}))',
         text,
         re.IGNORECASE
     )
 
     for item in partials:
 
-        path = item[0]
+        path = item
 
-        if not path.startswith("http"):
+        if isinstance(item, tuple):
+            path = item[0]
 
-            fixed = BASE_LINK + path.lstrip("/")
+        if not str(path).startswith("http"):
+
+            fixed = BASE_LINK + str(path).lstrip("/")
 
             fixed = clean_url(fixed)
 
-            urls.add(fixed)
+            if looks_valid(fixed):
+                urls.add(fixed)
+
+    socials = re.findall(
+        r'https?://(?:www\.)?(?:instagram\.com|discord\.gg|youtube\.com|youtu\.be|facebook\.com|twitter\.com|x\.com|whatsapp\.com|linktr\.ee)[^\s<>"\']*',
+        text,
+        re.IGNORECASE
+    )
+
+    for social in socials:
+
+        cleaned = clean_url(social)
+
+        if looks_valid(cleaned):
+            urls.add(cleaned)
 
     return sorted(list(urls))
 
@@ -314,10 +380,21 @@ def run_script():
 
         raw_strings = re.findall(rb"[ -~]{4,}", content)
 
-        decoded_strings = [
-            s.decode("utf-8", errors="ignore")
-            for s in raw_strings
-        ]
+        decoded_strings = []
+
+        for s in raw_strings:
+
+            try:
+
+                value = s.decode("utf-8", errors="ignore").strip()
+
+                value = remove_binary_trash(value)
+
+                if value:
+                    decoded_strings.append(value)
+
+            except:
+                pass
 
         urls = extract_urls(decoded)
 
