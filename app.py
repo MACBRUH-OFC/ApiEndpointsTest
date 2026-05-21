@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, request, Response
 import requests
 import gzip
 import binascii
@@ -42,17 +42,201 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-server_tokens = {k: None for k in UID_PASSWORDS}
+server_tokens = {}
 
+UI_HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FF API TOOL</title>
+
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+input{
+width:100%;
+padding:14px;
+background:#111;
+border:1px solid #333;
+border-radius:14px;
+color:white;
+margin-bottom:16px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.server{
+background:#111;
+color:white;
+margin:4px;
+}
+
+.server.active{
+background:#ffde00;
+color:black;
+}
+
+.run{
+background:#ffde00;
+color:black;
+width:100%;
+}
+
+#results{
+margin-top:20px;
+white-space:pre-wrap;
+word-break:break-word;
+}
+
+.link{
+padding:10px;
+margin-bottom:8px;
+background:#111;
+border-radius:12px;
+}
+
+a{
+color:#59d0ff;
+text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>FF API TOOL</h1>
+
+<input id="api" placeholder="Enter API name">
+
+<div id="servers"></div>
+
+<button class="run" onclick="runAPI()">
+RUN
+</button>
+
+<div id="results"></div>
+
+<script>
+
+const servers = [
+"ind","mea","id","cis","br","latam",
+"vn","tw","th","sg","eu","na","pk","bd"
+]
+
+let current = "ind"
+
+const box = document.getElementById("servers")
+
+servers.forEach(s=>{
+
+const btn = document.createElement("button")
+
+btn.innerText = s.toUpperCase()
+
+btn.className = "server"
+
+if(s==="ind"){
+btn.classList.add("active")
+}
+
+btn.onclick=()=>{
+
+document.querySelectorAll(".server")
+.forEach(x=>x.classList.remove("active"))
+
+btn.classList.add("active")
+
+current=s
+
+}
+
+box.appendChild(btn)
+
+})
+
+async function runAPI(){
+
+const api = document.getElementById("api").value
+
+if(!api){
+alert("Enter API")
+return
+}
+
+document.getElementById("results").innerHTML="Loading..."
+
+try{
+
+const r = await fetch(
+`/run_script?server=${current}&name=${encodeURIComponent(api)}`
+)
+
+const data = await r.json()
+
+if(!data.success){
+
+document.getElementById("results").innerHTML =
+data.error
+
+return
+
+}
+
+let html = ""
+
+data.links.forEach(link=>{
+
+html += `
+<div class="link">
+<a href="${link}" target="_blank">
+${link}
+</a>
+</div>
+`
+
+})
+
+document.getElementById("results").innerHTML =
+html
+
+}catch(e){
+
+document.getElementById("results").innerHTML =
+e
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
+"""
 
 @app.route("/")
 def home():
-    return render_template("ui.html")
+    return Response(UI_HTML, mimetype="text/html")
 
 
 def get_token(server):
 
-    if server_tokens[server]:
+    if server in server_tokens:
         return server_tokens[server]
 
     try:
@@ -62,7 +246,7 @@ def get_token(server):
 
         response = requests.get(
             f"{TOKEN_BASE_URL}?uid={uid}&password={password}",
-            timeout=15
+            timeout=20
         )
 
         text = response.text
@@ -73,8 +257,11 @@ def get_token(server):
         )
 
         if token_match:
+
             token = token_match.group(0)
+
             server_tokens[server] = token
+
             return token
 
     except Exception as e:
@@ -83,70 +270,44 @@ def get_token(server):
     return None
 
 
-def clean_link(url):
+def clean_link(link):
 
-    url = url.strip()
+    link = link.strip()
 
-    garbage = [
-        "\x00",
-        "\x01",
-        "\x02",
-        "\x03",
-        "\x04",
-        "\x05",
-        "\x06",
-        "\x07",
-        "\x08",
-        "\x0b",
-        "\x0c",
-        "\x0e",
-        "\x0f",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ]
+    link = re.sub(r'[\x00-\x1F]+', '', link)
 
-    for g in garbage:
-        url = url.replace(g, "")
+    link = re.sub(
+        r'(\.png|\.jpg|\.jpeg|\.webp|\.gif|\.ktx|\.ktxp|\.mp4|\.html|\.json|\.ff_extend)0+$',
+        r'\1',
+        link
+    )
 
-    url = re.sub(r'[\s"\'>]+$', '', url)
-
-    url = re.sub(r'(\.png|\.jpg|\.jpeg|\.webp|\.gif|\.ktx|\.ktxp|\.mp4|\.html|\.json|\.ff_extend)0+$', r'\1', url)
-
-    return url.strip()
+    return link
 
 
-def extract_urls(text):
+def extract_links(text):
 
-    pattern = r'''(?:
-        https?://
-        [^\s<>"']+
-    )'''
+    pattern = r'https?://[^\s<>"\'\\]+'
 
-    raw = re.findall(pattern, text, re.VERBOSE)
+    found = re.findall(pattern, text)
 
     final = []
 
     seen = set()
 
-    for url in raw:
+    for link in found:
 
-        url = clean_link(url)
+        link = clean_link(link)
 
-        if len(url) < 8:
+        if len(link) < 8:
             continue
 
-        if url in seen:
+        if link in seen:
             continue
 
-        seen.add(url)
+        seen.add(link)
 
-        final.append(url)
+        final.append(link)
 
     return final
 
@@ -154,78 +315,66 @@ def extract_urls(text):
 @app.route("/run_script")
 def run_script():
 
-    server = request.args.get("server")
-    api_name = request.args.get("name")
-
-    if server not in UID_PASSWORDS:
-        return jsonify({
-            "success": False,
-            "error": "Invalid server"
-        })
-
-    if not api_name:
-        return jsonify({
-            "success": False,
-            "error": "Missing API name"
-        })
-
-    token = get_token(server)
-
-    if not token:
-        return jsonify({
-            "success": False,
-            "error": "Token fetch failed"
-        })
-
-    url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
-
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "*/*",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "UnityPlayer/2022.3.47f1",
-        "ReleaseVersion": "OB53",
-        "X-Unity-Version": "2022.3.47f1"
-    }
-
-    payload = binascii.unhexlify(
-        "8533b7e1d34a5dfd9a830ee5cc36664e"
-    )
-
     try:
+
+        server = request.args.get("server")
+        api_name = request.args.get("name")
+
+        if server not in UID_PASSWORDS:
+            return jsonify({
+                "success": False,
+                "error": "Invalid server"
+            })
+
+        token = get_token(server)
+
+        if not token:
+            return jsonify({
+                "success": False,
+                "error": "Token fetch failed"
+            })
+
+        url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
+
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "UnityPlayer/2022.3.47f1",
+            "ReleaseVersion": "OB53"
+        }
+
+        payload = binascii.unhexlify(
+            "8533b7e1d34a5dfd9a830ee5cc36664e"
+        )
 
         response = requests.post(
             url,
             headers=headers,
             data=payload,
-            timeout=25
+            timeout=30
         )
 
         raw = response.content
 
-        if raw[:2] == b"\x1f\x8b":
-            raw = gzip.decompress(raw)
+        try:
+            if raw[:2] == b"\x1f\x8b":
+                raw = gzip.decompress(raw)
+        except:
+            pass
 
-        decoded = raw.decode(
-            "utf-8",
-            errors="ignore"
-        )
+        try:
+            decoded = raw.decode(
+                "utf-8",
+                errors="ignore"
+            )
+        except:
+            decoded = str(raw)
 
-        strings = re.findall(
-            r'[\x20-\x7E]{4,}',
-            decoded
-        )
-
-        urls = extract_urls(decoded)
+        links = extract_links(decoded)
 
         return jsonify({
             "success": True,
             "status": response.status_code,
-            "count": len(urls),
-            "links": urls,
-            "strings": strings,
-            "strings_count": len(strings),
-            "raw_size": len(raw)
+            "links": links
         })
 
     except Exception as e:
