@@ -5,22 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Fire API Tool</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@font-face{
+    font-family:'GFF';
+    src:url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
+}
 
 :root{
-    --bg:#070707;
-    --panel:#111111;
-    --panel2:#171717;
-    --border:#262626;
     --yellow:#ffde00;
-    --green:#00ff99;
-    --red:#ff4747;
-    --text:#ffffff;
-    --muted:#8f8f8f;
+    --bg:#060606;
+    --panel:#111111;
+    --border:#222;
+    --text:#f5f5f5;
+    --muted:#7d7d7d;
+    --green:#00ff9d;
+    --red:#ff4343;
 }
 
 *{
@@ -30,566 +32,713 @@
 }
 
 body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    padding:18px;
+    background:
+    linear-gradient(rgba(0,0,0,.92),rgba(0,0,0,.95)),
+    url('https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/bg_pc.617c669.jpg');
+    background-size:cover;
+    background-attachment:fixed;
+    color:white;
+    font-family:Arial,sans-serif;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    border-bottom:2px solid var(--yellow);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#000;
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+.topbar img{
+    height:34px;
 }
 
 .container{
+    width:100%;
     max-width:1200px;
     margin:auto;
+    padding:20px;
 }
 
-.title{
+.hero{
     text-align:center;
-    margin-bottom:20px;
+    margin:25px 0 30px;
 }
 
-.title h1{
-    font-size:34px;
-    font-weight:900;
+.hero h1{
+    font-family:'GFF';
+    font-size:58px;
+    line-height:.85;
+    font-style:italic;
+}
+
+.hero span{
     color:var(--yellow);
 }
 
-.title p{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:6px;
+.panel{
+    background:rgba(10,10,10,.96);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
 }
 
-.panel{
-    background:var(--panel);
-    border:1px solid var(--border);
+.input-box{
+    background:#0d0d0d;
+    border:1px solid #2c2c2c;
+    height:62px;
     border-radius:18px;
-    padding:18px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    padding:0 18px;
     margin-bottom:18px;
 }
 
-.search-box{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
+.input-box i{
+    color:var(--yellow);
+    margin-right:14px;
+    font-size:18px;
 }
 
-.input{
-    flex:1;
-    min-width:240px;
-    height:52px;
+.input-box input{
+    width:100%;
+    background:none;
     border:none;
     outline:none;
-    background:var(--panel2);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:0 16px;
     color:white;
     font-size:15px;
 }
 
-.main-btn{
-    height:52px;
-    padding:0 22px;
-    border:none;
-    border-radius:14px;
-    background:var(--yellow);
-    color:black;
-    font-weight:800;
-    cursor:pointer;
-    transition:.15s;
-}
-
-.main-btn:hover{
-    transform:translateY(-1px);
+.input-box input::placeholder{
+    color:#777;
 }
 
 .server-grid{
-    margin-top:16px;
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-    gap:10px;
+    gap:12px;
+    margin-bottom:22px;
 }
 
 .server-btn{
-    height:48px;
+    height:52px;
     border:none;
-    border-radius:12px;
-    background:var(--panel2);
-    border:1px solid var(--border);
-    color:white;
+    border-radius:14px;
+    background:#151515;
+    color:#ddd;
+    font-family:'GFF';
     cursor:pointer;
-    font-weight:700;
-    transition:.15s;
+    transition:.18s;
+    border:1px solid #262626;
+    font-size:12px;
+    letter-spacing:.5px;
 }
 
 .server-btn:hover{
-    border-color:var(--yellow);
+    background:#1d1d1d;
+    transform:translateY(-2px);
 }
 
 .server-btn.active{
     background:var(--yellow);
     color:black;
-}
-
-.top-tools{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:16px;
-}
-
-.tool-btn{
-    background:var(--panel2);
-    border:1px solid var(--border);
-    color:white;
-    padding:10px 14px;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:700;
-}
-
-.tool-btn:hover{
     border-color:var(--yellow);
+    box-shadow:0 0 18px rgba(255,222,0,.3);
 }
 
-.search-filter{
-    width:100%;
-    margin-bottom:16px;
-}
-
-.stats{
+.action-bar{
     display:flex;
     flex-wrap:wrap;
     gap:12px;
-    margin-bottom:16px;
+    margin-bottom:18px;
+}
+
+.action-btn{
+    flex:1;
+    min-width:150px;
+    height:55px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-family:'GFF';
+    transition:.15s;
+    font-size:13px;
+}
+
+.run-btn{
+    background:var(--yellow);
+    color:black;
+}
+
+.copy-btn{
+    background:#171717;
+    color:white;
+    border:1px solid #292929;
+}
+
+.download-btn{
+    background:#00ff9d;
+    color:black;
+}
+
+.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:20px;
 }
 
 .stat-box{
-    flex:1;
-    min-width:140px;
-    background:var(--panel2);
-    border:1px solid var(--border);
-    border-radius:14px;
+    background:#0f0f0f;
+    border:1px solid #222;
+    border-radius:16px;
     padding:14px;
 }
 
 .stat-title{
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:6px;
+    font-size:10px;
+    color:#777;
+    margin-bottom:7px;
+    font-family:'GFF';
 }
 
 .stat-value{
-    font-size:24px;
-    font-weight:800;
+    font-size:20px;
+    color:var(--yellow);
+    font-weight:bold;
 }
 
-.output{
+.toolbar{
     display:flex;
-    flex-direction:column;
+    flex-wrap:wrap;
     gap:10px;
-    max-height:70vh;
-    overflow:auto;
+    margin-bottom:18px;
 }
 
-.result-card{
-    background:var(--panel2);
-    border:1px solid var(--border);
+.filter-btn{
+    background:#121212;
+    border:1px solid #242424;
+    color:#ccc;
+    border-radius:12px;
+    padding:10px 16px;
+    cursor:pointer;
+    font-size:12px;
+    transition:.15s;
+}
+
+.filter-btn.active{
+    background:var(--yellow);
+    color:black;
+}
+
+.search-box{
+    margin-bottom:18px;
+}
+
+.search-box input{
+    width:100%;
+    height:52px;
+    background:#101010;
+    border:1px solid #222;
     border-radius:14px;
-    padding:14px;
-    display:flex;
-    align-items:center;
-    gap:12px;
+    padding:0 16px;
+    color:white;
+    outline:none;
 }
 
-.result-content{
-    flex:1;
+.output-wrapper{
+    background:#0a0a0a;
+    border:1px solid #1d1d1d;
+    border-radius:18px;
     overflow:hidden;
 }
 
-.result-text{
+.output-header{
+    height:52px;
+    background:#121212;
+    border-bottom:1px solid #1e1e1e;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+}
+
+.output-header span{
+    font-family:'GFF';
+    font-size:11px;
+    color:#999;
+}
+
+#output{
+    max-height:600px;
+    overflow:auto;
+    padding:14px;
+}
+
+.result-card{
+    background:#111;
+    border:1px solid #1f1f1f;
+    border-radius:14px;
+    padding:12px;
+    margin-bottom:10px;
+    transition:.15s;
+    position:relative;
+}
+
+.result-card:hover{
+    border-color:#3a3a3a;
+}
+
+.result-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.badge{
+    background:rgba(255,222,0,.12);
+    color:var(--yellow);
+    border:1px solid rgba(255,222,0,.25);
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:10px;
+    font-family:'GFF';
+}
+
+.copy-line{
+    background:#1a1a1a;
+    border:none;
+    color:#aaa;
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.result-value{
     word-break:break-all;
+    line-height:1.6;
+    font-size:13px;
+}
+
+.result-value a{
+    color:#56b7ff;
+    text-decoration:none;
+}
+
+.result-value a:hover{
+    text-decoration:underline;
+}
+
+.raw-box{
+    background:#0b0b0b;
+    border:1px solid #1d1d1d;
+    border-radius:14px;
+    padding:16px;
+    color:#ddd;
+    white-space:pre-wrap;
+    word-break:break-word;
     line-height:1.5;
     font-size:13px;
 }
 
-.badge{
-    min-width:70px;
-    text-align:center;
-    padding:7px 10px;
-    border-radius:10px;
-    font-size:11px;
-    font-weight:800;
-}
-
-.badge.link{
-    background:#102116;
-    color:var(--green);
-}
-
-.badge.raw{
-    background:#222;
-    color:#ccc;
-}
-
-.copy-btn{
-    border:none;
-    background:var(--yellow);
-    color:black;
-    padding:10px 14px;
-    border-radius:10px;
-    font-weight:800;
-    cursor:pointer;
-}
-
-.copy-btn:hover{
-    opacity:.9;
-}
-
-a{
-    color:#56b3ff;
-    text-decoration:none;
-}
-
-.status{
-    margin-top:12px;
-    color:var(--muted);
-    font-size:13px;
-}
-
 .loading{
+    text-align:center;
+    padding:70px 20px;
+    color:#888;
+}
+
+.loading i{
     color:var(--yellow);
+    font-size:28px;
+    margin-bottom:14px;
 }
 
-.error{
-    color:var(--red);
+@media(max-width:768px){
+
+.hero h1{
+    font-size:42px;
 }
 
-.success{
-    color:var(--green);
+.stats{
+    grid-template-columns:repeat(2,1fr);
 }
 
-::-webkit-scrollbar{
-    width:8px;
 }
 
-::-webkit-scrollbar-thumb{
-    background:#2f2f2f;
-    border-radius:10px;
-}
-
-@media(max-width:700px){
-
-    .result-card{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .copy-btn{
-        width:100%;
-    }
-
-}
 </style>
 </head>
+
 <body>
+
+<div class="topbar">
+<img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png">
+</div>
 
 <div class="container">
 
-    <div class="title">
-        <h1>FREE FIRE API TOOL</h1>
-        <p>Advanced Raw String & Link Extractor</p>
-    </div>
+<div class="hero">
+<h1>FREE FIRE<br><span>API TOOL</span></h1>
+</div>
 
-    <div class="panel">
+<div class="panel">
 
-        <div class="search-box">
-            <input id="apiInput" class="input" type="text" placeholder="Enter API Name">
-            <button class="main-btn" onclick="runSelectedServer()">
-                FETCH DATA
-            </button>
-        </div>
+<div class="input-box">
+<i class="fa-solid fa-link"></i>
+<input type="text" id="apiName" placeholder="Enter API Name">
+</div>
 
-        <div class="server-grid">
+<div class="server-grid">
 
-            <button class="server-btn active" onclick="selectServer(this,'ind')">IND</button>
-            <button class="server-btn" onclick="selectServer(this,'mea')">MEA</button>
-            <button class="server-btn" onclick="selectServer(this,'id')">ID</button>
-            <button class="server-btn" onclick="selectServer(this,'cis')">CIS</button>
-            <button class="server-btn" onclick="selectServer(this,'br')">BR</button>
-            <button class="server-btn" onclick="selectServer(this,'latam')">LATAM</button>
-            <button class="server-btn" onclick="selectServer(this,'vn')">VN</button>
-            <button class="server-btn" onclick="selectServer(this,'tw')">TW</button>
-            <button class="server-btn" onclick="selectServer(this,'th')">TH</button>
-            <button class="server-btn" onclick="selectServer(this,'sg')">SG</button>
-            <button class="server-btn" onclick="selectServer(this,'eu')">EU</button>
-            <button class="server-btn" onclick="selectServer(this,'na')">NA</button>
-            <button class="server-btn" onclick="selectServer(this,'pk')">PK</button>
-            <button class="server-btn" onclick="selectServer(this,'bd')">BD</button>
+<button class="server-btn active" onclick="selectServer(this,'ind')">IND</button>
+<button class="server-btn" onclick="selectServer(this,'mea')">MEA</button>
+<button class="server-btn" onclick="selectServer(this,'id')">ID</button>
+<button class="server-btn" onclick="selectServer(this,'cis')">CIS</button>
+<button class="server-btn" onclick="selectServer(this,'br')">BR</button>
+<button class="server-btn" onclick="selectServer(this,'latam')">LATAM</button>
+<button class="server-btn" onclick="selectServer(this,'vn')">VN</button>
+<button class="server-btn" onclick="selectServer(this,'tw')">TW</button>
+<button class="server-btn" onclick="selectServer(this,'th')">TH</button>
+<button class="server-btn" onclick="selectServer(this,'sg')">SG</button>
+<button class="server-btn" onclick="selectServer(this,'eu')">EU</button>
+<button class="server-btn" onclick="selectServer(this,'na')">NA</button>
+<button class="server-btn" onclick="selectServer(this,'pk')">PK</button>
+<button class="server-btn" onclick="selectServer(this,'bd')">BD</button>
 
-        </div>
+</div>
 
-    </div>
+<div class="action-bar">
 
-    <div class="panel">
+<button class="action-btn run-btn" onclick="runServer()">
+<i class="fa-solid fa-play"></i>
+ RUN API
+</button>
 
-        <div class="top-tools">
+<button class="action-btn copy-btn" onclick="copyAll()">
+<i class="fa-solid fa-copy"></i>
+ COPY ALL
+</button>
 
-            <button class="tool-btn" onclick="showMode('all')">
-                ALL
-            </button>
+<button class="action-btn download-btn" onclick="downloadResults()">
+<i class="fa-solid fa-download"></i>
+ EXPORT TXT
+</button>
 
-            <button class="tool-btn" onclick="showMode('links')">
-                LINKS ONLY
-            </button>
+</div>
 
-            <button class="tool-btn" onclick="showMode('raw')">
-                RAW ONLY
-            </button>
+<div class="stats">
 
-            <button class="tool-btn" onclick="copyAll()">
-                COPY ALL
-            </button>
+<div class="stat-box">
+<div class="stat-title">TOTAL</div>
+<div class="stat-value" id="totalCount">0</div>
+</div>
 
-            <button class="tool-btn" onclick="downloadTXT()">
-                EXPORT TXT
-            </button>
+<div class="stat-box">
+<div class="stat-title">LINKS</div>
+<div class="stat-value" id="linkCount">0</div>
+</div>
 
-        </div>
+<div class="stat-box">
+<div class="stat-title">MEDIA</div>
+<div class="stat-value" id="mediaCount">0</div>
+</div>
 
-        <input
-            type="text"
-            id="searchFilter"
-            class="input search-filter"
-            placeholder="Filter Results..."
-            oninput="renderResults()"
-        >
+<div class="stat-box">
+<div class="stat-title">STATUS</div>
+<div class="stat-value" id="statusText">IDLE</div>
+</div>
 
-        <div class="stats">
+</div>
 
-            <div class="stat-box">
-                <div class="stat-title">TOTAL</div>
-                <div class="stat-value" id="totalCount">0</div>
-            </div>
+<div class="toolbar">
 
-            <div class="stat-box">
-                <div class="stat-title">LINKS</div>
-                <div class="stat-value" id="linkCount">0</div>
-            </div>
+<button class="filter-btn active" onclick="setMode('all',this)">ALL</button>
+<button class="filter-btn" onclick="setMode('links',this)">LINKS</button>
+<button class="filter-btn" onclick="setMode('media',this)">MEDIA</button>
+<button class="filter-btn" onclick="setMode('raw',this)">RAW</button>
 
-            <div class="stat-box">
-                <div class="stat-title">RAW</div>
-                <div class="stat-value" id="rawCount">0</div>
-            </div>
+</div>
 
-        </div>
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Search results..." onkeyup="renderResults()">
+</div>
 
-        <div class="output" id="output"></div>
+<div class="output-wrapper">
 
-        <div class="status" id="status">
-            Ready
-        </div>
+<div class="output-header">
+<span>LIVE RESPONSE OUTPUT</span>
+<span id="loadedText">0 STRINGS</span>
+</div>
 
-    </div>
+<div id="output">
+
+<div class="loading">
+<i class="fa-solid fa-server fa-spin"></i>
+<div>Waiting for request...</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 <script>
 
 let currentServer = "ind";
-let allResults = [];
 let currentMode = "all";
+let allResults = [];
+let rawResponse = "";
 
-function selectServer(el, server){
+function selectServer(el,server){
 
-    document.querySelectorAll('.server-btn')
-    .forEach(btn => btn.classList.remove('active'));
+document.querySelectorAll(".server-btn").forEach(btn=>{
+btn.classList.remove("active");
+});
 
-    el.classList.add('active');
-
-    currentServer = server;
-}
-
-function showMode(mode){
-    currentMode = mode;
-    renderResults();
-}
-
-async function runSelectedServer(){
-
-    const api = document.getElementById('apiInput').value.trim();
-
-    if(!api){
-        alert("Enter API name");
-        return;
-    }
-
-    const output = document.getElementById('output');
-    const status = document.getElementById('status');
-
-    output.innerHTML = "";
-
-    status.className = "status loading";
-    status.textContent = "Loading API response...";
-
-    try{
-
-        const response = await fetch(
-            `/run_script?server=${currentServer}&name=${encodeURIComponent(api)}`
-        );
-
-        const data = await response.json();
-
-        if(data.error){
-
-            status.className = "status error";
-            status.textContent = data.error;
-            return;
-        }
-
-        allResults = data.strings || [];
-
-        updateCounts();
-
-        renderResults();
-
-        status.className = "status success";
-        status.textContent =
-            `Loaded ${allResults.length} strings`;
-
-    }catch(err){
-
-        status.className = "status error";
-        status.textContent = "Request failed";
-
-    }
+el.classList.add("active");
+currentServer = server;
 
 }
 
-function updateCounts(){
+function setMode(mode,el){
 
-    const links = allResults.filter(x =>
-        x.includes("http://") || x.includes("https://")
-    );
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+btn.classList.remove("active");
+});
 
-    document.getElementById('totalCount').textContent =
-        allResults.length;
+el.classList.add("active");
 
-    document.getElementById('linkCount').textContent =
-        links.length;
+currentMode = mode;
 
-    document.getElementById('rawCount').textContent =
-        allResults.length - links.length;
+renderResults();
+
+}
+
+async function runServer(){
+
+const api = document.getElementById("apiName").value.trim();
+
+if(!api){
+alert("Enter API name");
+return;
+}
+
+document.getElementById("statusText").innerText = "LOAD";
+
+document.getElementById("output").innerHTML = `
+<div class="loading">
+<i class="fa-solid fa-spinner fa-spin"></i>
+<div>Fetching API response...</div>
+</div>
+`;
+
+try{
+
+const res = await fetch(`/run_script?server=${currentServer}&name=${encodeURIComponent(api)}`);
+
+const data = await res.json();
+
+if(data.error){
+
+document.getElementById("statusText").innerText = "ERROR";
+
+document.getElementById("output").innerHTML = `
+<div class="raw-box">${data.error}</div>
+`;
+
+return;
+
+}
+
+allResults = data.strings || [];
+
+rawResponse = allResults.join("\n");
+
+document.getElementById("totalCount").innerText = allResults.length;
+
+const links = allResults.filter(v=>v.includes("http"));
+
+document.getElementById("linkCount").innerText = links.length;
+
+const media = allResults.filter(v=>
+v.includes(".png") ||
+v.includes(".jpg") ||
+v.includes(".mp4") ||
+v.includes(".ktx") ||
+v.includes(".ktxp")
+);
+
+document.getElementById("mediaCount").innerText = media.length;
+
+document.getElementById("loadedText").innerText =
+allResults.length + " STRINGS";
+
+document.getElementById("statusText").innerText = "DONE";
+
+renderResults();
+
+}catch(err){
+
+document.getElementById("statusText").innerText = "FAIL";
+
+document.getElementById("output").innerHTML = `
+<div class="raw-box">Request failed</div>
+`;
+
+}
+
 }
 
 function renderResults(){
 
-    const output = document.getElementById('output');
+const output = document.getElementById("output");
 
-    output.innerHTML = "";
+const search = document.getElementById("searchInput").value.toLowerCase();
 
-    const filter =
-        document.getElementById('searchFilter')
-        .value
-        .toLowerCase();
+if(currentMode === "raw"){
 
-    let filtered = allResults.filter(item =>
-        item.toLowerCase().includes(filter)
-    );
+output.innerHTML = `
+<div class="raw-box">${escapeHtml(rawResponse)}</div>
+`;
 
-    if(currentMode === "links"){
+return;
 
-        filtered = filtered.filter(item =>
-            item.includes("http://") ||
-            item.includes("https://")
-        );
+}
 
-    }
+let filtered = [...allResults];
 
-    if(currentMode === "raw"){
+if(currentMode === "links"){
+filtered = filtered.filter(v=>v.includes("http"));
+}
 
-        filtered = filtered.filter(item =>
-            !item.includes("http://") &&
-            !item.includes("https://")
-        );
+if(currentMode === "media"){
+filtered = filtered.filter(v=>
+v.includes(".png") ||
+v.includes(".jpg") ||
+v.includes(".mp4") ||
+v.includes(".ktx") ||
+v.includes(".ktxp")
+);
+}
 
-    }
+if(search){
+filtered = filtered.filter(v=>
+v.toLowerCase().includes(search)
+);
+}
 
-    filtered.forEach(item => {
+if(filtered.length === 0){
 
-        const isLink =
-            item.includes("http://") ||
-            item.includes("https://");
+output.innerHTML = `
+<div class="loading">
+<div>No results found</div>
+</div>
+`;
 
-        const card = document.createElement('div');
+return;
 
-        card.className = "result-card";
+}
 
-        card.innerHTML = `
+output.innerHTML = filtered.map((item,index)=>{
 
-            <div class="badge ${isLink ? 'link' : 'raw'}">
-                ${isLink ? 'LINK' : 'RAW'}
-            </div>
+const isLink = item.includes("http");
 
-            <div class="result-content">
-                <div class="result-text">
-                    ${
-                        isLink
-                        ? `<a href="${item}" target="_blank">${escapeHtml(item)}</a>`
-                        : escapeHtml(item)
-                    }
-                </div>
-            </div>
+return `
+<div class="result-card">
 
-            <button class="copy-btn">
-                COPY
-            </button>
-        `;
+<div class="result-top">
 
-        card.querySelector('.copy-btn')
-        .onclick = () => {
+<div class="badge">
+${isLink ? "LINK" : "RAW"}
+</div>
 
-            navigator.clipboard.writeText(item);
+<button class="copy-line" onclick="copyText('${encodeURIComponent(item)}')">
+<i class="fa-solid fa-copy"></i>
+</button>
 
-        };
+</div>
 
-        output.appendChild(card);
+<div class="result-value">
 
-    });
+${isLink
+? `<a href="${extractUrl(item)}" target="_blank">${escapeHtml(item)}</a>`
+: escapeHtml(item)
+}
+
+</div>
+
+</div>
+`;
+
+}).join("");
+
+}
+
+function extractUrl(text){
+
+const match = text.match(/https?:\/\/[^\s]+/);
+
+return match ? match[0] : "#";
+
+}
+
+function copyText(text){
+
+navigator.clipboard.writeText(decodeURIComponent(text));
 
 }
 
 function copyAll(){
 
-    navigator.clipboard.writeText(
-        allResults.join("\n")
-    );
+if(!rawResponse){
+alert("No results");
+return;
+}
+
+navigator.clipboard.writeText(rawResponse);
 
 }
 
-function downloadTXT(){
+function downloadResults(){
 
-    const blob = new Blob(
-        [allResults.join("\n")],
-        {type:'text/plain'}
-    );
+if(!rawResponse){
+alert("No results");
+return;
+}
 
-    const a = document.createElement('a');
+const blob = new Blob([rawResponse],{type:"text/plain"});
 
-    a.href = URL.createObjectURL(blob);
+const a = document.createElement("a");
 
-    a.download = "results.txt";
+a.href = URL.createObjectURL(blob);
 
-    a.click();
+a.download = "results.txt";
+
+a.click();
 
 }
 
 function escapeHtml(text){
 
-    return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
 
 }
 
