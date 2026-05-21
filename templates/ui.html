@@ -1,42 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-/>
+<title>Free Fire API Explorer</title>
 
-<title>
-FF API LINK EXTRACTOR
-</title>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-rel="stylesheet"
-/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 
-:root{
+@font-face{
+    font-family:'GFF';
+    src:url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
+}
 
+:root{
+    --yellow:#ffde00;
     --bg:#050505;
     --card:#101010;
-    --card2:#171717;
-    --border:#242424;
-    --text:#ffffff;
-    --sub:#9d9d9d;
-
-    --blue:#0a84ff;
-    --green:#22c55e;
-    --orange:#ff9500;
-    --red:#ff3b30;
-
-    --shadow:
-    0 10px 40px rgba(0,0,0,.45);
+    --border:#232323;
+    --green:#00ffa3;
+    --red:#ff4747;
 }
 
 *{
@@ -46,1079 +32,374 @@ rel="stylesheet"
 }
 
 body{
-
-    background:
-    radial-gradient(
-        circle at top,
-        #141414,
-        #050505 40%
-    );
-
-    color:var(--text);
-
-    font-family:'Inter',sans-serif;
-
-    min-height:100vh;
-
+    background:#000;
+    color:#fff;
+    font-family:Inter,sans-serif;
+    background-image:url('https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/bg_pc.617c669.jpg');
+    background-size:cover;
+    background-attachment:fixed;
     overflow-x:hidden;
 }
 
-.container{
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.92);
+    z-index:-1;
+}
 
+.gff{
+    font-family:'GFF',sans-serif;
+}
+
+header{
+    height:64px;
+    border-bottom:2px solid var(--yellow);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#000;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+header img{
+    height:28px;
+}
+
+.main{
     width:100%;
-
-    max-width:1700px;
-
+    max-width:560px;
     margin:auto;
-
     padding:18px;
 }
 
-.header{
-
-    background:rgba(16,16,16,.85);
-
-    backdrop-filter:blur(20px);
-
-    border:
-    1px solid var(--border);
-
-    border-radius:28px;
-
-    padding:24px;
-
-    margin-bottom:18px;
-
-    box-shadow:var(--shadow);
+.hero{
+    text-align:center;
+    margin:28px 0;
 }
 
-.top-flex{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    gap:20px;
-
-    flex-wrap:wrap;
+.hero h1{
+    font-size:48px;
+    line-height:.9;
+    font-style:italic;
 }
 
-.logo{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
+.hero .yellow{
+    color:var(--yellow);
 }
 
-.logo-box{
-
-    width:65px;
-
-    height:65px;
-
-    border-radius:20px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0a84ff,
-        #00d4ff
-    );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:28px;
-
-    font-weight:900;
+.panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    position:relative;
 }
 
-.title h1{
-
-    font-size:34px;
-
-    font-weight:900;
-
-    letter-spacing:1px;
-}
-
-.title p{
-
-    color:var(--sub);
-
-    margin-top:4px;
-
-    font-size:14px;
-}
-
-.badges{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-}
-
-.badge{
-
-    background:#181818;
-
-    border:
-    1px solid #292929;
-
-    border-radius:999px;
-
-    padding:10px 14px;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    color:#bcbcbc;
-}
-
-.main-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    420px 1fr;
-
-    gap:18px;
-}
-
-.sidebar{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-}
-
-.card{
-
-    background:rgba(15,15,15,.9);
-
-    border:
-    1px solid var(--border);
-
-    border-radius:28px;
-
-    padding:22px;
-
-    box-shadow:var(--shadow);
-}
-
-.card-title{
-
-    font-size:15px;
-
-    font-weight:800;
-
-    color:#bdbdbd;
-
-    margin-bottom:18px;
-
-    letter-spacing:.5px;
-}
-
-.input-group{
-
-    margin-bottom:15px;
+.panel::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:4px;
+    height:100%;
+    background:var(--yellow);
+    border-radius:24px 0 0 24px;
 }
 
 .label{
-
-    display:block;
-
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#8b8b8b;
     margin-bottom:8px;
-
-    color:#9f9f9f;
-
-    font-size:13px;
-
-    font-weight:700;
+    font-family:'GFF';
 }
 
-.input,
-.select{
-
+.input{
     width:100%;
-
-    background:#171717;
-
-    border:
-    1px solid #2a2a2a;
-
-    color:white;
-
-    padding:15px 16px;
-
-    border-radius:18px;
-
+    height:58px;
+    border-radius:16px;
+    background:#141414;
+    border:1px solid #2b2b2b;
+    color:#fff;
+    padding:0 18px;
     outline:none;
-
     font-size:14px;
-
-    transition:.2s;
 }
 
-.input:focus,
-.select:focus{
-
-    border-color:#0a84ff;
-
-    box-shadow:
-    0 0 0 4px rgba(10,132,255,.15);
+.input:focus{
+    border-color:var(--yellow);
 }
 
-.row{
-
+.select-grid{
     display:grid;
-
-    grid-template-columns:
-    1fr 1fr;
-
+    grid-template-columns:1fr 1fr;
     gap:12px;
 }
 
-.run-btn{
-
+.btn{
     width:100%;
-
+    height:60px;
     border:none;
-
-    border-radius:20px;
-
-    padding:18px;
-
-    margin-top:6px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0a84ff,
-        #00b7ff
-    );
-
-    color:white;
-
-    font-size:15px;
-
-    font-weight:900;
-
+    border-radius:16px;
+    background:var(--yellow);
+    color:#000;
+    font-family:'GFF';
+    font-size:18px;
+    font-style:italic;
     cursor:pointer;
-
-    transition:.2s;
+    margin-top:18px;
+    box-shadow:0 5px 0 #c8ae00;
+    transition:.1s;
 }
 
-.run-btn:hover{
-
-    transform:translateY(-2px);
-
-    filter:brightness(1.08);
+.btn:active{
+    transform:translateY(2px);
+    box-shadow:0 3px 0 #c8ae00;
 }
 
-.switches{
-
+.topbar{
     display:flex;
-
-    flex-direction:column;
-
-    gap:14px;
+    gap:10px;
+    margin-top:16px;
 }
 
-.switch-row{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-}
-
-.switch-row span{
-
-    font-size:14px;
-
+.mini-btn{
+    flex:1;
+    height:48px;
+    border-radius:14px;
+    border:1px solid #2c2c2c;
+    background:#161616;
+    color:#fff;
+    cursor:pointer;
+    font-size:13px;
     font-weight:700;
-
-    color:#cfcfcf;
 }
 
-.switch{
-
-    position:relative;
-
-    width:58px;
-
-    height:32px;
-}
-
-.switch input{
-
-    display:none;
-}
-
-.slider{
-
-    position:absolute;
-
-    inset:0;
-
-    background:#2d2d2d;
-
-    border-radius:999px;
-
-    transition:.2s;
-}
-
-.slider::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:24px;
-
-    height:24px;
-
-    background:white;
-
-    border-radius:50%;
-
-    top:4px;
-
-    left:4px;
-
-    transition:.2s;
-}
-
-.switch input:checked + .slider{
-
-    background:#22c55e;
-}
-
-.switch input:checked + .slider::before{
-
-    transform:translateX(26px);
+.mini-btn.active{
+    border-color:var(--yellow);
+    color:var(--yellow);
 }
 
 .stats{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,1fr);
-
-    gap:12px;
-}
-
-.stat{
-
-    background:#171717;
-
-    border:
-    1px solid #272727;
-
-    border-radius:22px;
-
-    padding:18px;
-}
-
-.stat-label{
-
-    color:#8d8d8d;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    margin-bottom:10px;
-}
-
-.stat-value{
-
-    font-size:28px;
-
-    font-weight:900;
-}
-
-.content{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-}
-
-.tabs{
-
-    display:flex;
-
-    gap:12px;
-
-    flex-wrap:wrap;
-}
-
-.tab{
-
-    background:#161616;
-
-    border:
-    1px solid #292929;
-
-    color:#bcbcbc;
-
-    padding:13px 18px;
-
+    margin-top:18px;
+    background:#131313;
+    border:1px solid #232323;
     border-radius:18px;
-
-    cursor:pointer;
-
-    font-size:13px;
-
-    font-weight:800;
-
-    transition:.2s;
-}
-
-.tab.active{
-
-    background:#0a84ff;
-
-    color:white;
-
-    border-color:#0a84ff;
-}
-
-.search-bar{
-
-    width:100%;
-}
-
-.viewer{
-
-    background:#0d0d0d;
-
-    border:
-    1px solid #202020;
-
-    border-radius:28px;
-
-    overflow:hidden;
-
-    min-height:820px;
-
+    padding:14px;
     display:flex;
-
-    flex-direction:column;
-}
-
-.viewer-top{
-
-    padding:18px;
-
-    border-bottom:
-    1px solid #202020;
-
-    background:#141414;
-
-    display:flex;
-
-    align-items:center;
-
     justify-content:space-between;
-
-    gap:15px;
-
-    flex-wrap:wrap;
+    align-items:center;
 }
 
-.viewer-title{
-
-    font-size:16px;
-
-    font-weight:900;
-}
-
-.viewer-actions{
-
+.stats-left{
     display:flex;
+    align-items:center;
+    gap:12px;
+}
 
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
+}
+
+.results{
+    margin-top:18px;
+    background:#121212;
+    border:1px solid #242424;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.toolbar{
+    padding:12px;
+    border-bottom:1px solid #242424;
+    display:flex;
     gap:10px;
-
-    flex-wrap:wrap;
 }
 
-.small-btn{
-
-    border:none;
-
-    border-radius:14px;
-
-    padding:12px 15px;
-
-    font-size:13px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    transition:.2s;
-
-    color:white;
-}
-
-.copy-btn{
-
-    background:#22c55e;
-}
-
-.download-btn{
-
-    background:#ff9500;
-}
-
-.clear-btn{
-
-    background:#ff3b30;
-}
-
-.small-btn:hover{
-
-    transform:translateY(-2px);
-}
-
-.output{
-
+.search{
     flex:1;
+    height:42px;
+    border-radius:12px;
+    border:1px solid #2b2b2b;
+    background:#181818;
+    color:#fff;
+    padding:0 14px;
+    outline:none;
+}
 
+.result-box{
+    max-height:70vh;
     overflow:auto;
-
-    padding:18px;
+    padding:12px;
 }
 
 .link-card{
-
-    background:#151515;
-
-    border:
-    1px solid #252525;
-
-    border-radius:20px;
-
-    padding:16px;
-
-    margin-bottom:14px;
-
+    background:#171717;
+    border:1px solid #262626;
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:12px;
     transition:.2s;
 }
 
 .link-card:hover{
-
-    border-color:#0a84ff;
-
-    transform:translateY(-1px);
+    border-color:#404040;
 }
 
 .link-type{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    padding:8px 12px;
-
-    border-radius:999px;
-
-    font-size:11px;
-
-    font-weight:900;
-
-    margin-bottom:12px;
+    font-size:10px;
+    color:var(--yellow);
+    letter-spacing:1px;
+    margin-bottom:6px;
+    font-family:'GFF';
 }
 
-.image{
-
-    background:rgba(34,197,94,.15);
-
-    color:#6eff9d;
-}
-
-.url{
-
-    background:rgba(255,149,0,.15);
-
-    color:#ffbe5c;
-}
-
-.raw{
-
-    background:rgba(10,132,255,.15);
-
-    color:#6dc0ff;
-}
-
-.link{
-
-    color:#64b8ff;
-
-    text-decoration:none;
-
-    word-break:break-all;
-
-    font-size:13px;
-
-    line-height:1.7;
-}
-
-.link:hover{
-
-    text-decoration:underline;
-}
-
-.raw-box{
-
-    background:#111;
-
-    border:
-    1px solid #222;
-
-    border-radius:18px;
-
-    padding:14px;
-
-    margin-bottom:12px;
-
-    white-space:pre-wrap;
-
-    word-break:break-word;
-
-    font-family:Consolas,monospace;
-
+.link-url{
     font-size:12px;
-
-    line-height:1.6;
-
-    color:#d0d0d0;
+    word-break:break-all;
+    color:#e5e5e5;
+    line-height:1.5;
 }
 
-.preview-image{
+.actions{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+}
 
+.action{
+    flex:1;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    background:#242424;
+    color:#fff;
+    cursor:pointer;
+    font-size:12px;
+}
+
+.preview{
+    margin-top:10px;
     width:100%;
-
-    margin-top:15px;
-
-    border-radius:18px;
-
-    border:
-    1px solid #2d2d2d;
-
+    border-radius:12px;
     display:none;
+    border:1px solid #2d2d2d;
 }
 
-.footer{
-
+.loading{
     text-align:center;
-
-    color:#767676;
-
-    margin-top:18px;
-
-    font-size:13px;
+    padding:40px 20px;
 }
 
-::-webkit-scrollbar{
-
-    width:10px;
+.spin{
+    font-size:34px;
+    color:var(--yellow);
+    animation:spin 2s linear infinite;
 }
 
-::-webkit-scrollbar-thumb{
-
-    background:#2f2f2f;
-
-    border-radius:999px;
-}
-
-@media(max-width:1200px){
-
-    .main-grid{
-
-        grid-template-columns:
-        1fr;
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
     }
 }
 
-@media(max-width:700px){
+.empty{
+    padding:60px 20px;
+    text-align:center;
+    color:#777;
+}
 
-    .title h1{
-
-        font-size:25px;
-    }
-
-    .viewer{
-
-        min-height:650px;
-    }
-
-    .stats{
-
-        grid-template-columns:
-        1fr;
-    }
-
-    .row{
-
-        grid-template-columns:
-        1fr;
-    }
+.footer-space{
+    height:30px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<header>
+<img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png">
+</header>
 
-<div class="header">
+<div class="main">
 
-<div class="top-flex">
-
-<div class="logo">
-
-<div class="logo-box">
-FF
+<div class="hero gff">
+<h1>API</h1>
+<h1 class="yellow">EXPLORER</h1>
 </div>
 
-<div class="title">
+<div class="panel">
 
-<h1>
-FF API LINK EXTRACTOR
-</h1>
+<div class="label">Region & Endpoint</div>
 
-<p>
-Advanced Free Fire Endpoint Tester & CDN Asset Extractor
-</p>
+<div class="select-grid">
 
-</div>
-
-</div>
-
-<div class="badges">
-
-<div class="badge">
-AUTO LINK FIX
-</div>
-
-<div class="badge">
-SMART CLEANER
-</div>
-
-<div class="badge">
-LIVE PREVIEW
-</div>
-
-<div class="badge">
-RAW RESPONSE
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="main-grid">
-
-<div class="sidebar">
-
-<div class="card">
-
-<div class="card-title">
-API REQUEST
-</div>
-
-<div class="input-group">
-
-<label class="label">
-REGION
-</label>
-
-<select
-id="server"
-class="select">
-
-<option value="ind">
-IND
-</option>
-
-<option value="mea">
-MEA
-</option>
-
-<option value="id">
-ID
-</option>
-
-<option value="cis">
-CIS
-</option>
-
-<option value="br">
-BR
-</option>
-
-<option value="latam">
-LATAM
-</option>
-
-<option value="vn">
-VN
-</option>
-
-<option value="tw">
-TW
-</option>
-
-<option value="th">
-TH
-</option>
-
-<option value="sg">
-SG
-</option>
-
-<option value="eu">
-EU
-</option>
-
-<option value="na">
-NA
-</option>
-
-<option value="pk">
-PK
-</option>
-
-<option value="bd">
-BD
-</option>
-
+<select class="input" id="region">
+<option value="ind">IND</option>
+<option value="br">BR</option>
+<option value="na">NA</option>
+<option value="eu">EU</option>
+<option value="sg">SG</option>
+<option value="vn">VN</option>
+<option value="th">TH</option>
+<option value="tw">TW</option>
+<option value="id">ID</option>
+<option value="pk">PK</option>
+<option value="bd">BD</option>
 </select>
 
+<input class="input" id="endpoint" placeholder="Endpoint">
 </div>
 
-<div class="input-group">
-
-<label class="label">
-ENDPOINT
-</label>
-
-<input
-id="endpoint"
-class="input"
-placeholder="Enter API Endpoint"
-/>
-
+<div style="margin-top:14px">
+<div class="label">Detected CDN Base</div>
+<input class="input" id="baseLink" readonly>
 </div>
 
-<div class="row">
-
-<div class="input-group">
-
-<label class="label">
-VERSION
-</label>
-
-<input
-id="version"
-class="input"
-value="OB53"
-/>
-
-</div>
-
-<div class="input-group">
-
-<label class="label">
-TIMEOUT
-</label>
-
-<input
-id="timeout"
-class="input"
-value="30"
-/>
-
-</div>
-
-</div>
-
-<button
-class="run-btn"
-onclick="runApi()">
-
-RUN API REQUEST
-
+<button class="btn" onclick="runRequest()">
+<i class="fa-solid fa-bolt"></i>
+SCAN LINKS
 </button>
 
-</div>
-
-<div class="card">
-
-<div class="card-title">
-VIEW SETTINGS
-</div>
-
-<div class="switches">
-
-<div class="switch-row">
-
-<span>
-IMAGE PREVIEW
-</span>
-
-<label class="switch">
-
-<input
-type="checkbox"
-id="imagePreview"
-checked
-/>
-
-<span class="slider"></span>
-
-</label>
-
-</div>
-
-<div class="switch-row">
-
-<span>
-SHOW RAW RESPONSE
-</span>
-
-<label class="switch">
-
-<input
-type="checkbox"
-id="showRaw"
-checked
-/>
-
-<span class="slider"></span>
-
-</label>
-
-</div>
-
-<div class="switch-row">
-
-<span>
-AUTO SCROLL
-</span>
-
-<label class="switch">
-
-<input
-type="checkbox"
-id="autoScroll"
-checked
-/>
-
-<span class="slider"></span>
-
-</label>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-LIVE STATS
+<div class="topbar">
+<button class="mini-btn active" id="imgBtn" onclick="toggleImages()">IMAGE PREVIEW</button>
+<button class="mini-btn" onclick="copyAll()">COPY ALL</button>
+<button class="mini-btn" onclick="downloadTxt()">DOWNLOAD</button>
 </div>
 
 <div class="stats">
-
-<div class="stat">
-
-<div class="stat-label">
-TOTAL LINKS
+<div class="stats-left">
+<div class="dot"></div>
+<div>
+<div style="font-size:12px;font-weight:700" id="statusText">READY</div>
+<div style="font-size:11px;color:#7f7f7f" id="countText">0 links</div>
+</div>
 </div>
 
-<div
-id="totalLinks"
-class="stat-value">
-
-0
-
+<div style="font-size:12px;color:#8f8f8f" id="timeText">0 ms</div>
 </div>
 
+<div class="results">
+
+<div class="toolbar">
+<input class="search" placeholder="Find links..." id="searchInput" oninput="filterLinks()">
 </div>
 
-<div class="stat">
+<div class="result-box" id="results">
 
-<div class="stat-label">
-RAW STRINGS
-</div>
-
-<div
-id="totalStrings"
-class="stat-value">
-
-0
-
-</div>
-
-</div>
-
-<div class="stat">
-
-<div class="stat-label">
-STATUS
-</div>
-
-<div
-id="status"
-class="stat-value">
-
-READY
-
-</div>
-
-</div>
-
-<div class="stat">
-
-<div class="stat-label">
-TIME
-</div>
-
-<div
-id="timeTaken"
-class="stat-value">
-
-0ms
-
+<div class="empty">
+No results loaded
 </div>
 
 </div>
@@ -1127,537 +408,240 @@ class="stat-value">
 
 </div>
 
-</div>
-
-<div class="content">
-
-<div class="tabs">
-
-<div
-class="tab active"
-onclick="switchTab('links')">
-
-LINKS
-
-</div>
-
-<div
-class="tab"
-onclick="switchTab('raw')">
-
-RAW RESPONSE
-
-</div>
-
-</div>
-
-<input
-id="search"
-class="input search-bar"
-placeholder="Search Links, URLs, Images, OB Paths..."
-oninput="filterResults()"
-/>
-
-<div class="viewer">
-
-<div class="viewer-top">
-
-<div class="viewer-title">
-
-OUTPUT VIEWER
-
-</div>
-
-<div class="viewer-actions">
-
-<button
-class="small-btn copy-btn"
-onclick="copyResults()">
-
-COPY
-
-</button>
-
-<button
-class="small-btn download-btn"
-onclick="downloadResults()">
-
-DOWNLOAD
-
-</button>
-
-<button
-class="small-btn clear-btn"
-onclick="clearResults()">
-
-CLEAR
-
-</button>
-
-</div>
-
-</div>
-
-<div
-id="output"
-class="output">
-
-<div class="raw-box">
-Waiting For API Request...
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="footer">
-
-Built For Testing • Asset Hunting • CDN Extraction • Endpoint Analysis
-
-</div>
+<div class="footer-space"></div>
 
 </div>
 
 <script>
 
-let currentTab = "links"
+const regionMap = {
+    ind:'https://dl-tata.freefireind.in/common/',
+    br:'https://dl.dir.freefiremobile.com/common/',
+    na:'https://dl.dir.freefiremobile.com/common/',
+    eu:'https://dl.dir.freefiremobile.com/common/',
+    sg:'https://dl.dir.freefiremobile.com/common/',
+    vn:'https://dl.dir.freefiremobile.com/common/',
+    th:'https://dl.dir.freefiremobile.com/common/',
+    tw:'https://dl.dir.freefiremobile.com/common/',
+    id:'https://dl.dir.freefiremobile.com/common/',
+    pk:'https://dl.dir.freefiremobile.com/common/',
+    bd:'https://dl.dir.freefiremobile.com/common/'
+};
 
-let imageLinks = []
+let allLinks = [];
+let imagePreview = true;
 
-let otherLinks = []
+const regionSelect = document.getElementById('region');
+const baseInput = document.getElementById('baseLink');
 
-let rawStrings = []
-
-function switchTab(tab){
-
-    currentTab = tab
-
-    document
-    .querySelectorAll(".tab")
-    .forEach(x => x.classList.remove("active"))
-
-    if(tab === "links"){
-
-        document
-        .querySelectorAll(".tab")[0]
-        .classList.add("active")
-
-    }else{
-
-        document
-        .querySelectorAll(".tab")[1]
-        .classList.add("active")
-    }
-
-    renderOutput()
+function updateBase(){
+    baseInput.value = regionMap[regionSelect.value];
 }
 
-async function runApi(){
+updateBase();
 
-    const server =
-    document
-    .getElementById("server")
-    .value
+regionSelect.addEventListener('change',updateBase);
 
-    const endpoint =
-    document
-    .getElementById("endpoint")
-    .value
-    .trim()
+function cleanLink(link){
 
-    const version =
-    document
-    .getElementById("version")
-    .value
-    .trim()
+    link = link.trim();
 
-    if(!endpoint){
+    link = link.replace(/^[^a-zA-Z0-9]+/,'');
+    link = link.replace(/[^\w\-./:?=&]+$/,'');
 
-        alert("Enter Endpoint")
+    link = link.replace(/0$/,'');
+    link = link.replace(/X$/,'');
+    link = link.replace(/J$/,'');
+    link = link.replace(/B#$/,'');
 
-        return
+    return link;
+}
+
+function buildLink(raw){
+
+    raw = cleanLink(raw);
+
+    if(raw.startsWith('http')){
+        return raw;
     }
 
-    document
-    .getElementById("status")
-    .innerText =
-    "LOADING"
+    if(raw.match(/^OB\d+/i)){
+        return regionMap[regionSelect.value] + raw;
+    }
 
-    const output =
-    document
-    .getElementById("output")
+    return null;
+}
 
-    output.innerHTML = `
-    <div class="raw-box">
-    Loading Response...
-    </div>
-    `
+async function runRequest(){
+
+    const endpoint = document.getElementById('endpoint').value.trim();
+
+    if(!endpoint){
+        alert('Enter endpoint');
+        return;
+    }
+
+    const start = Date.now();
+
+    document.getElementById('results').innerHTML = `
+        <div class="loading">
+            <i class="fa-solid fa-spinner spin"></i>
+            <div style="margin-top:16px;color:#888">Scanning assets...</div>
+        </div>
+    `;
+
+    document.getElementById('statusText').innerText = 'SCANNING';
 
     try{
 
-        const response =
-        await fetch(
+        const res = await fetch(`/run_script?server=${regionSelect.value}&name=${encodeURIComponent(endpoint)}`);
 
-            `/run?server=${server}`
-            + `&endpoint=${encodeURIComponent(endpoint)}`
-            + `&version=${encodeURIComponent(version)}`
-
-        )
-
-        const data =
-        await response.json()
+        const data = await res.json();
 
         if(data.error){
-
-            document
-            .getElementById("status")
-            .innerText =
-            "ERROR"
-
-            output.innerHTML = `
-            <div class="raw-box">
-            ${data.error}
-            </div>
-            `
-
-            return
+            throw new Error(data.error);
         }
 
-        imageLinks =
-        data.image_links || []
+        const found = [];
 
-        otherLinks =
-        data.other_links || []
+        data.strings.forEach(item=>{
 
-        rawStrings =
-        data.raw_strings || []
+            const built = buildLink(item);
 
-        document
-        .getElementById("totalLinks")
-        .innerText =
-        imageLinks.length + otherLinks.length
+            if(!built) return;
 
-        document
-        .getElementById("totalStrings")
-        .innerText =
-        rawStrings.length
+            if(
+                built.includes('.png') ||
+                built.includes('.jpg') ||
+                built.includes('.jpeg') ||
+                built.includes('.webp') ||
+                built.includes('.ktx') ||
+                built.includes('.html') ||
+                built.includes('.json') ||
+                built.includes('.ff_extend')
+            ){
+                found.push(cleanLink(built));
+            }
 
-        document
-        .getElementById("status")
-        .innerText =
-        data.status_code
+        });
 
-        document
-        .getElementById("timeTaken")
-        .innerText =
-        data.response_time + "ms"
+        allLinks = [...new Set(found)];
 
-        renderOutput()
+        renderLinks(allLinks);
+
+        document.getElementById('countText').innerText = allLinks.length + ' links';
+        document.getElementById('statusText').innerText = 'SUCCESS';
+
+        document.getElementById('timeText').innerText = (Date.now()-start)+' ms';
 
     }catch(err){
 
-        document
-        .getElementById("status")
-        .innerText =
-        "FAILED"
+        document.getElementById('results').innerHTML = `
+            <div class="empty">
+                ${err.message}
+            </div>
+        `;
 
-        output.innerHTML = `
-        <div class="raw-box">
-        Request Failed
+        document.getElementById('statusText').innerText = 'ERROR';
+    }
+}
+
+function renderLinks(arr){
+
+    if(arr.length===0){
+
+        document.getElementById('results').innerHTML = `
+            <div class="empty">
+                No valid links found
+            </div>
+        `;
+
+        return;
+    }
+
+    let html = '';
+
+    arr.forEach((link,index)=>{
+
+        const isImage =
+            link.includes('.png') ||
+            link.includes('.jpg') ||
+            link.includes('.jpeg') ||
+            link.includes('.webp');
+
+        html += `
+        <div class="link-card">
+
+            <div class="link-type">
+                ${isImage ? 'IMAGE ASSET' : 'RESOURCE'}
+            </div>
+
+            <div class="link-url">${link}</div>
+
+            ${isImage && imagePreview ? `
+            <img class="preview" src="${link}" loading="lazy"
+            onload="this.style.display='block'"
+            onerror="this.style.display='none'">
+            ` : ''}
+
+            <div class="actions">
+                <button class="action" onclick="copyLink('${link}')">
+                COPY
+                </button>
+
+                <button class="action" onclick="window.open('${link}','_blank')">
+                OPEN
+                </button>
+            </div>
+
         </div>
-        `
-    }
+        `;
+    });
+
+    document.getElementById('results').innerHTML = html;
 }
 
-function renderOutput(){
+function filterLinks(){
 
-    const output =
-    document
-    .getElementById("output")
+    const q = document.getElementById('searchInput').value.toLowerCase();
 
-    output.innerHTML = ""
+    const filtered = allLinks.filter(x=>x.toLowerCase().includes(q));
 
-    if(currentTab === "links"){
-
-        const allLinks = [
-            ...imageLinks,
-            ...otherLinks
-        ]
-
-        if(!allLinks.length){
-
-            output.innerHTML = `
-            <div class="raw-box">
-            No Links Found
-            </div>
-            `
-
-            return
-        }
-
-        allLinks.forEach(link => {
-
-            const isImage =
-            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
-            .test(link)
-
-            const card =
-            document.createElement("div")
-
-            card.className =
-            "link-card"
-
-            card.innerHTML = `
-
-            <div class="link-type ${isImage ? 'image' : 'url'}">
-
-            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
-
-            </div>
-
-            <a
-            href="${link}"
-            target="_blank"
-            class="link">
-
-            ${link}
-
-            </a>
-
-            ${isImage &&
-            document.getElementById("imagePreview").checked
-            ?
-
-            `<img
-            src="${link}"
-            class="preview-image"
-            onload="this.style.display='block'"
-            />`
-
-            :
-
-            ""
-            }
-
-            `
-
-            output.appendChild(card)
-        })
-
-    }else{
-
-        if(!rawStrings.length){
-
-            output.innerHTML = `
-            <div class="raw-box">
-            No Raw Response
-            </div>
-            `
-
-            return
-        }
-
-        rawStrings.forEach(item => {
-
-            const div =
-            document.createElement("div")
-
-            div.className =
-            "raw-box"
-
-            div.innerText =
-            item
-
-            output.appendChild(div)
-        })
-    }
-
-    if(
-        document
-        .getElementById("autoScroll")
-        .checked
-    ){
-
-        output.scrollTop = 0
-    }
+    renderLinks(filtered);
 }
 
-function filterResults(){
+function copyLink(link){
 
-    const query =
-    document
-    .getElementById("search")
-    .value
-    .toLowerCase()
+    navigator.clipboard.writeText(link);
 
-    const output =
-    document
-    .getElementById("output")
-
-    output.innerHTML = ""
-
-    if(currentTab === "links"){
-
-        const links = [
-            ...imageLinks,
-            ...otherLinks
-        ].filter(
-            x => x.toLowerCase().includes(query)
-        )
-
-        links.forEach(link => {
-
-            const isImage =
-            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
-            .test(link)
-
-            const card =
-            document.createElement("div")
-
-            card.className =
-            "link-card"
-
-            card.innerHTML = `
-
-            <div class="link-type ${isImage ? 'image' : 'url'}">
-
-            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
-
-            </div>
-
-            <a
-            href="${link}"
-            target="_blank"
-            class="link">
-
-            ${link}
-
-            </a>
-
-            ${isImage &&
-            document.getElementById("imagePreview").checked
-            ?
-
-            `<img
-            src="${link}"
-            class="preview-image"
-            onload="this.style.display='block'"
-            />`
-
-            :
-
-            ""
-            }
-
-            `
-
-            output.appendChild(card)
-        })
-
-    }else{
-
-        const filtered =
-        rawStrings.filter(
-            x => x.toLowerCase().includes(query)
-        )
-
-        filtered.forEach(item => {
-
-            const div =
-            document.createElement("div")
-
-            div.className =
-            "raw-box"
-
-            div.innerText =
-            item
-
-            output.appendChild(div)
-        })
-    }
 }
 
-function copyResults(){
+function copyAll(){
 
-    const all = [
-        ...imageLinks,
-        ...otherLinks
-    ]
+    navigator.clipboard.writeText(allLinks.join('\n'));
 
-    navigator
-    .clipboard
-    .writeText(all.join("\n"))
-
-    alert("Copied")
 }
 
-function downloadResults(){
+function downloadTxt(){
 
-    const all = [
-        ...imageLinks,
-        ...otherLinks
-    ]
+    const blob = new Blob([allLinks.join('\n')],{type:'text/plain'});
 
-    const blob =
-    new Blob(
-        [all.join("\n")],
-        {
-            type:"text/plain"
-        }
-    )
+    const a = document.createElement('a');
 
-    const a =
-    document.createElement("a")
+    a.href = URL.createObjectURL(blob);
 
-    a.href =
-    URL.createObjectURL(blob)
+    a.download = 'links.txt';
 
-    a.download =
-    "ff_links.txt"
-
-    a.click()
+    a.click();
 }
 
-function clearResults(){
+function toggleImages(){
 
-    imageLinks = []
+    imagePreview = !imagePreview;
 
-    otherLinks = []
+    document.getElementById('imgBtn').classList.toggle('active');
 
-    rawStrings = []
-
-    document
-    .getElementById("output")
-    .innerHTML =
-    `
-    <div class="raw-box">
-    Cleared
-    </div>
-    `
-
-    document
-    .getElementById("totalLinks")
-    .innerText =
-    "0"
-
-    document
-    .getElementById("totalStrings")
-    .innerText =
-    "0"
-
-    document
-    .getElementById("status")
-    .innerText =
-    "READY"
-
-    document
-    .getElementById("timeTaken")
-    .innerText =
-    "0ms"
+    renderLinks(allLinks);
 }
 
 </script>
