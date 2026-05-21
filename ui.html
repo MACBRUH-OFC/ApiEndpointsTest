@@ -14,7 +14,30 @@ content="width=device-width, initial-scale=1.0"
 FF API LINK EXTRACTOR
 </title>
 
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet"
+/>
+
 <style>
+
+:root{
+
+    --bg:#050505;
+    --card:#101010;
+    --card2:#171717;
+    --border:#242424;
+    --text:#ffffff;
+    --sub:#9d9d9d;
+
+    --blue:#0a84ff;
+    --green:#22c55e;
+    --orange:#ff9500;
+    --red:#ff3b30;
+
+    --shadow:
+    0 10px 40px rgba(0,0,0,.45);
+}
 
 *{
     margin:0;
@@ -24,102 +47,248 @@ FF API LINK EXTRACTOR
 
 body{
 
-    background:#050505;
+    background:
+    radial-gradient(
+        circle at top,
+        #141414,
+        #050505 40%
+    );
 
-    color:#ffffff;
+    color:var(--text);
 
-    font-family:
-    Arial,
-    sans-serif;
+    font-family:'Inter',sans-serif;
 
     min-height:100vh;
 
-    padding:18px;
+    overflow-x:hidden;
 }
 
 .container{
 
     width:100%;
 
-    max-width:1600px;
+    max-width:1700px;
 
     margin:auto;
+
+    padding:18px;
 }
 
 .header{
 
-    text-align:center;
+    background:rgba(16,16,16,.85);
 
-    margin-bottom:25px;
+    backdrop-filter:blur(20px);
+
+    border:
+    1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:24px;
+
+    margin-bottom:18px;
+
+    box-shadow:var(--shadow);
 }
 
-.header h1{
+.top-flex{
 
-    font-size:40px;
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.logo-box{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0a84ff,
+        #00d4ff
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    font-weight:900;
+}
+
+.title h1{
+
+    font-size:34px;
 
     font-weight:900;
 
-    letter-spacing:2px;
-
-    margin-bottom:10px;
+    letter-spacing:1px;
 }
 
-.header p{
+.title p{
 
-    color:#888;
+    color:var(--sub);
+
+    margin-top:4px;
 
     font-size:14px;
 }
 
-.panel{
+.badges{
 
-    background:#0f0f0f;
+    display:flex;
 
-    border:
-    1px solid #1f1f1f;
+    flex-wrap:wrap;
 
-    border-radius:22px;
-
-    padding:20px;
+    gap:10px;
 }
 
-.topbar{
-
-    display:grid;
-
-    grid-template-columns:
-    150px
-    1fr
-    120px;
-
-    gap:12px;
-
-    margin-bottom:18px;
-}
-
-.input{
-
-    width:100%;
+.badge{
 
     background:#181818;
 
     border:
     1px solid #292929;
 
-    border-radius:14px;
+    border-radius:999px;
 
-    padding:16px;
+    padding:10px 14px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#bcbcbc;
+}
+
+.main-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    420px 1fr;
+
+    gap:18px;
+}
+
+.sidebar{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.card{
+
+    background:rgba(15,15,15,.9);
+
+    border:
+    1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:22px;
+
+    box-shadow:var(--shadow);
+}
+
+.card-title{
+
+    font-size:15px;
+
+    font-weight:800;
+
+    color:#bdbdbd;
+
+    margin-bottom:18px;
+
+    letter-spacing:.5px;
+}
+
+.input-group{
+
+    margin-bottom:15px;
+}
+
+.label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#9f9f9f;
+
+    font-size:13px;
+
+    font-weight:700;
+}
+
+.input,
+.select{
+
+    width:100%;
+
+    background:#171717;
+
+    border:
+    1px solid #2a2a2a;
 
     color:white;
+
+    padding:15px 16px;
+
+    border-radius:18px;
 
     outline:none;
 
     font-size:14px;
+
+    transition:.2s;
 }
 
-.input:focus{
+.input:focus,
+.select:focus{
 
-    border-color:#00a2ff;
+    border-color:#0a84ff;
+
+    box-shadow:
+    0 0 0 4px rgba(10,132,255,.15);
+}
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:12px;
 }
 
 .run-btn{
@@ -128,24 +297,26 @@ body{
 
     border:none;
 
-    border-radius:14px;
+    border-radius:20px;
 
-    padding:16px;
+    padding:18px;
+
+    margin-top:6px;
 
     background:
     linear-gradient(
         135deg,
-        #0066ff,
-        #00a2ff
+        #0a84ff,
+        #00b7ff
     );
 
     color:white;
 
+    font-size:15px;
+
     font-weight:900;
 
     cursor:pointer;
-
-    margin-bottom:18px;
 
     transition:.2s;
 }
@@ -153,6 +324,93 @@ body{
 .run-btn:hover{
 
     transform:translateY(-2px);
+
+    filter:brightness(1.08);
+}
+
+.switches{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.switch-row{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+.switch-row span{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#cfcfcf;
+}
+
+.switch{
+
+    position:relative;
+
+    width:58px;
+
+    height:32px;
+}
+
+.switch input{
+
+    display:none;
+}
+
+.slider{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#2d2d2d;
+
+    border-radius:999px;
+
+    transition:.2s;
+}
+
+.slider::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:24px;
+
+    height:24px;
+
+    background:white;
+
+    border-radius:50%;
+
+    top:4px;
+
+    left:4px;
+
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+
+    background:#22c55e;
+}
+
+.switch input:checked + .slider::before{
+
+    transform:translateX(26px);
 }
 
 .stats{
@@ -160,136 +418,229 @@ body{
     display:grid;
 
     grid-template-columns:
-    repeat(auto-fit,minmax(200px,1fr));
+    repeat(2,1fr);
 
     gap:12px;
-
-    margin-bottom:18px;
 }
 
 .stat{
 
-    background:#161616;
+    background:#171717;
 
     border:
-    1px solid #252525;
+    1px solid #272727;
 
-    border-radius:16px;
+    border-radius:22px;
 
-    padding:16px;
+    padding:18px;
 }
 
-.stat-title{
+.stat-label{
 
-    color:#888;
+    color:#8d8d8d;
 
     font-size:12px;
 
-    margin-bottom:8px;
-}
-
-.stat-value{
-
-    font-size:24px;
-
-    font-weight:900;
-}
-
-.search-box{
-
-    margin-bottom:18px;
-}
-
-.grid{
-
-    display:grid;
-
-    grid-template-columns:
-    1fr 1fr;
-
-    gap:18px;
-}
-
-.section{
-
-    background:#0a0a0a;
-
-    border:
-    1px solid #1c1c1c;
-
-    border-radius:18px;
-
-    overflow:hidden;
-}
-
-.section-header{
-
-    padding:16px;
-
-    background:#121212;
-
-    border-bottom:
-    1px solid #1e1e1e;
-
-    font-weight:900;
-
-    font-size:16px;
-
-    color:#00a2ff;
-}
-
-.output{
-
-    padding:15px;
-
-    height:620px;
-
-    overflow:auto;
-
-    white-space:pre-wrap;
-
-    word-break:break-word;
-
-    font-family:
-    Consolas,
-    monospace;
-
-    font-size:13px;
-
-    line-height:1.6;
-}
-
-.link-card{
-
-    background:#141414;
-
-    border:
-    1px solid #262626;
-
-    border-radius:12px;
-
-    padding:12px;
+    font-weight:700;
 
     margin-bottom:10px;
 }
 
-.link-card a{
+.stat-value{
 
-    color:#55b6ff;
+    font-size:28px;
 
-    text-decoration:none;
+    font-weight:900;
 }
 
-.link-card a:hover{
+.content{
 
-    text-decoration:underline;
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+.tabs{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+.tab{
+
+    background:#161616;
+
+    border:
+    1px solid #292929;
+
+    color:#bcbcbc;
+
+    padding:13px 18px;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    transition:.2s;
+}
+
+.tab.active{
+
+    background:#0a84ff;
+
+    color:white;
+
+    border-color:#0a84ff;
+}
+
+.search-bar{
+
+    width:100%;
+}
+
+.viewer{
+
+    background:#0d0d0d;
+
+    border:
+    1px solid #202020;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    min-height:820px;
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+.viewer-top{
+
+    padding:18px;
+
+    border-bottom:
+    1px solid #202020;
+
+    background:#141414;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.viewer-title{
+
+    font-size:16px;
+
+    font-weight:900;
+}
+
+.viewer-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+.small-btn{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 15px;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    color:white;
+}
+
+.copy-btn{
+
+    background:#22c55e;
+}
+
+.download-btn{
+
+    background:#ff9500;
+}
+
+.clear-btn{
+
+    background:#ff3b30;
+}
+
+.small-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+.output{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:18px;
+}
+
+.link-card{
+
+    background:#151515;
+
+    border:
+    1px solid #252525;
+
+    border-radius:20px;
+
+    padding:16px;
+
+    margin-bottom:14px;
+
+    transition:.2s;
+}
+
+.link-card:hover{
+
+    border-color:#0a84ff;
+
+    transform:translateY(-1px);
 }
 
 .link-type{
 
-    display:inline-block;
+    display:inline-flex;
 
-    padding:5px 10px;
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 12px;
 
     border-radius:999px;
 
@@ -297,97 +648,95 @@ body{
 
     font-weight:900;
 
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
 .image{
 
-    background:#0f3d1d;
+    background:rgba(34,197,94,.15);
 
-    color:#6dff9b;
+    color:#6eff9d;
 }
 
-.other{
+.url{
 
-    background:#3d310f;
+    background:rgba(255,149,0,.15);
 
-    color:#ffd86d;
+    color:#ffbe5c;
 }
 
-.actions{
+.raw{
 
-    display:flex;
+    background:rgba(10,132,255,.15);
 
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    margin-top:18px;
+    color:#6dc0ff;
 }
 
-.action-btn{
+.link{
 
-    flex:1;
+    color:#64b8ff;
 
-    min-width:180px;
+    text-decoration:none;
 
-    border:none;
+    word-break:break-all;
 
-    border-radius:14px;
+    font-size:13px;
 
-    padding:15px;
-
-    color:white;
-
-    font-weight:900;
-
-    cursor:pointer;
-
-    transition:.2s;
+    line-height:1.7;
 }
 
-.action-btn:hover{
+.link:hover{
 
-    transform:translateY(-2px);
+    text-decoration:underline;
 }
 
-.copy-btn{
+.raw-box{
 
-    background:
-    linear-gradient(
-        135deg,
-        #18a558,
-        #21d07a
-    );
+    background:#111;
+
+    border:
+    1px solid #222;
+
+    border-radius:18px;
+
+    padding:14px;
+
+    margin-bottom:12px;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    font-family:Consolas,monospace;
+
+    font-size:12px;
+
+    line-height:1.6;
+
+    color:#d0d0d0;
 }
 
-.download-btn{
+.preview-image{
 
-    background:
-    linear-gradient(
-        135deg,
-        #ff9800,
-        #ffbc42
-    );
-}
+    width:100%;
 
-.clear-btn{
+    margin-top:15px;
 
-    background:
-    linear-gradient(
-        135deg,
-        #ff3b3b,
-        #ff6666
-    );
+    border-radius:18px;
+
+    border:
+    1px solid #2d2d2d;
+
+    display:none;
 }
 
 .footer{
 
-    margin-top:18px;
-
     text-align:center;
 
-    color:#666;
+    color:#767676;
+
+    margin-top:18px;
 
     font-size:13px;
 }
@@ -399,14 +748,14 @@ body{
 
 ::-webkit-scrollbar-thumb{
 
-    background:#333;
+    background:#2f2f2f;
 
     border-radius:999px;
 }
 
-@media(max-width:1100px){
+@media(max-width:1200px){
 
-    .grid{
+    .main-grid{
 
         grid-template-columns:
         1fr;
@@ -415,20 +764,26 @@ body{
 
 @media(max-width:700px){
 
-    .topbar{
+    .title h1{
+
+        font-size:25px;
+    }
+
+    .viewer{
+
+        min-height:650px;
+    }
+
+    .stats{
 
         grid-template-columns:
         1fr;
     }
 
-    .header h1{
+    .row{
 
-        font-size:28px;
-    }
-
-    .output{
-
-        height:450px;
+        grid-template-columns:
+        1fr;
     }
 }
 
@@ -442,23 +797,71 @@ body{
 
 <div class="header">
 
+<div class="top-flex">
+
+<div class="logo">
+
+<div class="logo-box">
+FF
+</div>
+
+<div class="title">
+
 <h1>
 FF API LINK EXTRACTOR
 </h1>
 
 <p>
-Extract CDN Assets, Images, URLs & Raw API Strings
+Advanced Free Fire Endpoint Tester & CDN Asset Extractor
 </p>
 
 </div>
 
-<div class="panel">
+</div>
 
-<div class="topbar">
+<div class="badges">
+
+<div class="badge">
+AUTO LINK FIX
+</div>
+
+<div class="badge">
+SMART CLEANER
+</div>
+
+<div class="badge">
+LIVE PREVIEW
+</div>
+
+<div class="badge">
+RAW RESPONSE
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="main-grid">
+
+<div class="sidebar">
+
+<div class="card">
+
+<div class="card-title">
+API REQUEST
+</div>
+
+<div class="input-group">
+
+<label class="label">
+REGION
+</label>
 
 <select
 id="server"
-class="input">
+class="select">
 
 <option value="ind">
 IND
@@ -518,17 +921,51 @@ BD
 
 </select>
 
+</div>
+
+<div class="input-group">
+
+<label class="label">
+ENDPOINT
+</label>
+
 <input
 id="endpoint"
 class="input"
-placeholder="Enter Endpoint"
+placeholder="Enter API Endpoint"
 />
+
+</div>
+
+<div class="row">
+
+<div class="input-group">
+
+<label class="label">
+VERSION
+</label>
 
 <input
 id="version"
 class="input"
 value="OB53"
 />
+
+</div>
+
+<div class="input-group">
+
+<label class="label">
+TIMEOUT
+</label>
+
+<input
+id="timeout"
+class="input"
+value="30"
+/>
+
+</div>
 
 </div>
 
@@ -540,11 +977,91 @@ RUN API REQUEST
 
 </button>
 
+</div>
+
+<div class="card">
+
+<div class="card-title">
+VIEW SETTINGS
+</div>
+
+<div class="switches">
+
+<div class="switch-row">
+
+<span>
+IMAGE PREVIEW
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="imagePreview"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<div class="switch-row">
+
+<span>
+SHOW RAW RESPONSE
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="showRaw"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+<div class="switch-row">
+
+<span>
+AUTO SCROLL
+</span>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="autoScroll"
+checked
+/>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+LIVE STATS
+</div>
+
 <div class="stats">
 
 <div class="stat">
 
-<div class="stat-title">
+<div class="stat-label">
 TOTAL LINKS
 </div>
 
@@ -560,7 +1077,7 @@ class="stat-value">
 
 <div class="stat">
 
-<div class="stat-title">
+<div class="stat-label">
 RAW STRINGS
 </div>
 
@@ -576,7 +1093,7 @@ class="stat-value">
 
 <div class="stat">
 
-<div class="stat-title">
+<div class="stat-label">
 STATUS
 </div>
 
@@ -592,15 +1109,15 @@ READY
 
 <div class="stat">
 
-<div class="stat-title">
-VERSION
+<div class="stat-label">
+TIME
 </div>
 
 <div
-id="versionView"
+id="timeTaken"
 class="stat-value">
 
-OB53
+0ms
 
 </div>
 
@@ -608,90 +1125,98 @@ OB53
 
 </div>
 
-<div class="search-box">
-
-<input
-id="search"
-class="input"
-placeholder="Search links or raw strings..."
-oninput="filterResults()"
-/>
+</div>
 
 </div>
 
-<div class="grid">
+<div class="content">
 
-<div class="section">
+<div class="tabs">
 
-<div class="section-header">
+<div
+class="tab active"
+onclick="switchTab('links')">
 
-EXTRACTED LINKS
+LINKS
 
 </div>
 
 <div
-id="links"
-class="output">
-
-No Data
-
-</div>
-
-</div>
-
-<div class="section">
-
-<div class="section-header">
+class="tab"
+onclick="switchTab('raw')">
 
 RAW RESPONSE
 
 </div>
 
+</div>
+
+<input
+id="search"
+class="input search-bar"
+placeholder="Search Links, URLs, Images, OB Paths..."
+oninput="filterResults()"
+/>
+
+<div class="viewer">
+
+<div class="viewer-top">
+
+<div class="viewer-title">
+
+OUTPUT VIEWER
+
+</div>
+
+<div class="viewer-actions">
+
+<button
+class="small-btn copy-btn"
+onclick="copyResults()">
+
+COPY
+
+</button>
+
+<button
+class="small-btn download-btn"
+onclick="downloadResults()">
+
+DOWNLOAD
+
+</button>
+
+<button
+class="small-btn clear-btn"
+onclick="clearResults()">
+
+CLEAR
+
+</button>
+
+</div>
+
+</div>
+
 <div
-id="raw"
+id="output"
 class="output">
 
-No Data
-
+<div class="raw-box">
+Waiting For API Request...
 </div>
 
 </div>
 
 </div>
 
-<div class="actions">
-
-<button
-class="action-btn copy-btn"
-onclick="copyLinks()">
-
-COPY LINKS
-
-</button>
-
-<button
-class="action-btn download-btn"
-onclick="downloadLinks()">
-
-DOWNLOAD LINKS
-
-</button>
-
-<button
-class="action-btn clear-btn"
-onclick="clearAll()">
-
-CLEAR OUTPUT
-
-</button>
+</div>
 
 </div>
 
 <div class="footer">
 
-Built For Asset Extraction & Endpoint Testing
-
-</div>
+Built For Testing • Asset Hunting • CDN Extraction • Endpoint Analysis
 
 </div>
 
@@ -699,9 +1224,37 @@ Built For Asset Extraction & Endpoint Testing
 
 <script>
 
+let currentTab = "links"
+
 let imageLinks = []
+
 let otherLinks = []
+
 let rawStrings = []
+
+function switchTab(tab){
+
+    currentTab = tab
+
+    document
+    .querySelectorAll(".tab")
+    .forEach(x => x.classList.remove("active"))
+
+    if(tab === "links"){
+
+        document
+        .querySelectorAll(".tab")[0]
+        .classList.add("active")
+
+    }else{
+
+        document
+        .querySelectorAll(".tab")[1]
+        .classList.add("active")
+    }
+
+    renderOutput()
+}
 
 async function runApi(){
 
@@ -725,6 +1278,7 @@ async function runApi(){
     if(!endpoint){
 
         alert("Enter Endpoint")
+
         return
     }
 
@@ -733,10 +1287,15 @@ async function runApi(){
     .innerText =
     "LOADING"
 
+    const output =
     document
-    .getElementById("versionView")
-    .innerText =
-    version
+    .getElementById("output")
+
+    output.innerHTML = `
+    <div class="raw-box">
+    Loading Response...
+    </div>
+    `
 
     try{
 
@@ -759,7 +1318,11 @@ async function runApi(){
             .innerText =
             "ERROR"
 
-            alert(data.error)
+            output.innerHTML = `
+            <div class="raw-box">
+            ${data.error}
+            </div>
+            `
 
             return
         }
@@ -773,14 +1336,10 @@ async function runApi(){
         rawStrings =
         data.raw_strings || []
 
-        const totalLinks =
-        imageLinks.length
-        + otherLinks.length
-
         document
         .getElementById("totalLinks")
         .innerText =
-        totalLinks
+        imageLinks.length + otherLinks.length
 
         document
         .getElementById("totalStrings")
@@ -790,11 +1349,14 @@ async function runApi(){
         document
         .getElementById("status")
         .innerText =
-        "SUCCESS"
+        data.status_code
 
-        renderLinks()
+        document
+        .getElementById("timeTaken")
+        .innerText =
+        data.response_time + "ms"
 
-        renderRaw(rawStrings)
+        renderOutput()
 
     }catch(err){
 
@@ -803,81 +1365,125 @@ async function runApi(){
         .innerText =
         "FAILED"
 
-        alert("Request Failed")
+        output.innerHTML = `
+        <div class="raw-box">
+        Request Failed
+        </div>
+        `
     }
 }
 
-function renderLinks(){
+function renderOutput(){
 
-    const container =
-    document.getElementById("links")
-
-    let html = ""
-
-    imageLinks.forEach(link => {
-
-        html += `
-
-        <div class="link-card">
-
-        <div class="link-type image">
-
-        IMAGE
-
-        </div>
-
-        <a
-        href="${link}"
-        target="_blank">
-
-        ${link}
-
-        </a>
-
-        </div>
-
-        `
-    })
-
-    otherLinks.forEach(link => {
-
-        html += `
-
-        <div class="link-card">
-
-        <div class="link-type other">
-
-        URL
-
-        </div>
-
-        <a
-        href="${link}"
-        target="_blank">
-
-        ${link}
-
-        </a>
-
-        </div>
-
-        `
-    })
-
-    if(!html){
-
-        html = "No Links Found"
-    }
-
-    container.innerHTML = html
-}
-
-function renderRaw(strings){
-
+    const output =
     document
-    .getElementById("raw")
-    .innerText =
-    strings.join("\n")
+    .getElementById("output")
+
+    output.innerHTML = ""
+
+    if(currentTab === "links"){
+
+        const allLinks = [
+            ...imageLinks,
+            ...otherLinks
+        ]
+
+        if(!allLinks.length){
+
+            output.innerHTML = `
+            <div class="raw-box">
+            No Links Found
+            </div>
+            `
+
+            return
+        }
+
+        allLinks.forEach(link => {
+
+            const isImage =
+            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
+            .test(link)
+
+            const card =
+            document.createElement("div")
+
+            card.className =
+            "link-card"
+
+            card.innerHTML = `
+
+            <div class="link-type ${isImage ? 'image' : 'url'}">
+
+            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
+
+            </div>
+
+            <a
+            href="${link}"
+            target="_blank"
+            class="link">
+
+            ${link}
+
+            </a>
+
+            ${isImage &&
+            document.getElementById("imagePreview").checked
+            ?
+
+            `<img
+            src="${link}"
+            class="preview-image"
+            onload="this.style.display='block'"
+            />`
+
+            :
+
+            ""
+            }
+
+            `
+
+            output.appendChild(card)
+        })
+
+    }else{
+
+        if(!rawStrings.length){
+
+            output.innerHTML = `
+            <div class="raw-box">
+            No Raw Response
+            </div>
+            `
+
+            return
+        }
+
+        rawStrings.forEach(item => {
+
+            const div =
+            document.createElement("div")
+
+            div.className =
+            "raw-box"
+
+            div.innerText =
+            item
+
+            output.appendChild(div)
+        })
+    }
+
+    if(
+        document
+        .getElementById("autoScroll")
+        .checked
+    ){
+
+        output.scrollTop = 0
+    }
 }
 
 function filterResults(){
@@ -888,128 +1494,120 @@ function filterResults(){
     .value
     .toLowerCase()
 
-    const filteredImages =
-    imageLinks.filter(
-        x => x.toLowerCase().includes(query)
-    )
+    const output =
+    document
+    .getElementById("output")
 
-    const filteredOthers =
-    otherLinks.filter(
-        x => x.toLowerCase().includes(query)
-    )
+    output.innerHTML = ""
 
-    const filteredStrings =
-    rawStrings.filter(
-        x => x.toLowerCase().includes(query)
-    )
+    if(currentTab === "links"){
 
-    const container =
-    document.getElementById("links")
+        const links = [
+            ...imageLinks,
+            ...otherLinks
+        ].filter(
+            x => x.toLowerCase().includes(query)
+        )
 
-    let html = ""
+        links.forEach(link => {
 
-    filteredImages.forEach(link => {
+            const isImage =
+            /\.(png|jpg|jpeg|gif|webp|ktx)$/i
+            .test(link)
 
-        html += `
+            const card =
+            document.createElement("div")
 
-        <div class="link-card">
+            card.className =
+            "link-card"
 
-        <div class="link-type image">
+            card.innerHTML = `
 
-        IMAGE
+            <div class="link-type ${isImage ? 'image' : 'url'}">
 
-        </div>
+            ${isImage ? 'IMAGE ASSET' : 'URL / ENDPOINT'}
 
-        <a
-        href="${link}"
-        target="_blank">
+            </div>
 
-        ${link}
+            <a
+            href="${link}"
+            target="_blank"
+            class="link">
 
-        </a>
+            ${link}
 
-        </div>
+            </a>
 
-        `
-    })
+            ${isImage &&
+            document.getElementById("imagePreview").checked
+            ?
 
-    filteredOthers.forEach(link => {
+            `<img
+            src="${link}"
+            class="preview-image"
+            onload="this.style.display='block'"
+            />`
 
-        html += `
+            :
 
-        <div class="link-card">
+            ""
+            }
 
-        <div class="link-type other">
+            `
 
-        URL
+            output.appendChild(card)
+        })
 
-        </div>
+    }else{
 
-        <a
-        href="${link}"
-        target="_blank">
+        const filtered =
+        rawStrings.filter(
+            x => x.toLowerCase().includes(query)
+        )
 
-        ${link}
+        filtered.forEach(item => {
 
-        </a>
+            const div =
+            document.createElement("div")
 
-        </div>
+            div.className =
+            "raw-box"
 
-        `
-    })
+            div.innerText =
+            item
 
-    if(!html){
-
-        html = "No Results"
+            output.appendChild(div)
+        })
     }
-
-    container.innerHTML = html
-
-    renderRaw(filteredStrings)
 }
 
-function copyLinks(){
+function copyResults(){
 
-    const allLinks = [
+    const all = [
         ...imageLinks,
         ...otherLinks
     ]
 
-    if(!allLinks.length){
-
-        alert("No Links")
-        return
-    }
-
-    navigator.clipboard.writeText(
-        allLinks.join("\n")
-    )
+    navigator
+    .clipboard
+    .writeText(all.join("\n"))
 
     alert("Copied")
 }
 
-function downloadLinks(){
+function downloadResults(){
 
-    const allLinks = [
+    const all = [
         ...imageLinks,
         ...otherLinks
     ]
 
-    if(!allLinks.length){
-
-        alert("No Links")
-        return
-    }
-
     const blob =
     new Blob(
-
-        [allLinks.join("\n")],
-
+        [all.join("\n")],
         {
             type:"text/plain"
         }
-
     )
 
     const a =
@@ -1024,21 +1622,22 @@ function downloadLinks(){
     a.click()
 }
 
-function clearAll(){
+function clearResults(){
 
     imageLinks = []
+
     otherLinks = []
+
     rawStrings = []
 
     document
-    .getElementById("links")
+    .getElementById("output")
     .innerHTML =
-    "No Data"
-
-    document
-    .getElementById("raw")
-    .innerText =
-    "No Data"
+    `
+    <div class="raw-box">
+    Cleared
+    </div>
+    `
 
     document
     .getElementById("totalLinks")
@@ -1054,6 +1653,11 @@ function clearAll(){
     .getElementById("status")
     .innerText =
     "READY"
+
+    document
+    .getElementById("timeTaken")
+    .innerText =
+    "0ms"
 }
 
 </script>
