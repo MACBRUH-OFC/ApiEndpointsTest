@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -18,90 +19,93 @@ font-family:Arial,sans-serif;
 padding:16px;
 }
 
-.panel{
+.main{
+max-width:1400px;
+margin:auto;
+}
+
+.card{
 background:#101010;
-border:1px solid #222;
+border:1px solid #202020;
 border-radius:18px;
 padding:16px;
 }
 
-.server-btn{
+.input{
+width:100%;
+padding:16px;
+background:#090909;
+border:1px solid #262626;
+border-radius:16px;
+color:white;
+outline:none;
+}
+
+.server{
 padding:12px;
-border-radius:12px;
+border-radius:14px;
 background:#171717;
-border:1px solid #2a2a2a;
+border:1px solid #292929;
 font-size:13px;
 font-weight:bold;
 cursor:pointer;
 transition:.2s;
 }
 
-.server-btn:hover{
+.server:hover{
 background:#ffde00;
 color:black;
 }
 
-.server-btn.active{
+.server.active{
 background:#ffde00;
 color:black;
 }
 
-input{
-width:100%;
-padding:14px;
-border-radius:14px;
-background:#0b0b0b;
-border:1px solid #222;
-outline:none;
-color:white;
-}
-
-.result-card{
-background:#0d0d0d;
-border:1px solid #202020;
+.run{
+background:#ffde00;
+color:black;
+padding:16px;
 border-radius:16px;
+font-weight:900;
+width:100%;
+font-size:18px;
+}
+
+.result{
+background:#0c0c0c;
+border:1px solid #1f1f1f;
 padding:14px;
+border-radius:16px;
 overflow:hidden;
 }
 
-.raw-box{
-background:#070707;
-border:1px solid #1d1d1d;
-padding:12px;
-border-radius:12px;
-font-size:12px;
+.preview{
+margin-top:12px;
+border-radius:14px;
+max-height:220px;
+border:1px solid #2a2a2a;
+}
+
+.raw{
 white-space:pre-wrap;
 word-break:break-word;
-max-height:260px;
+font-size:12px;
+color:#d2d2d2;
+max-height:300px;
 overflow:auto;
-color:#cfcfcf;
 }
 
-.toggle{
-display:flex;
-align-items:center;
-gap:8px;
-font-size:14px;
-}
-
-.preview-img{
-margin-top:12px;
-border-radius:12px;
-border:1px solid #2a2a2a;
-max-height:240px;
-}
-
-.small-btn{
+.small{
 padding:10px 14px;
+background:#171717;
 border-radius:12px;
-background:#1a1a1a;
-border:1px solid #2a2a2a;
 font-size:13px;
 cursor:pointer;
 }
 
-.small-btn:hover{
-background:#2a2a2a;
+.small:hover{
+background:#262626;
 }
 
 </style>
@@ -110,7 +114,7 @@ background:#2a2a2a;
 
 <body>
 
-<div class="max-w-7xl mx-auto space-y-5">
+<div class="main space-y-5">
 
 <div class="text-center">
 
@@ -119,122 +123,112 @@ FF API TOOL
 </h1>
 
 <p class="text-zinc-500 mt-2">
-Advanced Link Extractor + Raw Viewer
+Advanced Free Fire Link Extractor
 </p>
 
 </div>
 
-<div class="panel space-y-5">
+<div class="card space-y-5">
 
 <input
 id="api"
+class="input"
 placeholder="Enter API Name"
 />
 
 <div
 id="servers"
-class="grid grid-cols-2 md:grid-cols-4 gap-3"
+class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3"
 ></div>
 
 <button
+class="run"
 onclick="runAPI()"
-class="w-full bg-yellow-400 text-black font-black p-4 rounded-2xl"
 >
 RUN API
 </button>
 
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-<div class="panel">
+<div class="card">
 <div class="text-zinc-500 text-sm">LINKS</div>
-<div id="count" class="text-3xl font-bold">0</div>
+<div id="count" class="text-3xl font-black">0</div>
 </div>
 
-<div class="panel">
+<div class="card">
 <div class="text-zinc-500 text-sm">STATUS</div>
-<div id="status" class="text-3xl font-bold">0</div>
+<div id="status" class="text-3xl font-black">0</div>
 </div>
 
-<div class="panel">
+<div class="card">
 <div class="text-zinc-500 text-sm">RAW SIZE</div>
-<div id="rawsize" class="text-3xl font-bold">0</div>
+<div id="size" class="text-3xl font-black">0</div>
 </div>
 
-<div class="panel">
-<div class="text-zinc-500 text-sm">STRINGS</div>
-<div id="stringscount" class="text-3xl font-bold">0</div>
+<div class="card">
+<div class="text-zinc-500 text-sm">RAW STRINGS</div>
+<div id="strings" class="text-3xl font-black">0</div>
 </div>
 
 </div>
 
 <input
 id="search"
-placeholder="Search..."
+class="input"
+placeholder="Search Links..."
 oninput="renderResults()"
 />
 
-<div class="flex flex-wrap gap-5">
+<div class="flex flex-wrap gap-4">
 
-<label class="toggle">
+<label class="flex items-center gap-2">
 <input type="checkbox" id="preview" checked>
-Preview Images
+Preview
 </label>
 
-<label class="toggle">
-<input type="checkbox" id="linksOnly" checked>
-Links Only
+<label class="flex items-center gap-2">
+<input type="checkbox" id="rawmode">
+Raw Mode
 </label>
 
-<label class="toggle">
-<input type="checkbox" id="showRaw">
-Show Raw Strings
-</label>
-
-<label class="toggle">
+<label class="flex items-center gap-2">
 <input type="checkbox" id="images" checked>
 Images
 </label>
 
-<label class="toggle">
-<input type="checkbox" id="json" checked>
-JSON
+<label class="flex items-center gap-2">
+<input type="checkbox" id="videos" checked>
+Videos
 </label>
 
-<label class="toggle">
-<input type="checkbox" id="html" checked>
+<label class="flex items-center gap-2">
+<input type="checkbox" id="htmls" checked>
 HTML
+</label>
+
+<label class="flex items-center gap-2">
+<input type="checkbox" id="jsons" checked>
+JSON
 </label>
 
 </div>
 
 <div class="flex flex-wrap gap-3">
 
-<button
-onclick="copyAllLinks()"
-class="small-btn"
->
-COPY ALL LINKS
+<button class="small" onclick="copyAll()">
+COPY ALL
 </button>
 
-<button
-onclick="copyRawStrings()"
-class="small-btn"
->
-COPY RAW
-</button>
-
-<button
-onclick="downloadLinks()"
-class="small-btn"
->
+<button class="small" onclick="downloadLinks()">
 DOWNLOAD LINKS
 </button>
 
-<button
-onclick="downloadRaw()"
-class="small-btn"
->
+<button class="small" onclick="downloadRaw()">
 DOWNLOAD RAW
+</button>
+
+<button class="small" onclick="openAll()">
+OPEN ALL
 </button>
 
 </div>
@@ -250,39 +244,38 @@ class="space-y-4"
 
 <script>
 
-const regions = [
+const SERVERS = [
 "ind","mea","id","cis","br","latam",
 "vn","tw","th","sg","eu","na","pk","bd"
 ]
 
-let selectedServer = "ind"
+let currentServer = "ind"
 
-let allLinks = []
-let allStrings = []
+let ALL_LINKS = []
+let RAW_STRINGS = []
 
 const serverBox = document.getElementById("servers")
 
-regions.forEach(region=>{
+SERVERS.forEach(server=>{
 
 const btn = document.createElement("button")
 
-btn.className = "server-btn"
+btn.className = "server"
 
-btn.innerText = region.toUpperCase()
+btn.innerText = server.toUpperCase()
 
-if(region==="ind"){
+if(server==="ind"){
 btn.classList.add("active")
 }
 
-btn.onclick = ()=>{
+btn.onclick=()=>{
 
-document
-.querySelectorAll(".server-btn")
+document.querySelectorAll(".server")
 .forEach(x=>x.classList.remove("active"))
 
 btn.classList.add("active")
 
-selectedServer = region
+currentServer = server
 
 }
 
@@ -292,17 +285,11 @@ serverBox.appendChild(btn)
 
 async function runAPI(){
 
-const api = document
-.getElementById("api")
-.value
-.trim()
+const api = document.getElementById("api").value.trim()
 
 if(!api){
-
-alert("Enter API")
-
+alert("Enter API Name")
 return
-
 }
 
 document.getElementById("results").innerHTML =
@@ -311,7 +298,7 @@ document.getElementById("results").innerHTML =
 try{
 
 const response = await fetch(
-`/run_script?server=${selectedServer}&name=${encodeURIComponent(api)}`
+`/run_script?server=${currentServer}&name=${encodeURIComponent(api)}`
 )
 
 const data = await response.json()
@@ -319,34 +306,33 @@ const data = await response.json()
 if(!data.success){
 
 document.getElementById("results").innerHTML =
-`<div class="text-red-500">${data.error}</div>`
+`<div class='text-red-500'>${data.error}</div>`
 
 return
 
 }
 
-allLinks = data.links || []
-
-allStrings = data.strings || []
+ALL_LINKS = data.links || []
+RAW_STRINGS = data.strings || []
 
 document.getElementById("count").innerText =
-data.count
+ALL_LINKS.length
 
 document.getElementById("status").innerText =
 data.status
 
-document.getElementById("rawsize").innerText =
-data.raw_size
+document.getElementById("size").innerText =
+data.raw_size || 0
 
-document.getElementById("stringscount").innerText =
-data.strings_count
+document.getElementById("strings").innerText =
+RAW_STRINGS.length
 
 renderResults()
 
 }catch(err){
 
 document.getElementById("results").innerHTML =
-`<div class="text-red-500">${err}</div>`
+`<div class='text-red-500'>${err}</div>`
 
 }
 
@@ -366,64 +352,88 @@ document.getElementById("search")
 const preview =
 document.getElementById("preview").checked
 
-const linksOnly =
-document.getElementById("linksOnly").checked
-
-const showRaw =
-document.getElementById("showRaw").checked
+const rawMode =
+document.getElementById("rawmode").checked
 
 const images =
 document.getElementById("images").checked
 
-const json =
-document.getElementById("json").checked
+const videos =
+document.getElementById("videos").checked
 
-const html =
-document.getElementById("html").checked
+const htmls =
+document.getElementById("htmls").checked
 
-let filteredLinks = allLinks.filter(link=>{
+const jsons =
+document.getElementById("jsons").checked
+
+if(rawMode){
+
+RAW_STRINGS.forEach(str=>{
+
+if(search && !str.toLowerCase().includes(search)){
+return
+}
+
+const div = document.createElement("div")
+
+div.className = "result"
+
+div.innerHTML = `
+<div class="raw">${escapeHTML(str)}</div>
+`
+
+results.appendChild(div)
+
+})
+
+return
+
+}
+
+ALL_LINKS.forEach(link=>{
 
 if(search && !link.toLowerCase().includes(search)){
-return false
+return
 }
 
 if(!images){
 
-if(link.match(/\.(png|jpg|jpeg|webp|gif|ktx)$/i)){
-return false
+if(link.match(/\\.(png|jpg|jpeg|webp|gif|ktx|ktxp)$/i)){
+return
 }
 
 }
 
-if(!json){
+if(!videos){
 
-if(link.includes(".json")){
-return false
+if(link.match(/\\.(mp4|webm)$/i)){
+return
 }
 
 }
 
-if(!html){
+if(!htmls){
 
 if(link.includes(".html")){
-return false
+return
 }
 
 }
 
-return true
+if(!jsons){
 
-})
+if(link.includes(".json")){
+return
+}
 
-if(linksOnly){
+}
 
-filteredLinks.forEach(link=>{
+const div = document.createElement("div")
 
-const card = document.createElement("div")
+div.className = "result"
 
-card.className = "result-card"
-
-card.innerHTML = `
+div.innerHTML = `
 
 <div class="flex justify-between gap-3">
 
@@ -444,71 +454,34 @@ COPY
 
 </div>
 
-${preview ? previewHTML(link) : ""}
+${preview ? getPreview(link) : ""}
 
 `
 
-results.appendChild(card)
-
-})
-
-}else{
-
-allStrings.forEach(str=>{
-
-if(search && !str.toLowerCase().includes(search)){
-return
-}
-
-const card = document.createElement("div")
-
-card.className = "result-card"
-
-card.innerHTML = `
-
-<div class="raw-box">${escapeHTML(str)}</div>
-
-`
-
-results.appendChild(card)
+results.appendChild(div)
 
 })
 
 }
 
-if(showRaw){
+function getPreview(link){
 
-const rawCard = document.createElement("div")
-
-rawCard.className = "result-card"
-
-rawCard.innerHTML = `
-
-<div class="text-yellow-400 font-bold mb-3">
-RAW STRINGS
-</div>
-
-<div class="raw-box">
-${escapeHTML(allStrings.join("\n"))}
-</div>
-
-`
-
-results.appendChild(rawCard)
-
-}
-
-}
-
-function previewHTML(link){
-
-if(link.match(/\.(png|jpg|jpeg|webp|gif)$/i)){
+if(link.match(/\\.(png|jpg|jpeg|webp|gif)$/i)){
 
 return `
-<img
+<img src="${link}" class="preview">
+`
+
+}
+
+if(link.match(/\\.(mp4|webm)$/i)){
+
+return `
+<video
 src="${link}"
-class="preview-img"
-/>
+controls
+class="preview"
+></video>
 `
 
 }
@@ -523,18 +496,10 @@ navigator.clipboard.writeText(text)
 
 }
 
-function copyAllLinks(){
+function copyAll(){
 
 navigator.clipboard.writeText(
-allLinks.join("\n")
-)
-
-}
-
-function copyRawStrings(){
-
-navigator.clipboard.writeText(
-allStrings.join("\n")
+ALL_LINKS.join("\\n")
 )
 
 }
@@ -542,7 +507,7 @@ allStrings.join("\n")
 function downloadLinks(){
 
 const blob = new Blob(
-[allLinks.join("\n")],
+[ALL_LINKS.join("\\n")],
 {type:"text/plain"}
 )
 
@@ -559,7 +524,7 @@ a.click()
 function downloadRaw(){
 
 const blob = new Blob(
-[allStrings.join("\n")],
+[RAW_STRINGS.join("\\n")],
 {type:"text/plain"}
 )
 
@@ -567,9 +532,17 @@ const a = document.createElement("a")
 
 a.href = URL.createObjectURL(blob)
 
-a.download = "raw_strings.txt"
+a.download = "raw.txt"
 
 a.click()
+
+}
+
+function openAll(){
+
+ALL_LINKS.slice(0,20).forEach(link=>{
+window.open(link,"_blank")
+})
 
 }
 
