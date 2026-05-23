@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-<title>FREE FIRE API TOOL</title>
+<title>FREE FIRE API ENGINE</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -17,22 +16,18 @@
 
 :root {
     --yellow: #ffde00;
-    --yellow-glow: rgba(255, 222, 0, 0.15);
-    --bg: #070707;
-    --panel: rgba(13, 13, 13, 0.96);
-    --panel-card: #141414;
+    --bg: #0a0a0a;
+    --panel: #111111;
+    --card: #161616;
     --border: #222222;
-    --border-focus: #3d3d3d;
-    --green: #00ff95;
-    --red: #ff4343;
-    --blue: #38bdf8;
-    --text: #ffffff;
-    --muted: #888888;
+    --border-hover: #333333;
+    --text: #f5f5f5;
+    --muted: #707070;
     
-    /* Highlight styles */
-    --highlight-bg: #ffe600;
-    --highlight-text: #000000;
-    --highlight-active-bg: #ff6a00;
+    /* Perfect contrast highlights */
+    --match-bg: #ffe600;
+    --match-text: #000000;
+    --match-active: #ff7700;
 }
 
 * {
@@ -42,640 +37,564 @@
 }
 
 body {
-    background: #000;
+    background-color: #000000;
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
-    background-image: url('https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/bg_pc.617c669.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    overflow-x: hidden;
+    letter-spacing: -0.2px;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.96) 100%);
-    z-index: -1;
-}
-
-/* Custom Scrollbar for Premium Look */
+/* Premium micro scrollbars */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #0a0a0a;
+    background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #252525;
-    border-radius: 4px;
+    background: #222222;
+    border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--yellow);
 }
 
-.gff {
-    font-family: 'GFF', Arial, sans-serif;
-    letter-spacing: 0.5px;
-}
-
-.topbar {
-    width: 100%;
-    height: 75px;
-    border-bottom: 2px solid var(--yellow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-.topbar img {
-    height: 32px;
-    filter: drop-shadow(0 0 8px rgba(255,222,0,0.2));
-}
-
 .wrapper {
     width: 100%;
-    max-width: 1200px;
-    margin: auto;
-    padding: 30px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
 }
 
-.hero {
-    text-align: center;
-    margin-bottom: 30px;
+/* Header Optimization */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
 }
 
-.hero h1 {
-    font-size: 52px;
-    line-height: 1.0;
-    font-style: italic;
-    text-transform: uppercase;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.hero h1 span {
-    color: var(--yellow);
-    filter: drop-shadow(0 0 10px var(--yellow-glow));
+.brand-logo {
+    height: 24px;
+    object-fit: contain;
 }
 
 .badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    background: rgba(20, 20, 20, 0.8);
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 999px;
-    margin-bottom: 16px;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 1px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--muted);
 }
 
 .dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--yellow);
-    box-shadow: 0 0 10px var(--yellow);
+    box-shadow: 0 0 8px var(--yellow);
 }
 
-.panel {
+.engine-title {
+    font-family: 'GFF', sans-serif;
+    font-size: 18px;
+    font-style: italic;
+    text-transform: uppercase;
+}
+.engine-title span {
+    color: var(--yellow);
+}
+
+/* Core Dashboard Layout */
+.app-panel {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(12px);
 }
 
-.input-box {
-    width: 100%;
-    height: 56px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: #0a0a0a;
-    color: #fff;
-    padding: 0 20px;
-    font-size: 15px;
-    font-weight: 500;
-    outline: none;
-    margin-bottom: 20px;
-    transition: all 0.2s ease;
-}
-
-.input-box:focus {
-    border-color: var(--yellow);
-    box-shadow: 0 0 15px var(--yellow-glow);
-}
-
-.server-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.server-btn {
-    height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--panel-card);
-    color: #aeaeae;
-    cursor: pointer;
-    font-weight: 700;
-    transition: all 0.15s ease;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-}
-
-.server-btn:hover {
-    border-color: #555;
-    color: #fff;
-    transform: translateY(-1px);
-}
-
-.server-btn.active {
-    background: var(--yellow);
-    border-color: var(--yellow);
-    color: #000;
-    box-shadow: 0 4px 15px var(--yellow-glow);
-}
-
-.option-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.option-card {
-    flex: 1;
-    min-width: 160px;
-    height: 52px;
-    background: var(--panel-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-    transition: border 0.2s;
-}
-
-.option-card:hover {
-    border-color: var(--border-focus);
-}
-
-.option-card input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--yellow);
-    cursor: pointer;
-}
-
-.option-card span {
-    font-size: 13px;
-    font-weight: 700;
-    color: #d1d1d1;
-    letter-spacing: 0.5px;
-}
-
-.run-btn {
-    width: 100%;
-    height: 58px;
-    border: none;
-    border-radius: 14px;
-    background: var(--yellow);
-    color: #000;
-    font-size: 16px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 24px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 20px rgba(255, 222, 0, 0.1);
-}
-
-.run-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(255, 222, 0, 0.25);
-}
-
-.run-btn:active {
-    transform: translateY(0);
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.stat-box {
-    background: var(--panel-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
+/* Pure Inputs UI */
+.input-row {
     position: relative;
-    overflow: hidden;
+    margin-bottom: 20px;
 }
 
-.stat-title {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
-.stat-value {
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--text);
-}
-
-.stat-box[data-status="SUCCESS"] .stat-value { color: var(--green); }
-.stat-box[data-status="FAILED"] .stat-value,
-.stat-box[data-status="ERROR"] .stat-value { color: var(--red); }
-.stat-box[data-status="LOADING"] .stat-value { color: var(--yellow); }
-
-.toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.tool-btn {
-    height: 40px;
-    padding: 0 16px;
+.main-input {
+    width: 100%;
+    height: 52px;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--panel-card);
-    color: #e0e0e0;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.15s;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 0 140px 0 16px;
+    font-size: 14px;
+    font-family: monospace;
+    outline: none;
+    transition: all 0.15s ease;
 }
 
-.tool-btn:hover {
-    border-color: #555;
-    background: #1a1a1a;
+.main-input:focus {
+    border-color: var(--yellow);
+}
+
+.run-action-btn {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    height: 40px;
+    padding: 0 20px;
+    background: var(--yellow);
+    border: none;
+    border-radius: 6px;
+    color: #000000;
+    font-family: 'GFF', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.run-action-btn:hover {
+    background: #e5c800;
+}
+
+/* Minimal Grid Systems */
+.section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+}
+
+.server-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 6px;
+    margin-bottom: 24px;
+}
+
+.srv-chip {
+    height: 34px;
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.srv-chip:hover {
+    border-color: var(--border-hover);
     color: #fff;
 }
 
-/* Search Wrapper & Controls styling */
-.search-container {
+.srv-chip.active {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+}
+
+/* Unified Layout Options Switcher */
+.view-options {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #1a1a1a;
+    padding-bottom: 16px;
+}
+
+.opt-toggle {
+    padding: 8px 16px;
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.opt-toggle:hover {
+    border-color: var(--border-hover);
+}
+
+.opt-toggle.active {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255, 222, 0, 0.02);
+}
+
+/* Performance Metrics Track */
+.metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.metric-card .lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.metric-card .val {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+/* Control Hub Console Deck */
+.control-deck {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.search-wrapper {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-    background: #0a0a0a;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0 8px 0 16px;
-    transition: all 0.2s ease;
+    border-radius: 6px;
+    padding: 0 12px;
+    height: 38px;
 }
 
-.search-container:focus-within {
-    border-color: var(--yellow);
-    box-shadow: 0 0 12px var(--yellow-glow);
+.search-wrapper:focus-within {
+    border-color: var(--border-hover);
 }
 
-.search-icon {
-    color: #555;
-    font-size: 14px;
-}
-
-.search-box {
-    flex: 1;
-    height: 48px;
+.search-input {
+    width: 100%;
     background: transparent;
     border: none;
-    color: #fff;
     outline: none;
-    font-size: 14px;
-    padding-right: 8px;
+    color: #ffffff;
+    font-size: 13px;
+    padding-left: 8px;
 }
 
-.search-nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.search-counter {
+    font-size: 11px;
     color: var(--muted);
-    font-size: 12px;
-    user-select: none;
-}
-
-.search-count {
+    font-family: monospace;
+    white-space: nowrap;
     margin-right: 8px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
 }
 
-.search-nav-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--border);
-    background: var(--panel-card);
-    color: #fff;
-    border-radius: 8px;
+.search-nav {
+    display: flex;
+    gap: 2px;
+}
+
+.search-step-btn {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
     cursor: pointer;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s;
+    font-size: 11px;
 }
 
-.search-nav-btn:hover:not(:disabled) {
-    background: #222;
-    border-color: #606060;
+.search-step-btn:hover:not(:disabled) {
+    color: #fff;
+    background: var(--card);
 }
 
-.search-nav-btn:disabled {
-    opacity: 0.3;
+.search-step-btn:disabled {
+    opacity: 0.2;
     cursor: not-allowed;
 }
 
-.output {
-    width: 100%;
-    height: 550px;
-    background: #050505;
+.utility-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.util-btn {
+    height: 38px;
+    padding: 0 14px;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 6px;
+    color: #a0a0a0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.util-btn:hover {
+    border-color: var(--border-hover);
+    color: #ffffff;
+}
+
+/* Pristine Code Output Monitor */
+.console-monitor {
+    width: 100%;
+    height: 500px;
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
     overflow: auto;
     white-space: pre-wrap;
     word-break: break-word;
+    font-size: 13px;
     line-height: 1.6;
-    font-size: 14px;
-    color: #dcdcdc;
+    color: #bbbbbb;
     font-family: 'Courier New', Courier, monospace;
 }
 
-/* Real-time Highlighting Classes */
+/* Precise Marker Highlighting styling */
 mark.search-match {
-    background-color: var(--highlight-bg);
-    color: var(--highlight-text);
-    border-radius: 2px;
-    box-shadow: 0 0 4px var(--highlight-bg);
+    background-color: var(--match-bg);
+    color: var(--match-text);
+    border-radius: 1px;
 }
 
 mark.search-match.match-active {
-    background-color: var(--highlight-active-bg);
-    color: #fff;
-    box-shadow: 0 0 8px var(--highlight-active-bg);
+    background-color: var(--match-active);
+    color: #ffffff;
 }
 
-.link-item {
-    padding: 12px 16px;
-    background: var(--panel-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
+.url-item {
+    padding: 10px 12px;
+    background: #050505;
+    border: 1px solid #161616;
+    border-radius: 6px;
+    margin-bottom: 6px;
 }
 
-.link-item:hover {
-    border-color: #444;
-    background: #181818;
-    transform: translateX(2px);
-}
-
-.link-item a {
-    color: var(--blue);
+.url-item a {
+    color: #58a6ff;
     text-decoration: none;
-    word-break: break-all;
-    font-size: 13.5px;
+    font-family: monospace;
+    font-size: 12.5px;
 }
 
-.link-item a:hover {
+.url-item a:hover {
     text-decoration: underline;
 }
 
-/* Toast Notification styling */
 .toast {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--yellow);
-    color: #000;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-weight: bold;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transform: translateY(100px);
+    bottom: 20px;
+    right: 20px;
+    background: #ffffff;
+    color: #000000;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(10px);
+    transition: all 0.2s ease;
     z-index: 1000;
+    pointer-events: none;
 }
 
 .toast.show {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
 }
 
-.loading {
-    color: var(--yellow);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+.loading-state {
+    color: var(--muted);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
 }
 
 @media (max-width: 768px) {
-    .hero h1 { font-size: 36px; }
-    .wrapper { padding: 15px 10px; }
-    .panel { padding: 16px; }
-    .server-grid { grid-template-columns: repeat(4, 1fr); }
-    .output { height: 450px; }
+    header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .control-deck { flex-direction: column; align-items: stretch; gap: 8px; }
+    .server-selector { grid-template-columns: repeat(4, 1fr); }
+    .metrics-row { grid-template-columns: 1fr; gap: 8px; }
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-    <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" alt="Free Fire Logo">
-</div>
-
 <div class="wrapper">
 
-    <div class="hero gff">
-        <div class="badge">
-            <div class="dot"></div>
-            <span>LIVE API RESPONSE ANALYZER</span>
-        </div>
-        <h1>FREE FIRE<br><span>API TOOL</span></h1>
-    </div>
-
-    <div class="panel">
-
-        <input type="text" id="apiName" class="input-box" placeholder="ENTER API NAME OR PATH...">
-
-        <div class="server-grid">
-            <button class="server-btn active" onclick="setServer(this,'ind')">IND</button>
-            <button class="server-btn" onclick="setServer(this,'mea')">MEA</button>
-            <button class="server-btn" onclick="setServer(this,'id')">ID</button>
-            <button class="server-btn" onclick="setServer(this,'cis')">CIS</button>
-            <button class="server-btn" onclick="setServer(this,'br')">BR</button>
-            <button class="server-btn" onclick="setServer(this,'latam')">LATAM</button>
-            <button class="server-btn" onclick="setServer(this,'vn')">VN</button>
-            <button class="server-btn" onclick="setServer(this,'tw')">TW</button>
-            <button class="server-btn" onclick="setServer(this,'th')">TH</button>
-            <button class="server-btn" onclick="setServer(this,'sg')">SG</button>
-            <button class="server-btn" onclick="setServer(this,'eu')">EU</button>
-            <button class="server-btn" onclick="setServer(this,'na')">NA</button>
-            <button class="server-btn" onclick="setServer(this,'pk')">PK</button>
-            <button class="server-btn" onclick="setServer(this,'bd')">BD</button>
-        </div>
-
-        <div class="option-row">
-            <div class="option-card" onclick="toggleOption('showLinks')">
-                <input type="checkbox" id="showLinks" checked onclick="event.stopPropagation(); handleOptionChange();">
-                <span>LINKS ONLY</span>
-            </div>
-            <div class="option-card" onclick="toggleOption('showRaw')">
-                <input type="checkbox" id="showRaw" onclick="event.stopPropagation(); handleOptionChange();">
-                <span>RAW RESPONSE</span>
-            </div>
-            <div class="option-card" onclick="toggleOption('showStrings')">
-                <input type="checkbox" id="showStrings" onclick="event.stopPropagation(); handleOptionChange();">
-                <span>ALL STRINGS</span>
+    <!-- Premium Minimal Header -->
+    <header>
+        <div class="brand-group">
+            <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
+            <div class="badge">
+                <div class="dot"></div>
+                <span>LIVE RESPONDER</span>
             </div>
         </div>
+        <div class="engine-title">API <span>TOOL</span></div>
+    </header>
 
-        <button class="run-btn gff" onclick="runAPI()">
-            RUN API SCAN
-        </button>
+    <div class="app-panel">
 
-        <div class="stats">
-            <div class="stat-box">
-                <div class="stat-title">TOTAL STRINGS</div>
-                <div class="stat-value" id="stringCount">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-title">TOTAL LINKS</div>
-                <div class="stat-value" id="linkCount">0</div>
-            </div>
-            <div class="stat-box" id="statusBox">
-                <div class="stat-title">STATUS</div>
-                <div class="stat-value" id="statusText">IDLE</div>
-            </div>
+        <!-- Target Input -->
+        <div class="input-row">
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string...">
+            <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
-        <div class="toolbar">
-            <button class="tool-btn" onclick="copyOutput()">
-                <i class="fa-solid fa-copy"></i> COPY
-            </button>
-            <button class="tool-btn" onclick="downloadOutput()">
-                <i class="fa-solid fa-download"></i> DOWNLOAD
-            </button>
-            <button class="tool-btn" onclick="clearOutput()">
-                <i class="fa-solid fa-trash"></i> CLEAR
-            </button>
+        <!-- Servers -->
+        <div class="section-label">Target Region Cluster</div>
+        <div class="server-selector" id="serverSelectorGrid">
+            <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
+            <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
+            <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
+            <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
+            <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
+            <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
+            <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
+            <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
+            <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
+            <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
+            <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
+            <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
+            <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
+            <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
         </div>
 
-        <!-- Upgraded Premium Search Wrapper Controls -->
-        <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" class="search-box" id="searchBox" placeholder="SEARCH INSIDE ACTIVE RESULTS view..." oninput="performSearch()">
-            <div class="search-nav-controls">
-                <span class="search-count" id="searchCount">0/0</span>
-                <button class="search-nav-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" title="Previous match (Shift+Enter)" disabled>
-                    <i class="fa-solid fa-arrow-up"></i>
-                </button>
-                <button class="search-nav-btn" id="nextSearchBtn" onclick="navigateSearch(1)" title="Next match (Enter)" disabled>
-                    <i class="fa-solid fa-arrow-down"></i>
-                </button>
+        <!-- Layout Views Configuration -->
+        <div class="section-label">Output Perspective View</div>
+        <div class="view-options">
+            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
+            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
+            <button class="opt-toggle" id="btn-strings" onclick="setViewMode('strings')">ALL STRINGS</button>
+        </div>
+
+        <!-- Operational Status Metrics Tracker -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="lbl">Total Strings</div>
+                <div class="val" id="stringCount">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="lbl">Extracted Links</div>
+                <div class="val" id="linkCount">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="lbl">Engine Status</div>
+                <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
 
-        <div class="output" id="output">READY</div>
+        <!-- Streamlined Control Deck -->
+        <div class="control-deck">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass" style="color: #444; font-size: 12px;"></i>
+                <input type="text" class="search-input" id="searchBox" placeholder="Filter / Find..." oninput="performSearch()">
+                <span class="search-counter" id="searchCount">0/0</span>
+                <div class="search-nav">
+                    <button class="search-step-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" disabled><i class="fa-solid fa-chevron-up"></i></button>
+                    <button class="search-step-btn" id="nextSearchBtn" onclick="navigateSearch(1)" disabled><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+            </div>
+            
+            <div class="utility-actions">
+                <button class="util-btn" onclick="copyOutput()"><i class="fa-solid fa-copy"></i> Copy</button>
+                <button class="util-btn" onclick="downloadOutput()"><i class="fa-solid fa-download"></i> Download</button>
+                <button class="util-btn" onclick="clearOutput()"><i class="fa-solid fa-trash"></i> Reset</button>
+            </div>
+        </div>
+
+        <!-- Clean Output Console -->
+        <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
 
     </div>
 </div>
 
-<div class="toast" id="toastNotification">COPIED TO高度CLIPBOARD</div>
+<div class="toast" id="toastNotifier">Copied to clipboard</div>
 
 <script>
 let selectedServer = "ind";
-let lastOutput = "";
-let currentLinks = [];
-let apiDataPayload = null; // Caches the active raw JSON payload object
+let viewMode = "links"; // Option states tracking: 'links' | 'raw' | 'strings'
+let lastOutputText = "";
+let currentLinksArray = [];
+let apiCachedData = null;
 
-// Dom element mapping cache
 let searchMatches = [];
 let currentMatchIndex = -1;
 
 function setServer(btn, server) {
     selectedServer = server;
-    document.querySelectorAll(".server-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".srv-chip").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 }
 
-function toggleOption(id) {
-    const check = document.getElementById(id);
-    check.checked = !check.checked;
-    handleOptionChange();
-}
-
-function handleOptionChange() {
-    if (apiDataPayload) {
-        renderOutput(apiDataPayload);
+function setViewMode(mode) {
+    viewMode = mode;
+    document.querySelectorAll(".opt-toggle").forEach(b => b.classList.remove("active"));
+    document.getElementById(`btn-${mode}`).classList.add("active");
+    if (apiCachedData) {
+        renderOutput(apiCachedData);
     }
 }
 
-function updateStatusUI(status) {
-    const txt = document.getElementById("statusText");
-    const box = document.getElementById("statusBox");
-    txt.innerText = status;
-    box.setAttribute("data-status", status);
+function updateStatusUI(status, hexColor) {
+    const el = document.getElementById("statusText");
+    el.innerText = status;
+    el.style.color = hexColor || "var(--text)";
 }
 
-function showToast(msg) {
-    const toast = document.getElementById("toastNotification");
+function displayToast(msg) {
+    const toast = document.getElementById("toastNotifier");
     toast.innerText = msg;
     toast.classList.add("show");
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 2000);
+    setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
 async function runAPI() {
     const apiName = document.getElementById("apiName").value.trim();
     if (!apiName) {
-        alert("PLEASE ENTER AN API NAME OR PATH");
+        alert("Enter a target pipeline string.");
         return;
     }
 
-    updateStatusUI("LOADING");
-    document.getElementById("output").innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> FETCHING API RESPONSE...</div>';
+    updateStatusUI("SCANNING", "var(--yellow)");
+    document.getElementById("output").innerHTML = '<div class="loading-state">Engine handshake parsing payload packets...</div>';
     resetSearchState();
 
     try {
@@ -683,92 +602,79 @@ async function runAPI() {
         const data = await res.json();
 
         if (data.error) {
-            updateStatusUI("ERROR");
-            document.getElementById("output").innerHTML = `<div style="color:var(--red); font-weight:bold;"><i class="fa-solid fa-triangle-exclamation"></i> ${data.error}</div>`;
+            updateStatusUI("ERROR", "#ff4444");
+            document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace;">Engine Fault: ${data.error}</div>`;
             return;
         }
 
         document.getElementById("stringCount").innerText = data.count || 0;
         document.getElementById("linkCount").innerText = data.raw_count || 0;
-        updateStatusUI("SUCCESS");
+        updateStatusUI("ONLINE", "#00ff95");
 
-        currentLinks = data.urls || [];
-        apiDataPayload = data; 
+        currentLinksArray = data.urls || [];
+        apiCachedData = data; 
         
         renderOutput(data);
 
     } catch (err) {
-        updateStatusUI("FAILED");
-        document.getElementById("output").innerHTML = `<div style="color:var(--red); font-weight:bold;"><i class="fa-solid fa-circle-xmark"></i> LIVE REQUEST CONNECTION FAILED</div>`;
+        updateStatusUI("FAULT", "#ff4444");
+        document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace;">Network connection handshake termination reset.</div>`;
     }
 }
 
 function renderOutput(data) {
     const output = document.getElementById("output");
-    const showLinks = document.getElementById("showLinks").checked;
-    const showRaw = document.getElementById("showRaw").checked;
-    const showStrings = document.getElementById("showStrings").checked;
 
-    if (showRaw) {
-        lastOutput = data.raw_response || "";
-        output.textContent = lastOutput;
-    } else if (showStrings) {
-        lastOutput = (data.strings || []).join("\n");
-        output.textContent = lastOutput;
-    } else if (showLinks) {
-        if (!currentLinks || currentLinks.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic;">No extracted URLs found.</div>`;
-            lastOutput = "";
+    if (viewMode === "raw") {
+        lastOutputText = data.raw_response || "";
+        output.textContent = lastOutputText;
+    } else if (viewMode === "strings") {
+        lastOutputText = (data.strings || []).join("\n");
+        output.textContent = lastOutputText;
+    } else if (viewMode === "links") {
+        if (!currentLinksArray || currentLinksArray.length === 0) {
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic;">Null URLs collection dataset response.</div>`;
+            lastOutputText = "";
         } else {
             let html = "";
-            currentLinks.forEach(link => {
-                html += `<div class="link-item"><a href="${link}" target="_blank">${link}</a></div>`;
+            currentLinksArray.forEach(link => {
+                html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
             });
             output.innerHTML = html;
-            lastOutput = currentLinks.join("\n");
+            lastOutputText = currentLinksArray.join("\n");
         }
     }
-    // Re-trigger search optimization processing rule over newly populated DOM view content
     performSearch();
 }
 
 function copyOutput() {
-    if (!lastOutput) {
-        alert("NOTHING TO COPY");
-        return;
-    }
-    navigator.clipboard.writeText(lastOutput);
-    showToast("OUTPUT COPIED TO CLIPBOARD");
+    if (!lastOutputText) return;
+    navigator.clipboard.writeText(lastOutputText);
+    displayToast("Buffered logs copied to clip");
 }
 
 function clearOutput() {
-    document.getElementById("output").innerHTML = "READY";
+    document.getElementById("output").innerHTML = "SYSTEM LOG: FLUSH COMPLETED";
     document.getElementById("stringCount").innerText = "0";
     document.getElementById("linkCount").innerText = "0";
-    updateStatusUI("IDLE");
-    lastOutput = "";
-    apiDataPayload = null;
-    currentLinks = [];
+    updateStatusUI("IDLE", "var(--muted)");
+    lastOutputText = "";
+    apiCachedData = null;
+    currentLinksArray = [];
     resetSearchState();
-    showToast("DASHBOARD CLEARED");
+    displayToast("Console memory flushed");
 }
 
 function downloadOutput() {
-    if (!lastOutput) {
-        alert("NO DATA PRESENT TO DOWNLOAD");
-        return;
-    }
-    const blob = new Blob([lastOutput], { type: "text/plain" });
+    if (!lastOutputText) return;
+    const blob = new Blob([lastOutputText], { type: "text/plain" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `ff_api_output_${selectedServer}.txt`;
+    a.download = `api_logs_${selectedServer}.log`;
     a.click();
 }
 
-/* ==========================================================================
-   ADVANCED DOM INTERACTIVE SEARCH HIGHLIGHT & NAVIGATION SYSTEM
-   ========================================================================== */
-
+/* Precise Minimal Node Search System */
 function resetSearchState() {
     searchMatches = [];
     currentMatchIndex = -1;
@@ -781,21 +687,15 @@ function performSearch() {
     const query = document.getElementById("searchBox").value.trim();
     const output = document.getElementById("output");
     
-    // Clear dynamic matching structures if search is empty
     if (!query) {
         resetSearchState();
-        // Remove highlight nodes by forcing render standard configurations
-        if (apiDataPayload) {
-            const showLinks = document.getElementById("showLinks").checked;
-            const showRaw = document.getElementById("showRaw").checked;
-            const showStrings = document.getElementById("showStrings").checked;
-            
-            if (showRaw || showStrings) {
-                output.textContent = lastOutput;
-            } else if (showLinks) {
+        if (apiCachedData) {
+            if (viewMode === "raw" || viewMode === "strings") {
+                output.textContent = lastOutputText;
+            } else if (viewMode === "links") {
                 let html = "";
-                currentLinks.forEach(link => {
-                    html += `<div class="link-item"><a href="${link}" target="_blank">${link}</a></div>`;
+                currentLinksArray.forEach(link => {
+                    html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
                 });
                 output.innerHTML = html;
             }
@@ -803,114 +703,90 @@ function performSearch() {
         return;
     }
 
-    const isHtmlMode = document.getElementById("showLinks").checked && !document.getElementById("showRaw").checked && !document.getElementById("showStrings").checked;
-
-    if (isHtmlMode) {
-        // Search across structured HTML Link elements
+    if (viewMode === "links") {
         let html = "";
-        currentLinks.forEach(link => {
-            html += `<div class="link-item"><a href="${link}" target="_blank">${link}</a></div>`;
+        currentLinksArray.forEach(link => {
+            html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
         });
         output.innerHTML = html;
-        
-        // Execute targeting against container nodes
-        highlightTextNodes(output, query);
+        highlightNodes(output, query);
     } else {
-        // Plaintext Raw mapping view execution
-        output.textContent = lastOutput;
-        highlightTextNodes(output, query);
+        output.textContent = lastOutputText;
+        highlightNodes(output, query);
     }
 
-    // Collect array targets of all dynamically spawned highlights
     searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
     
     if (searchMatches.length > 0) {
         currentMatchIndex = 0;
-        updateSearchUI();
-        highlightActiveMatch();
+        updateSearchStatsUI();
+        applyFocusHighlight();
     } else {
         currentMatchIndex = -1;
-        updateSearchUI();
+        updateSearchStatsUI();
     }
 }
 
-// Recursive DOM text tokenizer matching highlighter 
-function highlightTextNodes(rootElement, query) {
-    const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
-    
-    function walk(node) {
+function highlightNodes(root, token) {
+    const regex = new RegExp(`(${escapePattern(token)})`, "gi");
+    function parser(node) {
         if (node.nodeType === Node.TEXT_NODE) {
             if (node.textContent.match(regex)) {
-                const span = document.createElement("span");
-                span.innerHTML = node.textContent.replace(regex, `<mark class="search-match">$1</mark>`);
-                node.parentNode.replaceChild(span, node);
+                const wrapper = document.createElement("span");
+                wrapper.innerHTML = node.textContent.replace(regex, `<mark class="search-match">$1</mark>`);
+                node.parentNode.replaceChild(wrapper, node);
             }
         } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'MARK' && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
             for (let i = node.childNodes.length - 1; i >= 0; i--) {
-                walk(node.childNodes[i]);
+                parser(node.childNodes[i]);
             }
         }
     }
-    walk(rootElement);
+    parser(root);
 }
 
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function escapePattern(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function updateSearchUI() {
-    const total = searchMatches.length;
-    const active = total > 0 ? currentMatchIndex + 1 : 0;
-    
-    document.getElementById("searchCount").innerText = `${active}/${total}`;
-    
-    const disabledState = total === 0;
-    document.getElementById("prevSearchBtn").disabled = disabledState;
-    document.getElementById("nextSearchBtn").disabled = disabledState;
+function updateSearchStatsUI() {
+    const len = searchMatches.length;
+    const cur = len > 0 ? currentMatchIndex + 1 : 0;
+    document.getElementById("searchCount").innerText = `${cur}/${len}`;
+    const state = len === 0;
+    document.getElementById("prevSearchBtn").disabled = state;
+    document.getElementById("nextSearchBtn").disabled = state;
 }
 
-function highlightActiveMatch() {
-    // Clear active highlight context positions
+function applyFocusHighlight() {
     searchMatches.forEach(el => el.classList.remove("match-active"));
-    
     if (currentMatchIndex >= 0 && currentMatchIndex < searchMatches.length) {
-        const activeTarget = searchMatches[currentMatchIndex];
-        activeTarget.classList.add("match-active");
-        
-        // Smoothly scroll container track views direct into frame viewport orientation
-        activeTarget.scrollIntoView({
+        const target = searchMatches[currentMatchIndex];
+        target.classList.add("match-active");
+        target.scrollIntoView({
             behavior: "smooth",
             block: "center"
         });
     }
 }
 
-function navigateSearch(direction) {
+function navigateSearch(offset) {
     if (searchMatches.length === 0) return;
-    
-    currentMatchIndex += direction;
-    
-    // Bounds wrapping execution rules
-    if (currentMatchIndex >= searchMatches.length) {
-        currentMatchIndex = 0;
-    } else if (currentMatchIndex < 0) {
-        currentMatchIndex = searchMatches.length - 1;
-    }
-    
-    updateSearchUI();
-    highlightActiveMatch();
+    currentMatchIndex += offset;
+    if (currentMatchIndex >= searchMatches.length) currentMatchIndex = 0;
+    if (currentMatchIndex < 0) currentMatchIndex = searchMatches.length - 1;
+    updateSearchStatsUI();
+    applyFocusHighlight();
 }
 
-// Bind universal dashboard key listeners for pro search tools orientation
 document.getElementById("searchBox").addEventListener("keydown", function(e) {
     if (searchMatches.length === 0) return;
-    
     if (e.key === "Enter") {
         e.preventDefault();
         if (e.shiftKey) {
-            navigateSearch(-1); // Shift+Enter jumps to previous match
+            navigateSearch(-1);
         } else {
-            navigateSearch(1);  // Enter jumps to next match
+            navigateSearch(1);
         }
     }
 });
