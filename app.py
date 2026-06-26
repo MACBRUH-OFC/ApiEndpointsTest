@@ -70,17 +70,17 @@ def get_release_version():
                 return version
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
-    return "OB53"  # Dynamic fallback version
+    return "OB53"  # Stable baseline fallback
 
 
-def get_token(server):
+def get_token(server, custom_version=None):
     if server_tokens[server]:
         return server_tokens[server]
 
     try:
         uid = UID_PASSWORDS[server]["uid"]
         password = UID_PASSWORDS[server]["password"]
-        version = get_release_version()
+        version = custom_version if custom_version else get_release_version()
 
         token_url = f"https://macxjwt.vercel.app/get_jwt_token?uid={uid}&password={password}&version={version}"
 
@@ -111,6 +111,8 @@ def run_script():
     server = request.args.get("server")
     api_name = request.args.get("name")
     payload_hex = request.args.get("payload", "8533b7e1d34a5dfd9a830ee5cc36664e")
+    custom_version = request.args.get("version")
+    custom_ua = request.args.get("ua", "UnityPlayer/2022.3.47f1")
 
     if server not in UID_PASSWORDS:
         return jsonify({"error": "Invalid server"})
@@ -118,19 +120,20 @@ def run_script():
     if not api_name:
         return jsonify({"error": "Missing API name"})
 
-    token = get_token(server)
+    # Fetch token using custom override version if specified
+    token = get_token(server, custom_version)
 
     if not token:
         return jsonify({"error": "Token fetch failed"})
 
-    release_version = get_release_version()
+    release_version = custom_version if custom_version else get_release_version()
 
     headers = {
         "Accept": "*/*",
         "Accept-Encoding": "deflate, gzip",
         "Content-Type": "application/x-www-form-urlencoded",
         "ReleaseVersion": release_version,
-        "User-Agent": "UnityPlayer/2022.3.47f1",
+        "User-Agent": custom_ua,
         "X-GA": "v1 1",
         "X-Unity-Version": "2022.3.47f1",
         "Authorization": f"Bearer {token}"
@@ -153,7 +156,7 @@ def run_script():
 
         if response.status_code == 401:
             server_tokens[server] = None
-            token = get_token(server)
+            token = get_token(server, custom_version)
 
             if not token:
                 return jsonify({"error": "Token refresh failed"})
@@ -178,7 +181,7 @@ def run_script():
 
         decoded = content.decode("utf-8", errors="ignore")
 
-        # Decode response using external Protobuf decoding endpoint
+        # Decode protobuf binary via dynamic external api
         protobuf_data = {}
         try:
             dec_res = requests.post(
@@ -210,7 +213,7 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Standardise and filter decoded endpoint strings
+        # Standardise and parse relative asset structures
         urls = set()
         for val in extracted_strings:
             val = val.strip()
@@ -224,7 +227,7 @@ def run_script():
                 urls.add(val)
                 continue
 
-            # 2. Extract relative paths ending in valid extensions (e.g. Local/IND/, test/, common/, OB16/)
+            # 2. Match relative asset paths
             if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
                 urls.add(val)
                 continue
