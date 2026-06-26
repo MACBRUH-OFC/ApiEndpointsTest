@@ -401,34 +401,71 @@ header {
     width: 100%;
     height: 500px;
     background: #000000;
-    background-image: linear-gradient(rgba(10, 10, 10, 0.4) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-image: linear-gradient(rgba(10, 10, 10, 0.45) 50%, rgba(0, 0, 0, 0.45) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
     background-size: 100% 4px, 6px 100%;
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 6px 0;
+    padding: 0;
     overflow: auto;
     color: #bbbbbb;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Minimal URL Row Design - No Icons */
+/* Group Block Layouts */
+.group-block {
+    margin-bottom: 0px;
+    border-bottom: 1px solid #141414;
+}
+
+.group-block:last-child {
+    border-bottom: none;
+}
+
+.group-header {
+    font-family: 'GFF', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    padding: 12px 14px;
+    background: #060606;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.group-count {
+    background: rgba(255, 222, 0, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    color: var(--yellow);
+    border: 1px solid rgba(255, 222, 0, 0.15);
+}
+
+/* Row Styling with Media support */
 .url-row {
+    display: flex;
+    align-items: center;
     padding: 10px 14px;
     border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #040404;
+    background: #020202;
     position: relative;
     cursor: pointer;
     transition: background 0.15s ease;
 }
 
 .url-row:hover {
-    background: #0e0e0e;
+    background: #0a0a0a;
 }
 
-/* Clean sliding text on hover - replaces messy icons */
 .url-row::after {
     content: "CLICK TO COPY";
     position: absolute;
@@ -461,6 +498,55 @@ header {
     text-decoration: underline;
 }
 
+/* Inline Media Previews */
+.media-preview-container {
+    flex-shrink: 0;
+    margin-right: 12px;
+}
+
+.img-preview-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.25s ease;
+    background: #111111;
+    display: block;
+}
+
+.img-preview-thumb:hover {
+    transform: scale(3.5);
+    transform-origin: left center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+    z-index: 999;
+}
+
+.video-preview-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.25s ease;
+    background: #111111;
+    display: block;
+}
+
+.video-preview-thumb:hover {
+    transform: scale(3.0);
+    transform-origin: left center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+    z-index: 999;
+}
+
+.audio-preview-player {
+    height: 28px;
+    width: 140px;
+    border-radius: 4px;
+    background: #000000;
+}
+
 /* Decoded Row Layouts */
 .decoded-row {
     padding: 8px 14px;
@@ -475,7 +561,7 @@ header {
     border-bottom: none;
 }
 
-/* Highlighted search structures */
+/* Highlighted searches */
 mark.search-match {
     background-color: var(--match-bg);
     color: var(--match-text);
@@ -528,7 +614,7 @@ mark.search-match.match-active {
 
 <div class="wrapper">
 
-    <!-- Premium Header -->
+    <!-- Header Block -->
     <header>
         <div class="brand-group">
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
@@ -548,7 +634,7 @@ mark.search-match.match-active {
             <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
-        <!-- Custom Request Binary Payload HEX configuration -->
+        <!-- Custom binary Hex payloads -->
         <div class="section-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span>Custom Hex Request Payload</span>
             <button class="toggle-payload-btn" onclick="togglePayloadInput()">Custom Config</button>
@@ -557,7 +643,7 @@ mark.search-match.match-active {
             <input type="text" id="customPayload" class="main-input" style="height: 44px; font-family: monospace;" placeholder="Hex payload string..." value="8533b7e1d34a5dfd9a830ee5cc36664e">
         </div>
 
-        <!-- Target Region Clusters -->
+        <!-- Server Selector chips -->
         <div class="section-label">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
             <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
@@ -576,7 +662,7 @@ mark.search-match.match-active {
             <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
         </div>
 
-        <!-- Layout Views Configuration -->
+        <!-- Perspective View Switcher -->
         <div class="section-label">Output Perspective View</div>
         <div class="view-options">
             <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
@@ -584,7 +670,7 @@ mark.search-match.match-active {
             <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
         </div>
 
-        <!-- Operational Status Metrics Tracker -->
+        <!-- Metrics Tracker -->
         <div class="metrics-row">
             <div class="metric-card">
                 <div class="lbl">Total Decoded Strings</div>
@@ -600,7 +686,7 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Search Deck -->
+        <!-- Consolidated controls deck -->
         <div class="control-deck">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
@@ -618,7 +704,7 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Live Content Monitor screen -->
+        <!-- Live Content screen -->
         <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
 
     </div>
@@ -628,7 +714,7 @@ mark.search-match.match-active {
 
 <script>
 let selectedServer = "ind";
-let viewMode = "links"; // Options: 'links' | 'decoded' | 'raw'
+let viewMode = "links"; // Option states: 'links' | 'decoded' | 'raw'
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -684,44 +770,37 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-// Client-side URL normalizer and base linker
+// Client-side URL normalizer and absolute link generator
 function processHtmlUrl(val) {
     val = val.trim();
     if (!val) return null;
 
-    // HTML-level extension replacements as requested
+    // Direct string normalization replacements as requested
     val = val.replace(/\.ff_extend/gi, '.jpg');
     val = val.replace(/\.ktx(p)?/gi, '.jpg');
 
     let val_lower = val.toLowerCase();
 
-    // 1. Matches complete absolute URLs
+    // 1. Return as is if it's already an absolute URL
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
         return val;
     }
 
-    // Checking matches on relative paths containing standard extensions
+    // 2. Map relative paths matching any extension (e.g. Local/IND/, test/, common/, OB16/)
     const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
 
     if (hasValidExtension) {
-        const cleanVal = val.replace(/^\/+/, ''); // Remove any duplicate leading slashes
+        const cleanVal = val.replace(/^\/+/, ''); // Clean redundant leading slashes
         const cleanValLower = cleanVal.toLowerCase();
 
-        // Dynamically detects paths starting with 'test', 'common' or any standard game version cluster prefix (e.g. OB16, OB54)
-        const isCdnAsset = cleanValLower.startsWith("test") || 
-                           cleanValLower.startsWith("common") || 
-                           /^ob\d+/i.test(cleanValLower);
-
-        if (isCdnAsset) {
-            if (cleanValLower.startsWith("common/")) {
-                return "https://dl.dir.freefiremobile.com/" + cleanVal;
-            } else {
-                return BASE_LINK + cleanVal;
-            }
+        if (cleanValLower.startsWith("common/")) {
+            return "https://dl.dir.freefiremobile.com/" + cleanVal;
+        } else {
+            return BASE_LINK + cleanVal;
         }
     }
 
-    // 2. Map standard social domain references
+    // 3. Map common social domains
     const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
     if (social_domains.some(domain => val_lower.includes(domain))) {
         if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
@@ -731,6 +810,14 @@ function processHtmlUrl(val) {
     }
 
     return null;
+}
+
+function getCategory(url) {
+    const lower = url.toLowerCase();
+    if (/\.(png|jpg|jpeg|webp|gif|bmp)/i.test(lower)) return "images";
+    if (/\.(mp4|webm)/i.test(lower)) return "videos";
+    if (/\.(mp3|wav|ogg)/i.test(lower)) return "audio";
+    return "other";
 }
 
 async function runAPI() {
@@ -781,7 +868,7 @@ function renderOutput(data) {
     output.innerHTML = ""; 
 
     if (viewMode === "links") {
-        // Build clean and dynamic formatted link URLs
+        // Build clean formatted endpoint URLs from both discovered links and raw decoded responses
         let processedUrls = [];
         const allCandidates = new Set([...(data.urls || []), ...(data.strings || [])]);
         
@@ -799,14 +886,80 @@ function renderOutput(data) {
             output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
             lastOutputText = "";
         } else {
-            let html = "";
+            // Group lists beautifully by category
+            const grouped = { images: [], videos: [], audio: [], other: [] };
             processedUrls.forEach(link => {
-                html += `
-                <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
-                    <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
-                </div>`;
+                grouped[getCategory(link)].push(link);
             });
-            output.innerHTML = html;
+
+            let finalHtml = "";
+
+            // 1. Render IMAGES Category
+            if (grouped.images.length > 0) {
+                let sectionHtml = `<div class="group-block" id="block-images">
+                    <div class="group-header">IMAGES <span class="group-count" id="badge-images">${grouped.images.length}</span></div>`;
+                grouped.images.forEach(link => {
+                    sectionHtml += `
+                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
+                        <div class="media-preview-container">
+                            <img src="${link}" class="img-preview-thumb" loading="lazy" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
+                        </div>
+                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    </div>`;
+                });
+                sectionHtml += `</div>`;
+                finalHtml += sectionHtml;
+            }
+
+            // 2. Render VIDEOS Category
+            if (grouped.videos.length > 0) {
+                let sectionHtml = `<div class="group-block" id="block-videos">
+                    <div class="group-header">VIDEOS <span class="group-count" id="badge-videos">${grouped.videos.length}</span></div>`;
+                grouped.videos.forEach(link => {
+                    sectionHtml += `
+                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
+                        <div class="media-preview-container">
+                            <video src="${link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
+                        </div>
+                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    </div>`;
+                });
+                sectionHtml += `</div>`;
+                finalHtml += sectionHtml;
+            }
+
+            // 3. Render AUDIO Category
+            if (grouped.audio.length > 0) {
+                let sectionHtml = `<div class="group-block" id="block-audio">
+                    <div class="group-header">AUDIO <span class="group-count" id="badge-audio">${grouped.audio.length}</span></div>`;
+                grouped.audio.forEach(link => {
+                    sectionHtml += `
+                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
+                        <div class="media-preview-container">
+                            <audio src="${link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
+                        </div>
+                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    </div>`;
+                });
+                sectionHtml += `</div>`;
+                finalHtml += sectionHtml;
+            }
+
+            // 4. Render OTHER configs/endpoints
+            if (grouped.other.length > 0) {
+                let sectionHtml = `<div class="group-block" id="block-other">
+                    <div class="group-header">OTHER / CONFIGS <span class="group-count" id="badge-other">${grouped.other.length}</span></div>`;
+                grouped.other.forEach(link => {
+                    sectionHtml += `
+                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
+                        <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    </div>`;
+                });
+                sectionHtml += `</div>`;
+                finalHtml += sectionHtml;
+            }
+
+            output.innerHTML = finalHtml;
             lastOutputText = processedUrls.join("\n");
         }
     } 
@@ -818,7 +971,7 @@ function renderOutput(data) {
         } else {
             let html = "";
             strings.forEach(str => {
-                // Apply dynamic filename extension replacement indecoded views as well
+                // Apply dynamic filename replacements in decoded view as well
                 let cleanStr = str.replace(/\.ff_extend/gi, '.jpg');
                 cleanStr = cleanStr.replace(/\.ktx(p)?/gi, '.jpg');
 
@@ -841,7 +994,7 @@ function renderOutput(data) {
 
 function copyIndividualText(text) {
     navigator.clipboard.writeText(text);
-    displayToast("URL buffered to clip");
+    displayToast("URL buffered to clipboard");
 }
 
 function copyOutput() {
@@ -874,7 +1027,7 @@ function downloadOutput() {
     a.click();
 }
 
-/* Node Searching & Filtering Logic */
+/* Node Searching & Real-time Filter-while-typing Logic */
 function resetSearchState() {
     searchMatches = [];
     currentMatchIndex = -1;
@@ -889,24 +1042,39 @@ function performSearch() {
     
     if (viewMode === "links") {
         if (!apiCachedData) return;
-        const rows = output.querySelectorAll(".url-row");
+        const groups = output.querySelectorAll(".group-block");
         let visibleCount = 0;
         
-        rows.forEach(row => {
-            const url = row.getAttribute("data-url") || "";
-            const hrefElement = row.querySelector(".url-href");
+        groups.forEach(group => {
+            const rows = group.querySelectorAll(".url-row");
+            let groupVisibleCount = 0;
             
-            if (!query) {
-                row.style.display = "block";
-                hrefElement.innerHTML = url;
-                visibleCount++;
-            } else if (url.toLowerCase().includes(query)) {
-                row.style.display = "block";
-                visibleCount++;
-                const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
+            rows.forEach(row => {
+                const url = row.getAttribute("data-url") || "";
+                const hrefElement = row.querySelector(".url-href");
+                
+                if (!query) {
+                    row.style.display = "flex";
+                    hrefElement.innerHTML = url;
+                    groupVisibleCount++;
+                } else if (url.toLowerCase().includes(query)) {
+                    row.style.display = "flex";
+                    groupVisibleCount++;
+                    const regex = new RegExp(`(${escapePattern(query)})`, "gi");
+                    hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
+                } else {
+                    row.style.display = "none";
+                }
+            });
+            
+            // Recalculate visible items per category and toggle group header visibility
+            if (groupVisibleCount > 0) {
+                group.style.display = "block";
+                const badge = group.querySelector(".group-count");
+                if (badge) badge.innerText = groupVisibleCount;
+                visibleCount += groupVisibleCount;
             } else {
-                row.style.display = "none";
+                group.style.display = "none";
             }
         });
         
