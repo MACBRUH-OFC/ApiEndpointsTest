@@ -17,11 +17,11 @@
     --yellow: #ffde00;
     --bg: #030303;
     --panel: #0a0a0a;
-    --card: #0f0f0f;
-    --border: #1a1a1a;
-    --border-hover: #2d2d2d;
-    --text: #e0e0e0;
-    --muted: #606060;
+    --card: #0e0e0e;
+    --border: #161616;
+    --border-hover: #2a2a2a;
+    --text: #dfdfdf;
+    --muted: #5e5e5e;
     
     /* Contrast highlights */
     --match-bg: #ffe600;
@@ -52,7 +52,7 @@ body {
     background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #1e1e1e;
+    background: #181818;
     border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -131,7 +131,16 @@ header {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* Structured options container look */
+.control-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
 }
 
 /* Input design */
@@ -185,7 +194,6 @@ header {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 24px;
     align-items: center;
 }
 
@@ -195,7 +203,7 @@ header {
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 11px;
-    color: #a0a0a0;
+    color: #909090;
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: monospace;
@@ -205,90 +213,6 @@ header {
     border-color: var(--yellow);
     color: var(--yellow);
     background: rgba(255, 222, 0, 0.02);
-}
-
-/* Advanced config drawer */
-.config-drawer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: #050505;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #909090;
-    margin-bottom: 12px;
-    transition: all 0.15s ease;
-}
-
-.config-drawer-header:hover {
-    border-color: var(--border-hover);
-    color: #ffffff;
-}
-
-.config-drawer-body {
-    background: #000000;
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    margin-top: -16px;
-    margin-bottom: 24px;
-    padding: 16px;
-}
-
-.config-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-}
-
-.config-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.config-item label {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.config-item input[type="text"] {
-    height: 36px;
-    background: #050505;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: #ffffff;
-    padding: 0 10px;
-    font-family: monospace;
-    font-size: 12px;
-    outline: none;
-    transition: border-color 0.15s ease;
-}
-
-.config-item input[type="text"]:focus {
-    border-color: var(--yellow);
-}
-
-.checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.checkbox-item input {
-    accent-color: var(--yellow);
-    cursor: pointer;
 }
 
 /* Minimal Grid Systems */
@@ -305,7 +229,6 @@ header {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     gap: 6px;
-    margin-bottom: 24px;
 }
 
 .srv-chip {
@@ -336,9 +259,8 @@ header {
 .view-options {
     display: flex;
     gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #1a1a1a;
-    padding-bottom: 16px;
+    border-bottom: 1px solid #141414;
+    padding-bottom: 14px;
 }
 
 .opt-toggle {
@@ -368,7 +290,6 @@ header {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-bottom: 24px;
 }
 
 .metric-card {
@@ -503,6 +424,52 @@ header {
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* Dynamic Interactive Scanning View */
+.engine-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    color: var(--yellow);
+    text-align: center;
+    gap: 20px;
+}
+
+.engine-spinner {
+    width: 52px;
+    height: 52px;
+    border: 3px solid rgba(255, 222, 0, 0.1);
+    border-top: 3px solid var(--yellow);
+    border-radius: 50%;
+    animation: spin 0.9s cubic-bezier(0.4, 0.1, 0.3, 1) infinite;
+    box-shadow: 0 0 18px rgba(255, 222, 0, 0.2);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.engine-loading-text {
+    font-family: 'GFF', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    animation: pulseText 1.5s infinite alternate;
+}
+
+@keyframes pulseText {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.engine-loading-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: monospace;
+}
+
 /* Group Block Layouts */
 .group-block {
     margin-bottom: 0px;
@@ -567,46 +534,39 @@ header {
 .url-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 10px 14px;
     border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
     background: #020202;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.15s ease;
+    gap: 16px;
 }
 
 .url-row:hover {
-    background: #0a0a0a;
-}
-
-.url-row::after {
-    content: "CLICK TO COPY";
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 9px;
-    color: var(--yellow);
-    font-weight: 700;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-}
-
-.url-row:hover::after {
-    opacity: 0.8;
+    background: #080808;
 }
 
 .url-row:last-child {
     border-bottom: none;
 }
 
+.url-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    overflow: hidden;
+}
+
 .url-href {
     color: #58a6ff;
     text-decoration: none;
     transition: color 0.1s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .url-href:hover {
@@ -614,46 +574,70 @@ header {
     text-decoration: underline;
 }
 
-/* Inline Media Previews */
-.media-preview-container {
+/* Row-level copy control */
+.row-copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.row-copy-btn:hover {
+    color: var(--yellow);
+    border-color: var(--yellow);
+    background: rgba(255, 222, 0, 0.02);
+}
+
+.row-copy-btn svg {
     flex-shrink: 0;
-    margin-right: 12px;
+}
+
+/* Corrected Image aspect-ratio preview box */
+.img-preview-container {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease;
+}
+
+.img-preview-container:hover {
+    border-color: var(--yellow);
 }
 
 .img-preview-thumb {
-    width: 44px;
-    height: 44px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.25s ease;
-    background: #111111;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Preserves both landscape and portrait aspect-ratios beautifully */
+    cursor: pointer;
     display: block;
-}
-
-.img-preview-thumb:hover {
-    transform: scale(3.5);
-    transform-origin: left center;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
-    z-index: 999;
 }
 
 .video-preview-thumb {
     width: 44px;
     height: 44px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 6px;
     border: 1px solid var(--border);
-    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.25s ease;
     background: #111111;
     display: block;
-}
-
-.video-preview-thumb:hover {
-    transform: scale(3.0);
-    transform-origin: left center;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
-    z-index: 999;
+    cursor: pointer;
 }
 
 .audio-preview-player {
@@ -675,6 +659,63 @@ header {
 
 .decoded-row:last-child {
     border-bottom: none;
+}
+
+/* Dynamic Popup Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 85%;
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+}
+
+.modal-content img, .modal-content video {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.close-modal:hover {
+    color: var(--yellow);
+}
+
+.modal-caption {
+    margin-top: 12px;
+    color: var(--muted);
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+    text-align: center;
+    padding: 0 8px;
 }
 
 /* Highlighted searches */
@@ -711,13 +752,6 @@ mark.search-match.match-active {
     transform: translateY(0);
 }
 
-.loading-state {
-    color: var(--muted);
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    padding: 16px;
-}
-
 @media (max-width: 768px) {
     header { flex-direction: column; align-items: flex-start; gap: 14px; }
     .control-deck { flex-direction: column; align-items: stretch; gap: 8px; }
@@ -730,7 +764,7 @@ mark.search-match.match-active {
 
 <div class="wrapper">
 
-    <!-- Premium Header -->
+    <!-- Header Block -->
     <header>
         <div class="brand-group">
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
@@ -744,85 +778,80 @@ mark.search-match.match-active {
 
     <div class="app-panel">
 
-        <!-- Target Endpoint Input -->
-        <div class="input-row">
-            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
-            <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
+        <!-- Target Endpoint Input Container -->
+        <div class="control-container" style="padding-bottom: 12px; margin-bottom: 12px;">
+            <div class="input-row">
+                <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
+                <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
+            </div>
+            <!-- Query History/Recents -->
+            <div class="history-row" id="historyContainer">
+                <!-- Dynamic pills populate here -->
+            </div>
         </div>
 
-        <!-- Query History/Recents -->
-        <div class="history-row" id="historyContainer">
-            <!-- Dynamic pills populate here -->
-        </div>
-
-        <!-- Advanced Config Drawer -->
-        <div class="config-drawer-header" onclick="toggleConfigDrawer()">
-            <span>Advanced Configuration Options</span>
-            <span id="drawerArrow">▼</span>
-        </div>
-        <div class="config-drawer-body" id="configDrawerBody" style="display: none;">
-            <div class="config-grid">
+        <!-- Option Settings container -->
+        <div class="control-container" style="margin-bottom: 20px;">
+            <div class="config-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
                 <div class="config-item">
-                    <label>Release Version Override</label>
-                    <input type="text" id="versionOverride" placeholder="Auto-Detect (e.g. OB53)">
+                    <label>Binary Hex Payload override</label>
+                    <input type="text" id="customPayload" value="8533b7e1d34a5dfd9a830ee5cc36664e" style="font-family: monospace; height: 38px;">
                 </div>
-                <div class="config-item">
-                    <label>Custom User-Agent</label>
-                    <input type="text" id="uaOverride" value="UnityPlayer/2022.3.47f1">
-                </div>
-                <div class="config-item">
-                    <label>Custom HEX Payload</label>
-                    <input type="text" id="customPayload" value="8533b7e1d34a5dfd9a830ee5cc36664e" style="font-family: monospace;">
-                </div>
-                <div class="config-item" style="justify-content: center;">
+                <div class="config-item" style="display: flex; flex-direction: row; align-items: center; height: 100%;">
                     <div class="checkbox-item">
                         <input type="checkbox" id="togglePreviews" checked onchange="toggleMediaPreviewsState()">
-                        <label for="togglePreviews">Enable Media Previews</label>
+                        <label for="togglePreviews">Enable Inline Media Previews</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Server Selector chips -->
-        <div class="section-label">Target Region Cluster</div>
-        <div class="server-selector" id="serverSelectorGrid">
-            <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
-            <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
-            <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
-            <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
-            <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
-            <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
-            <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
-            <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
-            <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
-            <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
-            <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
-            <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
-            <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
-            <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
+        <!-- Server Selector chips container -->
+        <div class="control-container" style="margin-bottom: 20px;">
+            <div class="section-label">Target Region Cluster</div>
+            <div class="server-selector" id="serverSelectorGrid">
+                <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
+                <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
+                <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
+                <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
+                <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
+                <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
+                <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
+                <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
+                <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
+                <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
+                <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
+                <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
+                <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
+                <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
+            </div>
         </div>
 
-        <!-- Perspective View Switcher -->
-        <div class="section-label">Output Perspective View</div>
-        <div class="view-options">
-            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
-            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
-            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
+        <!-- Perspective View Switcher container -->
+        <div class="control-container" style="margin-bottom: 20px;">
+            <div class="section-label">Output Perspective View</div>
+            <div class="view-options">
+                <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
+                <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
+                <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
+            </div>
         </div>
 
-        <!-- Metrics Tracker -->
-        <div class="metrics-row">
-            <div class="metric-card">
-                <div class="lbl">Total Decoded Strings</div>
-                <div class="val" id="stringCount">0</div>
-            </div>
-            <div class="metric-card">
-                <div class="lbl">Discovered Links</div>
-                <div class="val" id="linkCount">0</div>
-            </div>
-            <div class="metric-card">
-                <div class="lbl">Engine Status</div>
-                <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
+        <!-- Metrics Tracker container -->
+        <div class="control-container" style="margin-bottom: 24px;">
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="lbl">Total Decoded Strings</div>
+                    <div class="val" id="stringCount">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="lbl">Discovered Links</div>
+                    <div class="val" id="linkCount">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="lbl">Engine Status</div>
+                    <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
+                </div>
             </div>
         </div>
 
@@ -844,9 +873,18 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Live Content screen -->
+        <!-- Live Content monitor screen -->
         <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
 
+    </div>
+</div>
+
+<!-- Dynamic Overlay Modal popup -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modalMediaContainer"></div>
+        <div class="modal-caption" id="modalCaption"></div>
     </div>
 </div>
 
@@ -890,18 +928,6 @@ function setViewMode(mode) {
     document.getElementById(`btn-${mode}`).classList.add("active");
     if (apiCachedData) {
         renderOutput(apiCachedData);
-    }
-}
-
-function toggleConfigDrawer() {
-    const container = document.getElementById("configDrawerBody");
-    const arrow = document.getElementById("drawerArrow");
-    if (container.style.display === "none") {
-        container.style.display = "block";
-        arrow.innerText = "▲";
-    } else {
-        container.style.display = "none";
-        arrow.innerText = "▼";
     }
 }
 
@@ -958,7 +984,7 @@ function processHtmlUrl(val) {
     val = val.trim();
     if (!val) return null;
 
-    // Direct string replacements as requested
+    // String normalization replacements
     val = val.replace(/\.ff_extend/gi, '.jpg');
     val = val.replace(/\.ktx(p)?/gi, '.jpg');
 
@@ -1011,18 +1037,24 @@ async function runAPI() {
     }
 
     const payloadInput = document.getElementById("customPayload").value.trim();
-    const versionInput = document.getElementById("versionOverride").value.trim();
-    const uaInput = document.getElementById("uaOverride").value.trim();
 
     updateStatusUI("SCANNING", "var(--yellow)");
-    document.getElementById("output").innerHTML = '<div class="loading-state">Engine handshake parsing payload packets...</div>';
+    
+    // Dynamic peak interactive loader
+    document.getElementById("output").innerHTML = `
+        <div class="engine-loading-container">
+            <div class="engine-spinner"></div>
+            <div class="engine-loading-text">ENGAGING QUANTUM ENGINE SCAN...</div>
+            <div class="engine-loading-sub">Decoding binary payload, mapping paths, and translating clusters...</div>
+        </div>
+    `;
     resetSearchState();
 
     try {
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
-        if (payloadInput) endpoint += `&payload=${encodeURIComponent(payloadInput)}`;
-        if (versionInput) endpoint += `&version=${encodeURIComponent(versionInput)}`;
-        if (uaInput) endpoint += `&ua=${encodeURIComponent(uaInput)}`;
+        if (payloadInput) {
+            endpoint += `&payload=${encodeURIComponent(payloadInput)}`;
+        }
         
         const res = await fetch(endpoint);
         const data = await res.json();
@@ -1049,19 +1081,12 @@ async function runAPI() {
     }
 }
 
-function copyCategoryUrls(category) {
-    const urls = currentLinksArray.filter(link => getCategory(link) === category);
-    if (urls.length === 0) return;
-    navigator.clipboard.writeText(urls.join("\n"));
-    displayToast(`Copied all discovered ${category.toUpperCase()} endpoints`);
-}
-
 function renderOutput(data) {
     const output = document.getElementById("output");
     output.innerHTML = ""; 
 
     if (viewMode === "links") {
-        // Build clean formatted endpoint URLs from both discovered links and raw decoded responses
+        // Build clean formatted endpoint URLs
         let processedUrls = [];
         const allCandidates = new Set([...(data.urls || []), ...(data.strings || [])]);
         
@@ -1079,7 +1104,7 @@ function renderOutput(data) {
             output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
             lastOutputText = "";
         } else {
-            // Group lists cleanly by category
+            // Group lists beautifully by category
             const grouped = { images: [], videos: [], audio: [], other: [] };
             processedUrls.forEach(link => {
                 grouped[getCategory(link)].push(link);
@@ -1099,12 +1124,18 @@ function renderOutput(data) {
                     </div>`;
                 grouped.images.forEach(link => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
-                        ${enableMediaPreviews ? `
-                        <div class="media-preview-container">
-                            <img src="${link}" class="img-preview-thumb" loading="lazy" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
-                        </div>` : ''}
-                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    <div class="url-row" data-url="${link}">
+                        <div class="url-main">
+                            ${enableMediaPreviews ? `
+                            <div class="img-preview-container" onclick="openMediaModal('${link}', 'image')">
+                                <img src="${link}" class="img-preview-thumb" loading="lazy" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
+                            </div>` : ''}
+                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                        </div>
+                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Link
+                        </button>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1123,12 +1154,16 @@ function renderOutput(data) {
                     </div>`;
                 grouped.videos.forEach(link => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
-                        ${enableMediaPreviews ? `
-                        <div class="media-preview-container">
-                            <video src="${link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
-                        </div>` : ''}
-                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    <div class="url-row" data-url="${link}">
+                        <div class="url-main">
+                            ${enableMediaPreviews ? `
+                            <video src="${link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;" onclick="openMediaModal('${link}', 'video')"></video>` : ''}
+                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                        </div>
+                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Link
+                        </button>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1147,12 +1182,18 @@ function renderOutput(data) {
                     </div>`;
                 grouped.audio.forEach(link => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
-                        ${enableMediaPreviews ? `
-                        <div class="media-preview-container">
-                            <audio src="${link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
-                        </div>` : ''}
-                        <a href="${link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    <div class="url-row" data-url="${link}">
+                        <div class="url-main">
+                            ${enableMediaPreviews ? `
+                            <div class="media-preview-container">
+                                <audio src="${link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
+                            </div>` : ''}
+                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                        </div>
+                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Link
+                        </button>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1171,8 +1212,14 @@ function renderOutput(data) {
                     </div>`;
                 grouped.other.forEach(link => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
-                        <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
+                    <div class="url-row" data-url="${link}">
+                        <div class="url-main" style="padding-left: 2px;">
+                            <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href">${link}</a>
+                        </div>
+                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Link
+                        </button>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1212,6 +1259,38 @@ function renderOutput(data) {
     performSearch();
 }
 
+// Media Modal popup triggers
+function openMediaModal(src, type) {
+    const modal = document.getElementById("imageModal");
+    const container = document.getElementById("modalMediaContainer");
+    const caption = document.getElementById("modalCaption");
+    
+    container.innerHTML = "";
+    caption.innerText = src;
+
+    if (type === 'image') {
+        const img = document.createElement("img");
+        img.src = src;
+        img.onerror = () => { img.src = 'https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'; };
+        container.appendChild(img);
+    } else if (type === 'video') {
+        const vid = document.createElement("video");
+        vid.src = src;
+        vid.controls = true;
+        vid.autoplay = true;
+        container.appendChild(vid);
+    }
+    
+    modal.style.display = "flex";
+}
+
+function closeModal() {
+    const modal = document.getElementById("imageModal");
+    const container = document.getElementById("modalMediaContainer");
+    container.innerHTML = ""; // Stop playing videos inside modal instantly on close
+    modal.style.display = "none";
+}
+
 function copyIndividualText(text) {
     navigator.clipboard.writeText(text);
     displayToast("URL buffered to clipboard");
@@ -1229,8 +1308,6 @@ function clearOutput() {
     document.getElementById("linkCount").innerText = "0";
     document.getElementById("apiName").value = "";
     document.getElementById("customPayload").value = "8533b7e1d34a5dfd9a830ee5cc36664e";
-    document.getElementById("versionOverride").value = "";
-    document.getElementById("uaOverride").value = "UnityPlayer/2022.3.47f1";
     document.getElementById("searchBox").value = "";
     updateStatusUI("IDLE", "var(--muted)");
     lastOutputText = "";
@@ -1247,6 +1324,13 @@ function downloadOutput() {
     a.href = URL.createObjectURL(blob);
     a.download = `ff_api_logs_${selectedServer}.log`;
     a.click();
+}
+
+function copyCategoryUrls(category) {
+    const urls = currentLinksArray.filter(link => getCategory(link) === category);
+    if (urls.length === 0) return;
+    navigator.clipboard.writeText(urls.join("\n"));
+    displayToast(`Copied all discovered ${category.toUpperCase()} endpoints`);
 }
 
 /* Node Searching & Real-time Filter-while-typing Logic */
