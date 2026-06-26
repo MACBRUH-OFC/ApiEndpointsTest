@@ -24,7 +24,7 @@
     --text: #f5f5f5;
     --muted: #707070;
     
-    /* Perfect contrast highlights */
+    /* Contrast highlights */
     --match-bg: #ffe600;
     --match-text: #000000;
     --match-active: #ff7700;
@@ -150,6 +150,7 @@ header {
 
 .main-input:focus {
     border-color: var(--yellow);
+    box-shadow: 0 0 12px rgba(255, 222, 0, 0.15);
 }
 
 .run-action-btn {
@@ -171,6 +172,25 @@ header {
 
 .run-action-btn:hover {
     background: #e5c800;
+}
+
+/* Custom Payload Options Toggle */
+.toggle-payload-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+    transition: color 0.15s ease;
+}
+
+.toggle-payload-btn:hover {
+    color: var(--yellow);
 }
 
 /* Minimal Grid Systems */
@@ -208,16 +228,17 @@ header {
 }
 
 .srv-chip.active {
-    background: #ffffff;
-    border-color: #ffffff;
+    background: var(--yellow);
+    border-color: var(--yellow);
     color: #000000;
+    box-shadow: 0 0 10px rgba(255, 222, 0, 0.25);
 }
 
 /* Unified Layout Options Switcher */
 .view-options {
     display: flex;
     gap: 8px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     border-bottom: 1px solid #1a1a1a;
     padding-bottom: 16px;
 }
@@ -242,6 +263,53 @@ header {
     border-color: var(--yellow);
     color: var(--yellow);
     background: rgba(255, 222, 0, 0.02);
+}
+
+/* Dynamic Category Tabs for Links */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.cat-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #000000;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.cat-tab:hover {
+    border-color: var(--border-hover);
+    color: #ffffff;
+}
+
+.cat-tab.active {
+    background: var(--yellow);
+    color: #000000;
+    border-color: var(--yellow);
+}
+
+.cat-tab.active .badge-num {
+    background: rgba(0, 0, 0, 0.15);
+    color: #000000;
+}
+
+.badge-num {
+    padding: 2px 6px;
+    background: #1e1e1e;
+    color: var(--muted);
+    border-radius: 4px;
+    font-size: 9px;
 }
 
 /* Performance Metrics Track */
@@ -370,7 +438,7 @@ header {
     color: #ffffff;
 }
 
-/* Pristine Code Output Monitor */
+/* Output Monitor Dashboard */
 .console-monitor {
     width: 100%;
     height: 500px;
@@ -384,10 +452,94 @@ header {
     font-size: 13px;
     line-height: 1.6;
     color: #bbbbbb;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Precise Marker Highlighting styling */
+/* URL Asset Cards */
+.url-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    gap: 12px;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.url-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+}
+
+.url-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-family: 'GFF', sans-serif;
+    letter-spacing: 0.5px;
+    min-width: 70px;
+    text-align: center;
+}
+
+.badge-images { background: rgba(0, 191, 255, 0.1); color: #00bfff; border: 1px solid rgba(0, 191, 255, 0.2); }
+.badge-videos { background: rgba(255, 127, 80, 0.1); color: #ff7f50; border: 1px solid rgba(255, 127, 80, 0.2); }
+.badge-audio { background: rgba(144, 238, 144, 0.1); color: #90ee90; border: 1px solid rgba(144, 238, 144, 0.2); }
+.badge-html  { background: rgba(238, 130, 238, 0.1); color: #ee82ee; border: 1px solid rgba(238, 130, 238, 0.2); }
+.badge-social{ background: rgba(255, 222, 0, 0.1); color: var(--yellow); border: 1px solid rgba(255, 222, 0, 0.2); }
+.badge-other { background: rgba(120, 120, 120, 0.1); color: #a0a0a0; border: 1px solid rgba(120, 120, 120, 0.2); }
+
+.url-details {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.url-href {
+    color: #58a6ff;
+    text-decoration: none;
+    font-family: monospace;
+    font-size: 13px;
+    transition: color 0.1s ease;
+}
+
+.url-href:hover {
+    color: #79b8ff;
+    text-decoration: underline;
+}
+
+.url-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.card-action-btn {
+    width: 32px;
+    height: 32px;
+    background: #161616;
+    border: 1px solid var(--border);
+    color: #a0a0a0;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s ease;
+}
+
+.card-action-btn:hover {
+    color: #ffffff;
+    background: #222222;
+    border-color: #333333;
+}
+
+/* Marker Highlighting */
 mark.search-match {
     background-color: var(--match-bg);
     color: var(--match-text);
@@ -397,25 +549,6 @@ mark.search-match {
 mark.search-match.match-active {
     background-color: var(--match-active);
     color: #ffffff;
-}
-
-.url-item {
-    padding: 10px 12px;
-    background: #050505;
-    border: 1px solid #161616;
-    border-radius: 6px;
-    margin-bottom: 6px;
-}
-
-.url-item a {
-    color: #58a6ff;
-    text-decoration: none;
-    font-family: monospace;
-    font-size: 12.5px;
-}
-
-.url-item a:hover {
-    text-decoration: underline;
 }
 
 .toast {
@@ -474,8 +607,17 @@ mark.search-match.match-active {
 
         <!-- Target Input -->
         <div class="input-row">
-            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string...">
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
             <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
+        </div>
+
+        <!-- Request Hex Payload Selection -->
+        <div class="section-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span>Custom Binary Hex Payload</span>
+            <button class="toggle-payload-btn" onclick="togglePayloadInput()"><i class="fa-solid fa-code"></i> Toggle Custom</button>
+        </div>
+        <div class="input-row" id="payloadInputContainer" style="display: none; margin-bottom: 24px;">
+            <input type="text" id="customPayload" class="main-input" style="height: 44px; font-family: monospace;" placeholder="Enter hex payload (fallback used if empty)..." value="8533b7e1d34a5dfd9a830ee5cc36664e">
         </div>
 
         <!-- Servers -->
@@ -505,6 +647,17 @@ mark.search-match.match-active {
             <button class="opt-toggle" id="btn-strings" onclick="setViewMode('strings')">ALL STRINGS</button>
         </div>
 
+        <!-- Dynamic Category Tabs (Visible when VIEW = LINKS) -->
+        <div class="category-tabs" id="categoryTabsContainer" style="display: none;">
+            <button class="cat-tab active" onclick="setCategoryFilter('all')">All <span class="badge-num" id="count-all">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('images')">Images <span class="badge-num" id="count-images">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('videos')">Videos <span class="badge-num" id="count-videos">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('audio')">Audio <span class="badge-num" id="count-audio">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('html')">HTML <span class="badge-num" id="count-html">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('social')">Social <span class="badge-num" id="count-social">0</span></button>
+            <button class="cat-tab" onclick="setCategoryFilter('other')">Other <span class="badge-num" id="count-other">0</span></button>
+        </div>
+
         <!-- Operational Status Metrics Tracker -->
         <div class="metrics-row">
             <div class="metric-card">
@@ -525,7 +678,7 @@ mark.search-match.match-active {
         <div class="control-deck">
             <div class="search-wrapper">
                 <i class="fa-solid fa-magnifying-glass" style="color: #444; font-size: 12px;"></i>
-                <input type="text" class="search-input" id="searchBox" placeholder="Filter / Find..." oninput="performSearch()">
+                <input type="text" class="search-input" id="searchBox" placeholder="Filter/Search current output..." oninput="performSearch()">
                 <span class="search-counter" id="searchCount">0/0</span>
                 <div class="search-nav">
                     <button class="search-step-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" disabled><i class="fa-solid fa-chevron-up"></i></button>
@@ -551,6 +704,7 @@ mark.search-match.match-active {
 <script>
 let selectedServer = "ind";
 let viewMode = "links"; // Option states tracking: 'links' | 'raw' | 'strings'
+let currentCategory = "all"; // Category states tracking for URLs
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -573,6 +727,60 @@ function setViewMode(mode) {
     }
 }
 
+function togglePayloadInput() {
+    const container = document.getElementById("payloadInputContainer");
+    const btn = document.querySelector(".toggle-payload-btn");
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        btn.innerHTML = `<i class="fa-solid fa-code"></i> Hide Custom`;
+    } else {
+        container.style.display = "none";
+        btn.innerHTML = `<i class="fa-solid fa-code"></i> Toggle Custom`;
+    }
+}
+
+function setCategoryFilter(category) {
+    currentCategory = category;
+    document.querySelectorAll(".cat-tab").forEach(b => b.classList.remove("active"));
+    
+    // Support finding either single or double quote attributes
+    const activeTab = document.querySelector(`.cat-tab[onclick*="'${category}'"]`) || document.querySelector(`.cat-tab[onclick*='"${category}"']`);
+    if (activeTab) activeTab.classList.add("active");
+    
+    if (apiCachedData) {
+        renderOutput(apiCachedData);
+    }
+}
+
+function classifyUrl(url) {
+    const lower = url.toLowerCase();
+    if (/\.(png|jpg|jpeg|webp|gif|bmp|ktx)/i.test(lower)) return "images";
+    if (/\.(mp4|webm)/i.test(lower)) return "videos";
+    if (/\.(mp3|wav|ogg)/i.test(lower)) return "audio";
+    if (/\.html/i.test(lower)) return "html";
+    if (/(discord\.gg|instagram\.com|youtube\.com|youtu\.be|facebook\.com|twitter\.com|x\.com|linktr\.ee|whatsapp\.com)/i.test(lower)) return "social";
+    return "other";
+}
+
+function updateCategoryCounts(data) {
+    const urls = data.urls || [];
+    const counts = { all: urls.length, images: 0, videos: 0, audio: 0, html: 0, social: 0, other: 0 };
+    
+    urls.forEach(url => {
+        const cat = classifyUrl(url);
+        if (counts[cat] !== undefined) {
+            counts[cat]++;
+        } else {
+            counts["other"]++;
+        }
+    });
+
+    for (const [key, value] of Object.entries(counts)) {
+        const element = document.getElementById(`count-${key}`);
+        if (element) element.innerText = value;
+    }
+}
+
 function updateStatusUI(status, hexColor) {
     const el = document.getElementById("statusText");
     el.innerText = status;
@@ -589,16 +797,23 @@ function displayToast(msg) {
 async function runAPI() {
     const apiName = document.getElementById("apiName").value.trim();
     if (!apiName) {
-        alert("Enter a target pipeline string.");
+        alert("Enter a target endpoint path string.");
         return;
     }
+
+    const payloadInput = document.getElementById("customPayload").value.trim();
 
     updateStatusUI("SCANNING", "var(--yellow)");
     document.getElementById("output").innerHTML = '<div class="loading-state">Engine handshake parsing payload packets...</div>';
     resetSearchState();
 
     try {
-        const res = await fetch(`/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`);
+        let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
+        if (payloadInput) {
+            endpoint += `&payload=${encodeURIComponent(payloadInput)}`;
+        }
+        
+        const res = await fetch(endpoint);
         const data = await res.json();
 
         if (data.error) {
@@ -614,6 +829,7 @@ async function runAPI() {
         currentLinksArray = data.urls || [];
         apiCachedData = data; 
         
+        updateCategoryCounts(data);
         renderOutput(data);
 
     } catch (err) {
@@ -624,44 +840,83 @@ async function runAPI() {
 
 function renderOutput(data) {
     const output = document.getElementById("output");
+    const categoryTabs = document.getElementById("categoryTabsContainer");
 
-    if (viewMode === "raw") {
-        lastOutputText = data.raw_response || "";
-        output.textContent = lastOutputText;
-    } else if (viewMode === "strings") {
-        lastOutputText = (data.strings || []).join("\n");
-        output.textContent = lastOutputText;
-    } else if (viewMode === "links") {
-        if (!currentLinksArray || currentLinksArray.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic;">Null URLs collection dataset response.</div>`;
+    if (viewMode === "links") {
+        categoryTabs.style.display = "flex";
+        
+        // Filter elements locally based on selected category tab
+        const filteredUrls = (data.urls || []).filter(url => {
+            if (currentCategory === "all") return true;
+            return classifyUrl(url) === currentCategory;
+        });
+
+        if (filteredUrls.length === 0) {
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px; text-align: center; font-size:13px;">No assets discovered under this category filter.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
-            currentLinksArray.forEach(link => {
-                html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
+            filteredUrls.forEach(link => {
+                const cat = classifyUrl(link);
+                html += `
+                <div class="url-card" data-url="${link}">
+                    <div class="url-badge badge-${cat}">${cat}</div>
+                    <div class="url-details">
+                        <a href="${link}" target="_blank" class="url-href">${link}</a>
+                    </div>
+                    <div class="url-actions">
+                        <button class="card-action-btn" onclick="copyIndividualText('${link}')" title="Copy URL"><i class="fa-solid fa-copy"></i></button>
+                        <button class="card-action-btn" onclick="window.open('${link}', '_blank')" title="Open"><i class="fa-solid fa-external-link"></i></button>
+                    </div>
+                </div>`;
             });
             output.innerHTML = html;
-            lastOutputText = currentLinksArray.join("\n");
+            lastOutputText = filteredUrls.join("\n");
+        }
+    } else {
+        categoryTabs.style.display = "none";
+        if (viewMode === "raw") {
+            lastOutputText = data.raw_response || "";
+            output.textContent = lastOutputText;
+        } else if (viewMode === "strings") {
+            lastOutputText = (data.strings || []).join("\n");
+            output.textContent = lastOutputText;
         }
     }
     performSearch();
 }
 
+function copyIndividualText(text) {
+    navigator.clipboard.writeText(text);
+    displayToast("URL buffered to clip");
+}
+
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
-    displayToast("Buffered logs copied to clip");
+    displayToast("Buffered log context copied");
 }
 
 function clearOutput() {
     document.getElementById("output").innerHTML = "SYSTEM LOG: FLUSH COMPLETED";
     document.getElementById("stringCount").innerText = "0";
     document.getElementById("linkCount").innerText = "0";
+    document.getElementById("apiName").value = "";
+    document.getElementById("customPayload").value = "8533b7e1d34a5dfd9a830ee5cc36664e";
     updateStatusUI("IDLE", "var(--muted)");
     lastOutputText = "";
     apiCachedData = null;
     currentLinksArray = [];
+    currentCategory = "all";
     resetSearchState();
+    
+    const categories = ["all", "images", "videos", "audio", "html", "social", "other"];
+    categories.forEach(cat => {
+        const el = document.getElementById(`count-${cat}`);
+        if (el) el.innerText = "0";
+    });
+    setCategoryFilter("all");
+    
     displayToast("Console memory flushed");
 }
 
@@ -670,7 +925,7 @@ function downloadOutput() {
     const blob = new Blob([lastOutputText], { type: "text/plain" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `api_logs_${selectedServer}.log`;
+    a.download = `ff_api_logs_${selectedServer}.log`;
     a.click();
 }
 
@@ -684,46 +939,58 @@ function resetSearchState() {
 }
 
 function performSearch() {
-    const query = document.getElementById("searchBox").value.trim();
+    const query = document.getElementById("searchBox").value.trim().toLowerCase();
     const output = document.getElementById("output");
     
-    if (!query) {
-        resetSearchState();
-        if (apiCachedData) {
-            if (viewMode === "raw" || viewMode === "strings") {
-                output.textContent = lastOutputText;
-            } else if (viewMode === "links") {
-                let html = "";
-                currentLinksArray.forEach(link => {
-                    html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
-                });
-                output.innerHTML = html;
-            }
-        }
-        return;
-    }
-
     if (viewMode === "links") {
-        let html = "";
-        currentLinksArray.forEach(link => {
-            html += `<div class="url-item"><a href="${link}" target="_blank">${link}</a></div>`;
+        if (!apiCachedData) return;
+        const cards = output.querySelectorAll(".url-card");
+        
+        cards.forEach(card => {
+            const url = card.getAttribute("data-url") || "";
+            const hrefElement = card.querySelector(".url-href");
+            
+            if (!query) {
+                card.style.display = "flex";
+                hrefElement.innerHTML = url;
+            } else if (url.toLowerCase().includes(query)) {
+                card.style.display = "flex";
+                const regex = new RegExp(`(${escapePattern(query)})`, "gi");
+                hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
+            } else {
+                card.style.display = "none";
+            }
         });
-        output.innerHTML = html;
-        highlightNodes(output, query);
+        
+        searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
+        
+        if (searchMatches.length > 0) {
+            currentMatchIndex = 0;
+            updateSearchStatsUI();
+            applyFocusHighlight();
+        } else {
+            currentMatchIndex = -1;
+            updateSearchStatsUI();
+        }
     } else {
+        if (!query) {
+            resetSearchState();
+            output.textContent = lastOutputText;
+            return;
+        }
+
         output.textContent = lastOutputText;
         highlightNodes(output, query);
-    }
-
-    searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
-    
-    if (searchMatches.length > 0) {
-        currentMatchIndex = 0;
-        updateSearchStatsUI();
-        applyFocusHighlight();
-    } else {
-        currentMatchIndex = -1;
-        updateSearchStatsUI();
+        searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
+        
+        if (searchMatches.length > 0) {
+            currentMatchIndex = 0;
+            updateSearchStatsUI();
+            applyFocusHighlight();
+        } else {
+            currentMatchIndex = -1;
+            updateSearchStatsUI();
+        }
     }
 }
 
