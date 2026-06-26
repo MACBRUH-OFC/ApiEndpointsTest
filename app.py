@@ -17,7 +17,7 @@ UID_PASSWORDS = {
     "vn": {"uid": "4113363250", "password": "47269BFC4695E93FFABA1AA426847669D12AF36F6B7FCA52BF660459EE2B4092"},
     "tw": {"uid": "4113375272", "password": "6AB01F7FB110A4C9EB95DBA21BD0E63E622DF8E566157811910F81E54394A17D"},
     "th": {"uid": "4113415247", "password": "2542DD73DD60B33E183C6A894F9F6A2FC7DAEC457B826C71D44BFD4470788BBB"},
-    "sg": {"uid": "3615082916", "password": "60ACA52124148070458C031C2A003B3E1123B93D7B3B117FB7E775225439B2BC"},
+    "sg": {"uid": "4139211052", "password": "3BA22FEF36B7118B9FB1E1EB3E5A6DD84BDE696BD66B494269496E9834F00F3B"},
     "eu": {"uid": "4139177376", "password": "E29B0A5C48E8B426BE3E9D977927606842310E2F14EB108F2B5D7F73D9C4B105"},
     "na": {"uid": "4139196327", "password": "FA680B796474B22907BFD3DF2AFA29577FA43C5B2068417AA24453F25212B854"},
     "pk": {"uid": "4139224003", "password": "1812098F2587DCAEF5CC21EAD93FAA751D212CD81C586CFD4B4F48C1B49D2A88"},
@@ -70,7 +70,7 @@ def get_release_version():
                 return version
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
-    return "OB53"  # Standard dynamic fallback
+    return "OB53"  # Dynamic fallback version
 
 
 def get_token(server):
@@ -178,7 +178,7 @@ def run_script():
 
         decoded = content.decode("utf-8", errors="ignore")
 
-        # Decode response utilising the external Protobuf decoding endpoint
+        # Decode response using external Protobuf decoding endpoint
         protobuf_data = {}
         try:
             dec_res = requests.post(
@@ -210,7 +210,7 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Standardise and filter decoded string links
+        # Standardise and filter decoded endpoint strings
         urls = set()
         for val in extracted_strings:
             val = val.strip()
@@ -219,27 +219,17 @@ def run_script():
 
             val_lower = val.lower()
 
-            # 1. Matches complete absolute URLs
+            # 1. Matches absolute URLs
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # 2. Prepend base CDN strictly if it starts with "test" or "common"
-            if val_lower.startswith("test") or val_lower.startswith("common"):
-                val_clean = val.lstrip("/")
-                if val_clean.lower().startswith("common/"):
-                    url_item = "https://dl.dir.freefiremobile.com/" + val_clean
-                else:
-                    url_item = BASE_LINK + val_clean
-                urls.add(url_item)
-                continue
-
-            # 3. Match relative assets containing typical extensions without conversions
+            # 2. Extract relative paths ending in valid extensions (e.g. Local/IND/, test/, common/, OB16/)
             if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
                 urls.add(val)
                 continue
 
-            # 4. Social media domains
+            # 3. Match social domain references
             social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"]
             if any(domain in val_lower for domain in social_domains):
                 if not val_lower.startswith(("http://", "https://")):
