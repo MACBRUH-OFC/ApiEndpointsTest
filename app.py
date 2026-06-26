@@ -110,7 +110,7 @@ def get_token(server):
 def run_script():
     server = request.args.get("server")
     api_name = request.args.get("name")
-    payload_hex = request.args.get("payload", "8533b7e1d34a5dfd9a830ee5cc36664e")
+    payload_hex = "8533b7e1d34a5dfd9a830ee5cc36664e"  # Fixed hex payload
 
     if server not in UID_PASSWORDS:
         return jsonify({"error": "Invalid server"})
@@ -178,7 +178,7 @@ def run_script():
 
         decoded = content.decode("utf-8", errors="ignore")
 
-        # Decode response using external Protobuf decoding endpoint
+        # Decode response utilising the external Protobuf decoding endpoint
         protobuf_data = {}
         try:
             dec_res = requests.post(
@@ -210,7 +210,7 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Standardise and parse relative asset structures
+        # Map and output candidate strings
         urls = set()
         for val in extracted_strings:
             val = val.strip()
@@ -219,12 +219,12 @@ def run_script():
 
             val_lower = val.lower()
 
-            # 1. Matches absolute URLs
+            # 1. Matches complete URLs
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # 2. Extract relative paths ending in valid extensions
+            # 2. Match relative asset paths
             if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
                 urls.add(val)
                 continue
