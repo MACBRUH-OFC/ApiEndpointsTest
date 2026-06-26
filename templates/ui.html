@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FREE FIRE API ENGINE - CONTROL DECK</title>
+<title>FREE FIRE API ENGINE</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -17,11 +17,11 @@
     --yellow: #ffde00;
     --bg: #030303;
     --panel: #0a0a0a;
-    --card: #0e0e0e;
-    --border: #161616;
-    --border-hover: #2a2a2a;
-    --text: #dfdfdf;
-    --muted: #5e5e5e;
+    --card: #0f0f0f;
+    --border: #1a1a1a;
+    --border-hover: #2d2d2d;
+    --text: #e0e0e0;
+    --muted: #606060;
     
     /* Contrast highlights */
     --match-bg: #ffe600;
@@ -43,7 +43,7 @@ body {
     letter-spacing: -0.2px;
 }
 
-/* Scrollbar styles */
+/* Premium micro scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -52,7 +52,7 @@ body {
     background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #181818;
+    background: #1e1e1e;
     border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -125,25 +125,17 @@ header {
     color: var(--yellow);
 }
 
-/* Core Dashboard Layout */
-.app-panel {
+/* Official Structured Containers */
+.dashboard-container {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Structured options container look */
-.control-container {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-}
-
-/* Input design */
+/* Pure Inputs UI */
 .input-row {
     position: relative;
     margin-bottom: 12px;
@@ -203,7 +195,7 @@ header {
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 11px;
-    color: #909090;
+    color: #a0a0a0;
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: monospace;
@@ -215,14 +207,14 @@ header {
     background: rgba(255, 222, 0, 0.02);
 }
 
-/* Minimal Grid Systems */
 .section-label {
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     color: var(--muted);
     font-weight: 700;
     letter-spacing: 0.8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    display: block;
 }
 
 .server-selector {
@@ -255,12 +247,10 @@ header {
     box-shadow: 0 0 10px rgba(255, 222, 0, 0.25);
 }
 
-/* Unified View Options Switcher */
+/* Perspective View Switcher options */
 .view-options {
     display: flex;
     gap: 8px;
-    border-bottom: 1px solid #141414;
-    padding-bottom: 14px;
 }
 
 .opt-toggle {
@@ -356,7 +346,7 @@ header {
 
 .search-nav {
     display: flex;
-    gap: 2px;
+    gap: 4px;
 }
 
 .search-step-btn {
@@ -409,7 +399,7 @@ header {
     color: #ffffff;
 }
 
-/* Output Monitor Console Screen */
+/* Output Monitor Console screen background scanning scanlines */
 .console-monitor {
     width: 100%;
     height: 500px;
@@ -422,52 +412,6 @@ header {
     overflow: auto;
     color: #bbbbbb;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-/* Dynamic Interactive Scanning View */
-.engine-loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: 400px;
-    color: var(--yellow);
-    text-align: center;
-    gap: 20px;
-}
-
-.engine-spinner {
-    width: 52px;
-    height: 52px;
-    border: 3px solid rgba(255, 222, 0, 0.1);
-    border-top: 3px solid var(--yellow);
-    border-radius: 50%;
-    animation: spin 0.9s cubic-bezier(0.4, 0.1, 0.3, 1) infinite;
-    box-shadow: 0 0 18px rgba(255, 222, 0, 0.2);
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.engine-loading-text {
-    font-family: 'GFF', sans-serif;
-    font-size: 15px;
-    letter-spacing: 1.5px;
-    animation: pulseText 1.5s infinite alternate;
-}
-
-@keyframes pulseText {
-    0% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-.engine-loading-sub {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: monospace;
 }
 
 /* Group Block Layouts */
@@ -534,39 +478,29 @@ header {
 .url-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 10px 14px;
     border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
     background: #020202;
-    gap: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
 .url-row:hover {
-    background: #080808;
+    background: #0a0a0a;
 }
 
 .url-row:last-child {
     border-bottom: none;
 }
 
-.url-main {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    overflow: hidden;
-}
-
 .url-href {
     color: #58a6ff;
     text-decoration: none;
     transition: color 0.1s ease;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .url-href:hover {
@@ -574,70 +508,67 @@ header {
     text-decoration: underline;
 }
 
-/* Row-level copy control */
-.row-copy-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--muted);
-    font-size: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    padding: 5px 10px;
+.row-actions-block {
+    margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 4px;
-    transition: all 0.15s ease;
-    white-space: nowrap;
+    gap: 8px;
+    padding-left: 12px;
 }
 
-.row-copy-btn:hover {
+/* Clean vector SVG for clipboard copy */
+.copy-svg-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.copy-svg-icon:hover {
     color: var(--yellow);
-    border-color: var(--yellow);
-    background: rgba(255, 222, 0, 0.02);
+    transform: scale(1.1);
 }
 
-.row-copy-btn svg {
+/* Fixed Image Alignment Frame */
+.media-preview-container {
     flex-shrink: 0;
-}
-
-/* Corrected Image aspect-ratio preview box */
-.img-preview-container {
+    margin-right: 12px;
     width: 44px;
     height: 44px;
-    border-radius: 6px;
+    background: #000000;
     border: 1px solid var(--border);
-    background: #111111;
+    border-radius: 6px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    flex-shrink: 0;
-    transition: border-color 0.15s ease;
-}
-
-.img-preview-container:hover {
-    border-color: var(--yellow);
 }
 
 .img-preview-thumb {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Preserves both landscape and portrait aspect-ratios beautifully */
+    object-fit: contain; /* Prevents vertical/horizontal stretching on diverse dimensions */
     cursor: pointer;
     display: block;
+    transition: filter 0.15s ease;
+}
+
+.img-preview-thumb:hover {
+    filter: brightness(1.2);
 }
 
 .video-preview-thumb {
-    width: 44px;
-    height: 44px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: #111111;
-    display: block;
     cursor: pointer;
+    display: block;
+    transition: filter 0.15s ease;
+}
+
+.video-preview-thumb:hover {
+    filter: brightness(1.2);
 }
 
 .audio-preview-player {
@@ -661,64 +592,7 @@ header {
     border-bottom: none;
 }
 
-/* Dynamic Popup Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 85%;
-    background: #000000;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-}
-
-.modal-content img, .modal-content video {
-    max-width: 100%;
-    max-height: 70vh;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.close-modal {
-    position: absolute;
-    top: 10px; right: 15px;
-    color: #ffffff;
-    font-size: 28px;
-    font-weight: 300;
-    cursor: pointer;
-    transition: color 0.15s ease;
-}
-
-.close-modal:hover {
-    color: var(--yellow);
-}
-
-.modal-caption {
-    margin-top: 12px;
-    color: var(--muted);
-    font-family: monospace;
-    font-size: 12px;
-    word-break: break-all;
-    text-align: center;
-    padding: 0 8px;
-}
-
-/* Highlighted searches */
+/* Search Highlights */
 mark.search-match {
     background-color: var(--match-bg);
     color: var(--match-text);
@@ -728,6 +602,91 @@ mark.search-match {
 mark.search-match.match-active {
     background-color: var(--match-active);
     color: #ffffff;
+}
+
+/* Premium Simulated Loader */
+.scanner-loader {
+    padding: 30px;
+    text-align: center;
+    font-family: monospace;
+}
+
+.scanner-text {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    animation: pulseBlink 1.5s infinite alternate;
+}
+
+@keyframes pulseBlink {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.scanner-bar-container {
+    width: 100%;
+    max-width: 320px;
+    height: 8px;
+    background: #111111;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.scanner-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--yellow);
+    box-shadow: 0 0 10px var(--yellow);
+    transition: width 0.1s linear;
+}
+
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #000000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.1s ease;
+}
+
+.lightbox-close:hover {
+    color: var(--yellow);
 }
 
 .toast {
@@ -776,86 +735,69 @@ mark.search-match.match-active {
         <div class="engine-title">API <span>TOOL</span></div>
     </header>
 
-    <div class="app-panel">
-
-        <!-- Target Endpoint Input Container -->
-        <div class="control-container" style="padding-bottom: 12px; margin-bottom: 12px;">
-            <div class="input-row">
-                <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
-                <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
-            </div>
-            <!-- Query History/Recents -->
-            <div class="history-row" id="historyContainer">
-                <!-- Dynamic pills populate here -->
-            </div>
+    <!-- CONTAINER 1: Pipeline inputs & query caching -->
+    <div class="dashboard-container">
+        <div class="input-row">
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
+            <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
-        <!-- Option Settings container -->
-        <div class="control-container" style="margin-bottom: 20px;">
-            <div class="config-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
-                <div class="config-item">
-                    <label>Binary Hex Payload override</label>
-                    <input type="text" id="customPayload" value="8533b7e1d34a5dfd9a830ee5cc36664e" style="font-family: monospace; height: 38px;">
-                </div>
-                <div class="config-item" style="display: flex; flex-direction: row; align-items: center; height: 100%;">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="togglePreviews" checked onchange="toggleMediaPreviewsState()">
-                        <label for="togglePreviews">Enable Inline Media Previews</label>
-                    </div>
-                </div>
+        <div class="history-row" id="historyContainer">
+            <!-- Dynamic pills populate here -->
+        </div>
+    </div>
+
+    <!-- CONTAINER 2: Clusters selection -->
+    <div class="dashboard-container">
+        <div class="section-label">Target Region Cluster</div>
+        <div class="server-selector" id="serverSelectorGrid">
+            <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
+            <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
+            <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
+            <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
+            <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
+            <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
+            <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
+            <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
+            <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
+            <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
+            <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
+            <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
+            <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
+            <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
+        </div>
+    </div>
+
+    <!-- CONTAINER 3: Perspective View Switcher -->
+    <div class="dashboard-container">
+        <div class="section-label">Output Perspective View</div>
+        <div class="view-options">
+            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
+            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
+            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
+        </div>
+    </div>
+
+    <!-- CONTAINER 4: Operational Metrics -->
+    <div class="dashboard-container">
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="lbl">Total Decoded Strings</div>
+                <div class="val" id="stringCount">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="lbl">Discovered Links</div>
+                <div class="val" id="linkCount">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="lbl">Engine Status</div>
+                <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
+    </div>
 
-        <!-- Server Selector chips container -->
-        <div class="control-container" style="margin-bottom: 20px;">
-            <div class="section-label">Target Region Cluster</div>
-            <div class="server-selector" id="serverSelectorGrid">
-                <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
-                <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
-                <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
-                <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
-                <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
-                <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
-                <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
-                <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
-                <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
-                <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
-                <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
-                <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
-                <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
-                <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
-            </div>
-        </div>
-
-        <!-- Perspective View Switcher container -->
-        <div class="control-container" style="margin-bottom: 20px;">
-            <div class="section-label">Output Perspective View</div>
-            <div class="view-options">
-                <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
-                <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
-                <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
-            </div>
-        </div>
-
-        <!-- Metrics Tracker container -->
-        <div class="control-container" style="margin-bottom: 24px;">
-            <div class="metrics-row">
-                <div class="metric-card">
-                    <div class="lbl">Total Decoded Strings</div>
-                    <div class="val" id="stringCount">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="lbl">Discovered Links</div>
-                    <div class="val" id="linkCount">0</div>
-                </div>
-                <div class="metric-card">
-                    <div class="lbl">Engine Status</div>
-                    <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Consolidated controls deck -->
+    <!-- CONTAINER 5: Control deck & output monitor screen -->
+    <div class="dashboard-container">
         <div class="control-deck">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
@@ -873,18 +815,15 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Live Content monitor screen -->
         <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
-
     </div>
 </div>
 
-<!-- Dynamic Overlay Modal popup -->
-<div id="imageModal" class="modal" onclick="closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div id="modalMediaContainer"></div>
-        <div class="modal-caption" id="modalCaption"></div>
+<!-- Image Lightbox Modal Overlay -->
+<div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <img id="lightboxImage" src="" alt="Preview">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     </div>
 </div>
 
@@ -893,7 +832,6 @@ mark.search-match.match-active {
 <script>
 let selectedServer = "ind";
 let viewMode = "links"; // Option states: 'links' | 'decoded' | 'raw'
-let enableMediaPreviews = true;
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -911,7 +849,7 @@ const VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ];
 
-// Initialize Query History pills on startup
+// Initialize query history pills on page load
 document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
 });
@@ -931,20 +869,13 @@ function setViewMode(mode) {
     }
 }
 
-function toggleMediaPreviewsState() {
-    enableMediaPreviews = document.getElementById("togglePreviews").checked;
-    if (apiCachedData) {
-        renderOutput(apiCachedData);
-    }
-}
-
 function updateHistoryUI() {
     const container = document.getElementById("historyContainer");
     if (queryHistory.length === 0) {
-        container.innerHTML = `<span style="color: var(--muted); font-style: italic; font-size:11px;">No recent scans cached.</span>`;
+        container.innerHTML = `<span style="color: var(--muted); font-style: italic; font-size:11px;">No scan history stored.</span>`;
         return;
     }
-    container.innerHTML = `<span style="color: var(--muted); font-size:11px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent:</span>`;
+    container.innerHTML = `<span style="color: var(--muted); font-size:11px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
     queryHistory.forEach(endpoint => {
         const pill = document.createElement("button");
         pill.className = "history-pill";
@@ -961,7 +892,7 @@ function saveToHistory(endpoint) {
     if (!endpoint) return;
     queryHistory = queryHistory.filter(e => e !== endpoint);
     queryHistory.unshift(endpoint);
-    if (queryHistory.length > 5) queryHistory.pop(); // Max 5 pills cached
+    if (queryHistory.length > 5) queryHistory.pop(); // Cache threshold
     localStorage.setItem("ff_query_history", JSON.stringify(queryHistory));
     updateHistoryUI();
 }
@@ -979,43 +910,47 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-// Client-side URL normalizer and absolute link generator
+// Convert relative endpoints into working browser destination formats
 function processHtmlUrl(val) {
     val = val.trim();
     if (!val) return null;
 
-    // String normalization replacements
+    // Direct filename format cleanups
     val = val.replace(/\.ff_extend/gi, '.jpg');
     val = val.replace(/\.ktx(p)?/gi, '.jpg');
 
     let val_lower = val.toLowerCase();
 
-    // 1. Return as is if it's already an absolute URL
+    // 1. Return absolute URLs as is
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
-        return val;
+        return { text: val, link: val };
     }
 
-    // 2. Map relative paths matching any extension (e.g. Local/IND/, test/, common/, OB16/)
+    // 2. Map half-link relative paths matching any extension (e.g. Local/IND/, test/, OB16/)
     const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
 
     if (hasValidExtension) {
-        const cleanVal = val.replace(/^\/+/, ''); // Clean redundant leading slashes
+        const cleanVal = val.replace(/^\/+/, ''); // Clean duplicate slashes
         const cleanValLower = cleanVal.toLowerCase();
 
+        let linkUrl = "";
         if (cleanValLower.startsWith("common/")) {
-            return "https://dl.dir.freefiremobile.com/" + cleanVal;
+            linkUrl = "https://dl.dir.freefiremobile.com/" + cleanVal;
         } else {
-            return BASE_LINK + cleanVal;
+            linkUrl = BASE_LINK + cleanVal;
         }
+        // Return structured tuple: text represents relative endpoint path only, link represents target href
+        return { text: val, link: linkUrl };
     }
 
-    // 3. Map common social domains
+    // 3. Map common social links
     const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
     if (social_domains.some(domain => val_lower.includes(domain))) {
+        let linkUrl = val;
         if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
-            return "https://" + val;
+            linkUrl = "https://" + val;
         }
-        return val;
+        return { text: val, link: linkUrl };
     }
 
     return null;
@@ -1036,49 +971,87 @@ async function runAPI() {
         return;
     }
 
-    const payloadInput = document.getElementById("customPayload").value.trim();
-
     updateStatusUI("SCANNING", "var(--yellow)");
-    
-    // Dynamic peak interactive loader
-    document.getElementById("output").innerHTML = `
-        <div class="engine-loading-container">
-            <div class="engine-spinner"></div>
-            <div class="engine-loading-text">ENGAGING QUANTUM ENGINE SCAN...</div>
-            <div class="engine-loading-sub">Decoding binary payload, mapping paths, and translating clusters...</div>
-        </div>
-    `;
     resetSearchState();
+
+    // Trigger visual simulation progress loader inside monitor console
+    const output = document.getElementById("output");
+    output.innerHTML = `
+    <div class="scanner-loader">
+        <div class="scanner-text" id="scannerStatus">INITIATING PIPELINE SCAN: 0%</div>
+        <div class="scanner-bar-container">
+            <div class="scanner-bar-fill" id="scannerProgress"></div>
+        </div>
+    </div>`;
+
+    let progress = 0;
+    const interval = setInterval(() => {
+        if (progress < 90) {
+            progress += Math.floor(Math.random() * 15) + 5;
+            if (progress > 90) progress = 90;
+            document.getElementById("scannerProgress").style.width = `${progress}%`;
+            document.getElementById("scannerStatus").innerText = `SCANNING TARGET PIPELINE: ${progress}%`;
+        }
+    }, 150);
 
     try {
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
-        if (payloadInput) {
-            endpoint += `&payload=${encodeURIComponent(payloadInput)}`;
-        }
-        
         const res = await fetch(endpoint);
         const data = await res.json();
 
-        if (data.error) {
-            updateStatusUI("ERROR", "#ff4444");
-            document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
-            return;
-        }
+        clearInterval(interval);
+        document.getElementById("scannerProgress").style.width = `100%`;
+        document.getElementById("scannerStatus").innerText = `DECRYPTING PAYLOAD: 100%`;
 
-        document.getElementById("stringCount").innerText = data.count || 0;
-        document.getElementById("linkCount").innerText = data.raw_count || 0;
-        updateStatusUI("ONLINE", "#00ff95");
+        setTimeout(() => {
+            if (data.error) {
+                updateStatusUI("ERROR", "#ff4444");
+                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
+                return;
+            }
 
-        currentLinksArray = data.urls || [];
-        apiCachedData = data; 
-        
-        saveToHistory(apiName);
-        renderOutput(data);
+            document.getElementById("stringCount").innerText = data.count || 0;
+            document.getElementById("linkCount").innerText = data.raw_count || 0;
+            updateStatusUI("ONLINE", "#00ff95");
+
+            currentLinksArray = data.urls || [];
+            apiCachedData = data; 
+            
+            saveToHistory(apiName);
+            renderOutput(data);
+        }, 300);
 
     } catch (err) {
+        clearInterval(interval);
         updateStatusUI("FAULT", "#ff4444");
-        document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Network connection handshake termination reset.</div>`;
+        output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Network connection handshake termination reset.</div>`;
     }
+}
+
+function copyCategoryUrls(category) {
+    const urls = [];
+    const allCandidates = new Set([...(apiCachedData.urls || []), ...(apiCachedData.strings || [])]);
+    allCandidates.forEach(cand => {
+        const parsed = processHtmlUrl(cand);
+        if (parsed && getCategory(parsed.link) === category) {
+            urls.push(parsed.link);
+        }
+    });
+
+    if (urls.length === 0) return;
+    navigator.clipboard.writeText(urls.join("\n"));
+    displayToast(`Copied all discovered ${category.toUpperCase()} endpoints`);
+}
+
+function openLightbox(src) {
+    const lightbox = document.getElementById("imageLightbox");
+    const img = document.getElementById("lightboxImage");
+    img.src = src;
+    lightbox.style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("imageLightbox").style.display = "none";
 }
 
 function renderOutput(data) {
@@ -1086,28 +1059,34 @@ function renderOutput(data) {
     output.innerHTML = ""; 
 
     if (viewMode === "links") {
-        // Build clean formatted endpoint URLs
-        let processedUrls = [];
+        let processedTuples = [];
         const allCandidates = new Set([...(data.urls || []), ...(data.strings || [])]);
         
         allCandidates.forEach(cand => {
             const parsed = processHtmlUrl(cand);
             if (parsed) {
-                processedUrls.push(parsed);
+                processedTuples.push(parsed);
             }
         });
-        
-        processedUrls = Array.from(new Set(processedUrls)).sort();
-        currentLinksArray = processedUrls;
 
-        if (processedUrls.length === 0) {
+        // De-duplicate tuples by link url
+        const seen = new Set();
+        processedTuples = processedTuples.filter(item => {
+            const duplicate = seen.has(item.link);
+            seen.add(item.link);
+            return !duplicate;
+        });
+
+        processedTuples.sort((a, b) => a.text.localeCompare(b.text));
+        currentLinksArray = processedTuples.map(item => item.text);
+
+        if (processedTuples.length === 0) {
             output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
             lastOutputText = "";
         } else {
-            // Group lists beautifully by category
             const grouped = { images: [], videos: [], audio: [], other: [] };
-            processedUrls.forEach(link => {
-                grouped[getCategory(link)].push(link);
+            processedTuples.forEach(item => {
+                grouped[getCategory(item.link)].push(item);
             });
 
             let finalHtml = "";
@@ -1122,20 +1101,17 @@ function renderOutput(data) {
                             <span class="group-count" id="badge-images">${grouped.images.length}</span>
                         </div>
                     </div>`;
-                grouped.images.forEach(link => {
+                grouped.images.forEach(item => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}">
-                        <div class="url-main">
-                            ${enableMediaPreviews ? `
-                            <div class="img-preview-container" onclick="openMediaModal('${link}', 'image')">
-                                <img src="${link}" class="img-preview-thumb" loading="lazy" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
-                            </div>` : ''}
-                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                    <div class="url-row" data-url="${item.text}">
+                        <div class="media-preview-container">
+                            <img src="${item.link}" class="img-preview-thumb" loading="lazy" onclick="openLightbox('${item.link}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
                         </div>
-                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            Copy Link
-                        </button>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
+                        <div class="row-actions-block">
+                            <!-- Clean SVG vector copy icon -->
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 22px;v44px;border-radius:4px;border:1px solid var(--border);margin-right:12px;v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        </div>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1152,18 +1128,16 @@ function renderOutput(data) {
                             <span class="group-count" id="badge-videos">${grouped.videos.length}</span>
                         </div>
                     </div>`;
-                grouped.videos.forEach(link => {
+                grouped.videos.forEach(item => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}">
-                        <div class="url-main">
-                            ${enableMediaPreviews ? `
-                            <video src="${link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;" onclick="openMediaModal('${link}', 'video')"></video>` : ''}
-                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                    <div class="url-row" data-url="${item.text}">
+                        <div class="media-preview-container">
+                            <video src="${item.link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
                         </div>
-                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            Copy Link
-                        </button>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
+                        <div class="row-actions-block">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        </div>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1180,20 +1154,16 @@ function renderOutput(data) {
                             <span class="group-count" id="badge-audio">${grouped.audio.length}</span>
                         </div>
                     </div>`;
-                grouped.audio.forEach(link => {
+                grouped.audio.forEach(item => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}">
-                        <div class="url-main">
-                            ${enableMediaPreviews ? `
-                            <div class="media-preview-container">
-                                <audio src="${link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
-                            </div>` : ''}
-                            <a href="${link}" target="_blank" class="url-href">${link}</a>
+                    <div class="url-row" data-url="${item.text}">
+                        <div class="media-preview-container">
+                            <audio src="${item.link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
                         </div>
-                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            Copy Link
-                        </button>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
+                        <div class="row-actions-block">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        </div>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1210,16 +1180,13 @@ function renderOutput(data) {
                             <span class="group-count" id="badge-other">${grouped.other.length}</span>
                         </div>
                     </div>`;
-                grouped.other.forEach(link => {
+                grouped.other.forEach(item => {
                     sectionHtml += `
-                    <div class="url-row" data-url="${link}">
-                        <div class="url-main" style="padding-left: 2px;">
-                            <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href">${link}</a>
+                    <div class="url-row" data-url="${item.text}">
+                        <a href="${item.link.startsWith('http') ? item.link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
+                        <div class="row-actions-block">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
-                        <button class="row-copy-btn" onclick="copyIndividualText('${link}')">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            Copy Link
-                        </button>
                     </div>`;
                 });
                 sectionHtml += `</div>`;
@@ -1227,7 +1194,7 @@ function renderOutput(data) {
             }
 
             output.innerHTML = finalHtml;
-            lastOutputText = processedUrls.join("\n");
+            lastOutputText = processedTuples.map(item => item.link).join("\n");
         }
     } 
     else if (viewMode === "decoded") {
@@ -1238,7 +1205,6 @@ function renderOutput(data) {
         } else {
             let html = "";
             strings.forEach(str => {
-                // Apply dynamic filename replacements in decoded view as well
                 let cleanStr = str.replace(/\.ff_extend/gi, '.jpg');
                 cleanStr = cleanStr.replace(/\.ktx(p)?/gi, '.jpg');
 
@@ -1259,43 +1225,6 @@ function renderOutput(data) {
     performSearch();
 }
 
-// Media Modal popup triggers
-function openMediaModal(src, type) {
-    const modal = document.getElementById("imageModal");
-    const container = document.getElementById("modalMediaContainer");
-    const caption = document.getElementById("modalCaption");
-    
-    container.innerHTML = "";
-    caption.innerText = src;
-
-    if (type === 'image') {
-        const img = document.createElement("img");
-        img.src = src;
-        img.onerror = () => { img.src = 'https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'; };
-        container.appendChild(img);
-    } else if (type === 'video') {
-        const vid = document.createElement("video");
-        vid.src = src;
-        vid.controls = true;
-        vid.autoplay = true;
-        container.appendChild(vid);
-    }
-    
-    modal.style.display = "flex";
-}
-
-function closeModal() {
-    const modal = document.getElementById("imageModal");
-    const container = document.getElementById("modalMediaContainer");
-    container.innerHTML = ""; // Stop playing videos inside modal instantly on close
-    modal.style.display = "none";
-}
-
-function copyIndividualText(text) {
-    navigator.clipboard.writeText(text);
-    displayToast("URL buffered to clipboard");
-}
-
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
@@ -1307,7 +1236,6 @@ function clearOutput() {
     document.getElementById("stringCount").innerText = "0";
     document.getElementById("linkCount").innerText = "0";
     document.getElementById("apiName").value = "";
-    document.getElementById("customPayload").value = "8533b7e1d34a5dfd9a830ee5cc36664e";
     document.getElementById("searchBox").value = "";
     updateStatusUI("IDLE", "var(--muted)");
     lastOutputText = "";
@@ -1324,13 +1252,6 @@ function downloadOutput() {
     a.href = URL.createObjectURL(blob);
     a.download = `ff_api_logs_${selectedServer}.log`;
     a.click();
-}
-
-function copyCategoryUrls(category) {
-    const urls = currentLinksArray.filter(link => getCategory(link) === category);
-    if (urls.length === 0) return;
-    navigator.clipboard.writeText(urls.join("\n"));
-    displayToast(`Copied all discovered ${category.toUpperCase()} endpoints`);
 }
 
 /* Node Searching & Real-time Filter-while-typing Logic */
@@ -1373,7 +1294,6 @@ function performSearch() {
                 }
             });
             
-            // Recalculate visible items per category and toggle group header visibility
             if (groupVisibleCount > 0) {
                 group.style.display = "block";
                 const badge = group.querySelector(".group-count");
@@ -1475,36 +1395,6 @@ function highlightNodes(root, token) {
 
 function escapePattern(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function updateSearchStatsUI() {
-    const len = searchMatches.length;
-    const cur = len > 0 ? currentMatchIndex + 1 : 0;
-    document.getElementById("searchCount").innerText = `${cur}/${len}`;
-    const state = len === 0;
-    document.getElementById("prevSearchBtn").disabled = state;
-    document.getElementById("nextSearchBtn").disabled = state;
-}
-
-function applyFocusHighlight() {
-    searchMatches.forEach(el => el.classList.remove("match-active"));
-    if (currentMatchIndex >= 0 && currentMatchIndex < searchMatches.length) {
-        const target = searchMatches[currentMatchIndex];
-        target.classList.add("match-active");
-        target.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    }
-}
-
-function navigateSearch(offset) {
-    if (searchMatches.length === 0) return;
-    currentMatchIndex += offset;
-    if (currentMatchIndex >= searchMatches.length) currentMatchIndex = 0;
-    if (currentMatchIndex < 0) currentMatchIndex = searchMatches.length - 1;
-    updateSearchStatsUI();
-    applyFocusHighlight();
 }
 
 document.getElementById("searchBox").addEventListener("keydown", function(e) {
