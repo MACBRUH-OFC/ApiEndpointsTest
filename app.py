@@ -7,7 +7,6 @@ import json
 
 app = Flask(__name__)
 
-# Keep original dictionaries exactly matching the first code structure
 UID_PASSWORDS = {
     "ind": {"uid": "4258906717", "password": "RockingGamerz65-1WDTR63DX"},
     "mea": {"uid": "4103849657", "password": "EF315D040E99F9B63D79C7AEE6DC697F297D298EF384BAA4E50E003DB56514C4"},
@@ -71,7 +70,7 @@ def get_release_version():
                 return version
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
-    return "OB53"  # Fallback version
+    return "OB53"  # Standard dynamic fallback
 
 
 def get_token(server):
@@ -111,6 +110,7 @@ def get_token(server):
 def run_script():
     server = request.args.get("server")
     api_name = request.args.get("name")
+    payload_hex = request.args.get("payload", "8533b7e1d34a5dfd9a830ee5cc36664e")
 
     if server not in UID_PASSWORDS:
         return jsonify({"error": "Invalid server"})
@@ -136,8 +136,10 @@ def run_script():
         "Authorization": f"Bearer {token}"
     }
 
-    hex_payload = "8533b7e1d34a5dfd9a830ee5cc36664e"
-    binary_payload = binascii.unhexlify(hex_payload)
+    try:
+        binary_payload = binascii.unhexlify(payload_hex)
+    except Exception as e:
+        return jsonify({"error": f"Invalid payload hex formatting: {str(e)}"})
 
     url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
 
@@ -194,7 +196,6 @@ def run_script():
         except Exception as e:
             print("Protobuf decoder lookup failed:", e)
 
-        # Recursively retrieve unique strings inside the decoded structure
         extracted_strings = set()
 
         def extract_strings_from_protobuf(data):
@@ -209,25 +210,21 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Handle candidate strings and standardise path mappings
+        # Standardise and filter decoded string links
         urls = set()
         for val in extracted_strings:
             val = val.strip()
             if not val:
                 continue
 
-            # Standardise supported extension formats
-            val = re.sub(r'\.ff_extend', '.jpg', val, flags=re.IGNORECASE)
-            val = re.sub(r'\.ktxp?', '.png', val, flags=re.IGNORECASE)
-
             val_lower = val.lower()
 
-            # 1. Matches complete URLs
+            # 1. Matches complete absolute URLs
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # 2. Match only paths literally starting with "test" or "common"
+            # 2. Prepend base CDN strictly if it starts with "test" or "common"
             if val_lower.startswith("test") or val_lower.startswith("common"):
                 val_clean = val.lstrip("/")
                 if val_clean.lower().startswith("common/"):
@@ -237,7 +234,12 @@ def run_script():
                 urls.add(url_item)
                 continue
 
-            # 3. Match social domain references
+            # 3. Match relative assets containing typical extensions without conversions
+            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
+                urls.add(val)
+                continue
+
+            # 4. Social media domains
             social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"]
             if any(domain in val_lower for domain in social_domains):
                 if not val_lower.startswith(("http://", "https://")):
@@ -247,41 +249,12 @@ def run_script():
 
         urls_list = sorted(list(urls))
 
-        grouped = {
-            "images": [],
-            "videos": [],
-            "audio": [],
-            "html": [],
-            "social": [],
-            "other": []
-        }
-
-        for item in urls_list:
-            lower = item.lower()
-            if any(lower.endswith(x) for x in [".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".ktx"]):
-                grouped["images"].append(item)
-            elif any(lower.endswith(x) for x in [".mp4", ".webm"]):
-                grouped["videos"].append(item)
-            elif any(lower.endswith(x) for x in [".mp3", ".wav", ".ogg"]):
-                grouped["audio"].append(item)
-            elif lower.endswith(".html"):
-                grouped["html"].append(item)
-            elif any(x in lower for x in [
-                "discord.gg", "instagram.com", "youtube.com", "youtu.be",
-                "facebook.com", "twitter.com", "x.com", "linktr.ee", "whatsapp.com"
-            ]):
-                grouped["social"].append(item)
-            else:
-                grouped["other"].append(item)
-
-        # Returning the connection format structure matching your previous API design
         return jsonify({
             "success": True,
             "count": len(extracted_strings),
             "raw_count": len(urls_list),
-            "strings": list(extracted_strings),
+            "strings": sorted(list(extracted_strings)),
             "urls": urls_list,
-            "groups": grouped,
             "raw_response": decoded
         })
 
