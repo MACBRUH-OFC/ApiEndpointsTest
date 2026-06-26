@@ -108,42 +108,37 @@ def get_token(server):
 
 @app.route("/run_script")
 def run_script():
-    server = request.args.get("server")
-    api_name = request.args.get("name")
-    payload_hex = "8533b7e1d34a5dfd9a830ee5cc36664e"  # Fixed hex payload
-
-    if server not in UID_PASSWORDS:
-        return jsonify({"error": "Invalid server"})
-
-    if not api_name:
-        return jsonify({"error": "Missing API name"})
-
-    token = get_token(server)
-
-    if not token:
-        return jsonify({"error": "Token fetch failed"})
-
-    release_version = get_release_version()
-
-    headers = {
-        "Accept": "*/*",
-        "Accept-Encoding": "deflate, gzip",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "ReleaseVersion": release_version,
-        "User-Agent": "UnityPlayer/2022.3.47f1",
-        "X-GA": "v1 1",
-        "X-Unity-Version": "2022.3.47f1",
-        "Authorization": f"Bearer {token}"
-    }
-
     try:
+        server = request.args.get("server")
+        api_name = request.args.get("name")
+        payload_hex = "8533b7e1d34a5dfd9a830ee5cc36664e"  # Fixed request payload
+
+        if server not in UID_PASSWORDS:
+            return jsonify({"error": "Invalid server"})
+
+        if not api_name:
+            return jsonify({"error": "Missing API name"})
+
+        release_version = get_release_version()
+        token = get_token(server)
+
+        if not token:
+            return jsonify({"error": "Token fetch failed"})
+
+        headers = {
+            "Accept": "*/*",
+            "Accept-Encoding": "deflate, gzip",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "ReleaseVersion": release_version,
+            "User-Agent": "UnityPlayer/2022.3.47f1",
+            "X-GA": "v1 1",
+            "X-Unity-Version": "2022.3.47f1",
+            "Authorization": f"Bearer {token}"
+        }
+
         binary_payload = binascii.unhexlify(payload_hex)
-    except Exception as e:
-        return jsonify({"error": f"Invalid payload hex formatting: {str(e)}"})
+        url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
 
-    url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
-
-    try:
         response = requests.post(
             url,
             headers=headers,
@@ -210,7 +205,6 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Map and output candidate strings
         urls = set()
         for val in extracted_strings:
             val = val.strip()
@@ -219,12 +213,12 @@ def run_script():
 
             val_lower = val.lower()
 
-            # 1. Matches complete URLs
+            # 1. Matches complete absolute URLs
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # 2. Match relative asset paths
+            # 2. Extract relative paths ending in valid extensions (e.g. Local/IND/, test/, OB16/)
             if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
                 urls.add(val)
                 continue
@@ -249,9 +243,7 @@ def run_script():
         })
 
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        })
+        return jsonify({"error": str(e)})
 
 
 if __name__ == "__main__":
