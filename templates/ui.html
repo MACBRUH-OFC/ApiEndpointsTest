@@ -15,18 +15,18 @@
 
 :root {
     --yellow: #ffde00;
-    --bg: #0a0a0a;
-    --panel: #111111;
-    --card: #161616;
-    --border: #222222;
-    --border-hover: #333333;
-    --text: #f5f5f5;
-    --muted: #707070;
+    --bg: #030303;
+    --panel: #0a0a0a;
+    --card: #0f0f0f;
+    --border: #1a1a1a;
+    --border-hover: #2d2d2d;
+    --text: #e0e0e0;
+    --muted: #606060;
     
     /* Contrast highlights */
     --match-bg: #ffe600;
     --match-text: #000000;
-    --match-active: #ff7700;
+    --match-active: #ff5e00;
 }
 
 * {
@@ -36,7 +36,7 @@
 }
 
 body {
-    background-color: #000000;
+    background-color: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
@@ -52,7 +52,7 @@ body {
     background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #222222;
+    background: #1e1e1e;
     border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -107,6 +107,12 @@ header {
     border-radius: 50%;
     background: var(--yellow);
     box-shadow: 0 0 8px var(--yellow);
+    animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); box-shadow: 0 0 4px var(--yellow); }
+    100% { transform: scale(1.1); box-shadow: 0 0 12px var(--yellow); }
 }
 
 .engine-title {
@@ -125,6 +131,7 @@ header {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* Pure Inputs UI */
@@ -144,12 +151,12 @@ header {
     font-size: 14px;
     font-family: monospace;
     outline: none;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 }
 
 .main-input:focus {
     border-color: var(--yellow);
-    box-shadow: 0 0 12px rgba(255, 222, 0, 0.15);
+    box-shadow: 0 0 14px rgba(255, 222, 0, 0.12);
 }
 
 .run-action-btn {
@@ -324,7 +331,6 @@ header {
     outline: none;
     color: #ffffff;
     font-size: 13px;
-    padding-left: 8px;
 }
 
 .search-counter {
@@ -390,27 +396,54 @@ header {
     color: #ffffff;
 }
 
-/* Output Monitor Console */
+/* Output Monitor Console Screen */
 .console-monitor {
     width: 100%;
     height: 500px;
     background: #000000;
+    background-image: linear-gradient(rgba(10, 10, 10, 0.4) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 6px 100%;
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 12px;
+    padding: 6px 0;
     overflow: auto;
     color: #bbbbbb;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Clean Row Layouts */
+/* Minimal URL Row Design - No Icons */
 .url-row {
     padding: 10px 14px;
     border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #050505;
+    background: #040404;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.url-row:hover {
+    background: #0e0e0e;
+}
+
+/* Clean sliding text on hover - replaces messy icons */
+.url-row::after {
+    content: "CLICK TO COPY";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px;
+    color: var(--yellow);
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.url-row:hover::after {
+    opacity: 0.8;
 }
 
 .url-row:last-child {
@@ -428,6 +461,7 @@ header {
     text-decoration: underline;
 }
 
+/* Decoded Row Layouts */
 .decoded-row {
     padding: 8px 14px;
     border-bottom: 1px solid #141414;
@@ -441,7 +475,7 @@ header {
     border-bottom: none;
 }
 
-/* Highlighted searches styling */
+/* Highlighted search structures */
 mark.search-match {
     background-color: var(--match-bg);
     color: var(--match-text);
@@ -479,6 +513,7 @@ mark.search-match.match-active {
     color: var(--muted);
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
+    padding: 16px;
 }
 
 @media (max-width: 768px) {
@@ -493,7 +528,7 @@ mark.search-match.match-active {
 
 <div class="wrapper">
 
-    <!-- Header Block -->
+    <!-- Premium Header -->
     <header>
         <div class="brand-group">
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
@@ -513,16 +548,16 @@ mark.search-match.match-active {
             <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
-        <!-- Customizable Binary Request payload hex -->
+        <!-- Custom Request Binary Payload HEX configuration -->
         <div class="section-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span>Custom Hex Payload</span>
+            <span>Custom Hex Request Payload</span>
             <button class="toggle-payload-btn" onclick="togglePayloadInput()">Custom Config</button>
         </div>
         <div class="input-row" id="payloadInputContainer" style="display: none; margin-bottom: 24px;">
-            <input type="text" id="customPayload" class="main-input" style="height: 44px; font-family: monospace;" placeholder="Hex byte string..." value="8533b7e1d34a5dfd9a830ee5cc36664e">
+            <input type="text" id="customPayload" class="main-input" style="height: 44px; font-family: monospace;" placeholder="Hex payload string..." value="8533b7e1d34a5dfd9a830ee5cc36664e">
         </div>
 
-        <!-- Server Selector -->
+        <!-- Target Region Clusters -->
         <div class="section-label">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
             <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
@@ -541,7 +576,7 @@ mark.search-match.match-active {
             <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
         </div>
 
-        <!-- Perspective View Switcher -->
+        <!-- Layout Views Configuration -->
         <div class="section-label">Output Perspective View</div>
         <div class="view-options">
             <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
@@ -549,7 +584,7 @@ mark.search-match.match-active {
             <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
         </div>
 
-        <!-- Metrics Monitor Grid -->
+        <!-- Operational Status Metrics Tracker -->
         <div class="metrics-row">
             <div class="metric-card">
                 <div class="lbl">Total Decoded Strings</div>
@@ -565,7 +600,7 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Consolidated Controls -->
+        <!-- Search Deck -->
         <div class="control-deck">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
@@ -583,7 +618,7 @@ mark.search-match.match-active {
             </div>
         </div>
 
-        <!-- Live Content Monitor Screen -->
+        <!-- Live Content Monitor screen -->
         <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
 
     </div>
@@ -593,13 +628,21 @@ mark.search-match.match-active {
 
 <script>
 let selectedServer = "ind";
-let viewMode = "links"; // Option states: 'links' | 'decoded' | 'raw'
+let viewMode = "links"; // Options: 'links' | 'decoded' | 'raw'
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
 
 let searchMatches = [];
 let currentMatchIndex = -1;
+
+const BASE_LINK = "https://dl.dir.freefiremobile.com/common/";
+
+const VALID_EXTENSIONS = [
+    "png", "jpg", "jpeg", "webp", "gif",
+    "bmp", "ktx", "html", "json",
+    "mp4", "mp3", "wav", "ogg", "webm"
+];
 
 function setServer(btn, server) {
     selectedServer = server;
@@ -641,6 +684,55 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
+// Client-side URL normalizer and base linker
+function processHtmlUrl(val) {
+    val = val.trim();
+    if (!val) return null;
+
+    // HTML-level extension replacements as requested
+    val = val.replace(/\.ff_extend/gi, '.jpg');
+    val = val.replace(/\.ktx(p)?/gi, '.jpg');
+
+    let val_lower = val.toLowerCase();
+
+    // 1. Matches complete absolute URLs
+    if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
+        return val;
+    }
+
+    // Checking matches on relative paths containing standard extensions
+    const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
+
+    if (hasValidExtension) {
+        const cleanVal = val.replace(/^\/+/, ''); // Remove any duplicate leading slashes
+        const cleanValLower = cleanVal.toLowerCase();
+
+        // Dynamically detects paths starting with 'test', 'common' or any standard game version cluster prefix (e.g. OB16, OB54)
+        const isCdnAsset = cleanValLower.startsWith("test") || 
+                           cleanValLower.startsWith("common") || 
+                           /^ob\d+/i.test(cleanValLower);
+
+        if (isCdnAsset) {
+            if (cleanValLower.startsWith("common/")) {
+                return "https://dl.dir.freefiremobile.com/" + cleanVal;
+            } else {
+                return BASE_LINK + cleanVal;
+            }
+        }
+    }
+
+    // 2. Map standard social domain references
+    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
+    if (social_domains.some(domain => val_lower.includes(domain))) {
+        if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
+            return "https://" + val;
+        }
+        return val;
+    }
+
+    return null;
+}
+
 async function runAPI() {
     const apiName = document.getElementById("apiName").value.trim();
     if (!apiName) {
@@ -665,7 +757,7 @@ async function runAPI() {
 
         if (data.error) {
             updateStatusUI("ERROR", "#ff4444");
-            document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding:12px;">Engine Fault: ${data.error}</div>`;
+            document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
             return;
         }
 
@@ -680,45 +772,63 @@ async function runAPI() {
 
     } catch (err) {
         updateStatusUI("FAULT", "#ff4444");
-        document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding:12px;">Network connection handshake termination reset.</div>`;
+        document.getElementById("output").innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Network connection handshake termination reset.</div>`;
     }
 }
 
 function renderOutput(data) {
     const output = document.getElementById("output");
-    output.innerHTML = ""; // Empty previous elements cleanly
+    output.innerHTML = ""; 
 
     if (viewMode === "links") {
-        if (!currentLinksArray || currentLinksArray.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 12px;">No endpoint URLs matched.</div>`;
+        // Build clean and dynamic formatted link URLs
+        let processedUrls = [];
+        const allCandidates = new Set([...(data.urls || []), ...(data.strings || [])]);
+        
+        allCandidates.forEach(cand => {
+            const parsed = processHtmlUrl(cand);
+            if (parsed) {
+                processedUrls.push(parsed);
+            }
+        });
+        
+        processedUrls = Array.from(new Set(processedUrls)).sort();
+        currentLinksArray = processedUrls;
+
+        if (processedUrls.length === 0) {
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
-            currentLinksArray.forEach(link => {
+            processedUrls.forEach(link => {
                 html += `
-                <div class="url-row" data-url="${link}">
-                    <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href">${link}</a>
+                <div class="url-row" data-url="${link}" onclick="copyIndividualText('${link}')">
+                    <a href="${link.startsWith('http') ? link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${link}</a>
                 </div>`;
             });
             output.innerHTML = html;
-            lastOutputText = currentLinksArray.join("\n");
+            lastOutputText = processedUrls.join("\n");
         }
     } 
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 12px;">No decoded protobuf strings mapped.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No decoded protobuf strings found.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
             strings.forEach(str => {
+                // Apply dynamic filename extension replacement indecoded views as well
+                let cleanStr = str.replace(/\.ff_extend/gi, '.jpg');
+                cleanStr = cleanStr.replace(/\.ktx(p)?/gi, '.jpg');
+
                 html += `
-                <div class="decoded-row" data-text="${str}">
-                    <span class="decoded-text">${str}</span>
+                <div class="decoded-row" data-text="${cleanStr}">
+                    <span class="decoded-text">${cleanStr}</span>
                 </div>`;
             });
             output.innerHTML = html;
-            lastOutputText = strings.join("\n");
+            lastOutputText = strings.map(str => str.replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg')).join("\n");
         }
     } 
     else if (viewMode === "raw") {
@@ -727,6 +837,11 @@ function renderOutput(data) {
     }
     
     performSearch();
+}
+
+function copyIndividualText(text) {
+    navigator.clipboard.writeText(text);
+    displayToast("URL buffered to clip");
 }
 
 function copyOutput() {
@@ -759,7 +874,7 @@ function downloadOutput() {
     a.click();
 }
 
-/* Node Searching & Filter-while-typing Logic */
+/* Node Searching & Filtering Logic */
 function resetSearchState() {
     searchMatches = [];
     currentMatchIndex = -1;
