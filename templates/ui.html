@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FREE FIRE API ENGINE</title>
+<title>FREE FIRE API ENGINE - CONTROL CONSOLE</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -43,7 +43,7 @@ body {
     letter-spacing: -0.2px;
 }
 
-/* Premium micro scrollbars */
+/* Scrollbars styling */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -125,17 +125,45 @@ header {
     color: var(--yellow);
 }
 
-/* Official Structured Containers */
+/* Official Container Layouts */
 .dashboard-container {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Pure Inputs UI */
+.container-title {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 2px solid var(--yellow);
+    padding-left: 8px;
+}
+
+.clear-history-btn {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+    letter-spacing: 0.5px;
+}
+
+.clear-history-btn:hover {
+    color: #ff4444;
+}
+
+/* Inputs UI */
 .input-row {
     position: relative;
     margin-bottom: 12px;
@@ -181,7 +209,7 @@ header {
     background: #e5c800;
 }
 
-/* Recents/History pills layout */
+/* Recents pills layout */
 .history-row {
     display: flex;
     flex-wrap: wrap;
@@ -205,16 +233,6 @@ header {
     border-color: var(--yellow);
     color: var(--yellow);
     background: rgba(255, 222, 0, 0.02);
-}
-
-.section-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    margin-bottom: 12px;
-    display: block;
 }
 
 .server-selector {
@@ -247,7 +265,7 @@ header {
     box-shadow: 0 0 10px rgba(255, 222, 0, 0.25);
 }
 
-/* Perspective View Switcher options */
+/* Perspective view switcher */
 .view-options {
     display: flex;
     gap: 8px;
@@ -346,7 +364,7 @@ header {
 
 .search-nav {
     display: flex;
-    gap: 4px;
+    gap: 2px;
 }
 
 .search-step-btn {
@@ -399,7 +417,7 @@ header {
     color: #ffffff;
 }
 
-/* Output Monitor Console screen background scanning scanlines */
+/* Output Monitor Console Screen background scanning scanlines */
 .console-monitor {
     width: 100%;
     height: 500px;
@@ -514,9 +532,10 @@ header {
     align-items: center;
     gap: 8px;
     padding-left: 12px;
+    flex-shrink: 0;
 }
 
-/* Clean vector SVG for clipboard copy */
+/* Clean vector SVG for clipboard copy with scale animations */
 .copy-svg-icon {
     width: 14px;
     height: 14px;
@@ -530,7 +549,7 @@ header {
     transform: scale(1.1);
 }
 
-/* Fixed Image Alignment Frame */
+/* Fixed image thumbnails scaling */
 .media-preview-container {
     flex-shrink: 0;
     margin-right: 12px;
@@ -548,7 +567,7 @@ header {
 .img-preview-thumb {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Prevents vertical/horizontal stretching on diverse dimensions */
+    object-fit: contain; /* Landscape and portrait fit center automatically with zero distortion */
     cursor: pointer;
     display: block;
     transition: filter 0.15s ease;
@@ -604,7 +623,7 @@ mark.search-match.match-active {
     color: #ffffff;
 }
 
-/* Premium Simulated Loader */
+/* Premium scan log and dynamic progress scan state inside monitor */
 .scanner-loader {
     padding: 30px;
     text-align: center;
@@ -634,6 +653,7 @@ mark.search-match.match-active {
     margin: 0 auto;
     overflow: hidden;
     position: relative;
+    margin-bottom: 24px;
 }
 
 .scanner-bar-fill {
@@ -642,6 +662,31 @@ mark.search-match.match-active {
     background: var(--yellow);
     box-shadow: 0 0 10px var(--yellow);
     transition: width 0.1s linear;
+}
+
+.scanner-log-panel {
+    text-align: left;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 450px;
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    background: #030303;
+    padding: 12px;
+    border-radius: 6px;
+    height: 120px;
+    overflow: hidden;
+}
+
+.scanner-log-line {
+    margin-bottom: 6px;
+    animation: slideInUp 0.15s ease-out;
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(5px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .lightbox-overlay {
@@ -737,6 +782,10 @@ mark.search-match.match-active {
 
     <!-- CONTAINER 1: Pipeline inputs & query caching -->
     <div class="dashboard-container">
+        <div class="container-title">
+            <span>Target Pipeline Input</span>
+            <span class="clear-history-btn" onclick="clearHistory()">Clear History</span>
+        </div>
         <div class="input-row">
             <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
             <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
@@ -749,7 +798,7 @@ mark.search-match.match-active {
 
     <!-- CONTAINER 2: Clusters selection -->
     <div class="dashboard-container">
-        <div class="section-label">Target Region Cluster</div>
+        <div class="container-title">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
             <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
             <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
@@ -770,7 +819,7 @@ mark.search-match.match-active {
 
     <!-- CONTAINER 3: Perspective View Switcher -->
     <div class="dashboard-container">
-        <div class="section-label">Output Perspective View</div>
+        <div class="container-title">Output Perspective View</div>
         <div class="view-options">
             <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
             <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
@@ -780,6 +829,7 @@ mark.search-match.match-active {
 
     <!-- CONTAINER 4: Operational Metrics -->
     <div class="dashboard-container">
+        <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
             <div class="metric-card">
                 <div class="lbl">Total Decoded Strings</div>
@@ -798,6 +848,7 @@ mark.search-match.match-active {
 
     <!-- CONTAINER 5: Control deck & output monitor screen -->
     <div class="dashboard-container">
+        <div class="container-title">Console Output Monitor</div>
         <div class="control-deck">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
@@ -857,6 +908,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function setServer(btn, server) {
     selectedServer = server;
     document.querySelectorAll(".srv-chip").forEach(b => b.classList.remove("active"));
+    btn.className = "srv-chip";
     btn.classList.add("active");
 }
 
@@ -875,7 +927,7 @@ function updateHistoryUI() {
         container.innerHTML = `<span style="color: var(--muted); font-style: italic; font-size:11px;">No scan history stored.</span>`;
         return;
     }
-    container.innerHTML = `<span style="color: var(--muted); font-size:11px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
+    container.innerHTML = `<span style="color: var(--muted); font-size:10px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
     queryHistory.forEach(endpoint => {
         const pill = document.createElement("button");
         pill.className = "history-pill";
@@ -892,8 +944,14 @@ function saveToHistory(endpoint) {
     if (!endpoint) return;
     queryHistory = queryHistory.filter(e => e !== endpoint);
     queryHistory.unshift(endpoint);
-    if (queryHistory.length > 5) queryHistory.pop(); // Cache threshold
+    if (queryHistory.length > 8) queryHistory.pop(); // Cache threshold
     localStorage.setItem("ff_query_history", JSON.stringify(queryHistory));
+    updateHistoryUI();
+}
+
+function clearHistory() {
+    queryHistory = [];
+    localStorage.removeItem("ff_query_history");
     updateHistoryUI();
 }
 
@@ -915,7 +973,7 @@ function processHtmlUrl(val) {
     val = val.trim();
     if (!val) return null;
 
-    // Direct filename format cleanups
+    // Direct filename replacements
     val = val.replace(/\.ff_extend/gi, '.jpg');
     val = val.replace(/\.ktx(p)?/gi, '.jpg');
 
@@ -926,7 +984,7 @@ function processHtmlUrl(val) {
         return { text: val, link: val };
     }
 
-    // 2. Map half-link relative paths matching any extension (e.g. Local/IND/, test/, OB16/)
+    // 2. Map relative paths matching any extension (e.g. Local/IND/, test/, OB16/)
     const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
 
     if (hasValidExtension) {
@@ -939,7 +997,6 @@ function processHtmlUrl(val) {
         } else {
             linkUrl = BASE_LINK + cleanVal;
         }
-        // Return structured tuple: text represents relative endpoint path only, link represents target href
         return { text: val, link: linkUrl };
     }
 
@@ -964,6 +1021,14 @@ function getCategory(url) {
     return "other";
 }
 
+function getDisplayPath(fullLink) {
+    const basePrefix = "https://dl.dir.freefiremobile.com/common/";
+    if (fullLink.startsWith(basePrefix)) {
+        return fullLink.substring(basePrefix.length);
+    }
+    return fullLink;
+}
+
 async function runAPI() {
     const apiName = document.getElementById("apiName").value.trim();
     if (!apiName) {
@@ -974,7 +1039,7 @@ async function runAPI() {
     updateStatusUI("SCANNING", "var(--yellow)");
     resetSearchState();
 
-    // Trigger visual simulation progress loader inside monitor console
+    // Trigger visual simulation progress logs inside monitor console
     const output = document.getElementById("output");
     output.innerHTML = `
     <div class="scanner-loader">
@@ -982,17 +1047,44 @@ async function runAPI() {
         <div class="scanner-bar-container">
             <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
+        <div class="scanner-log-panel" id="scannerLogs">
+            <div class="scanner-log-line">> Establishing secure tunnel responder handshake...</div>
+        </div>
     </div>`;
 
+    const logs = [
+        "Establishing secure tunnel responder handshake...",
+        "Querying lockRegion validation clusters...",
+        "LockRegion parsed successfully. Acquiring key token...",
+        "Token verification active. Building binary requests...",
+        "Pushing decrypted Garena client request body...",
+        "Decrypting incoming API protobuf response packets..."
+    ];
+
     let progress = 0;
+    let logIndex = 0;
     const interval = setInterval(() => {
-        if (progress < 90) {
-            progress += Math.floor(Math.random() * 15) + 5;
-            if (progress > 90) progress = 90;
-            document.getElementById("scannerProgress").style.width = `${progress}%`;
-            document.getElementById("scannerStatus").innerText = `SCANNING TARGET PIPELINE: ${progress}%`;
+        if (progress < 92) {
+            progress += Math.floor(Math.random() * 12) + 6;
+            if (progress > 92) progress = 92;
+            
+            const fill = document.getElementById("scannerProgress");
+            const txt = document.getElementById("scannerStatus");
+            const logBox = document.getElementById("scannerLogs");
+            
+            if (fill) fill.style.width = `${progress}%`;
+            if (txt) txt.innerText = `SCANNING TARGET PIPELINE: ${progress}%`;
+            
+            if (logBox && logIndex < logs.length && progress > (logIndex * 15)) {
+                const line = document.createElement("div");
+                line.className = "scanner-log-line";
+                line.innerText = `> ${logs[logIndex]}`;
+                logBox.appendChild(line);
+                logBox.scrollTop = logBox.scrollHeight;
+                logIndex++;
+            }
         }
-    }, 150);
+    }, 120);
 
     try {
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
@@ -1000,26 +1092,34 @@ async function runAPI() {
         const data = await res.json();
 
         clearInterval(interval);
-        document.getElementById("scannerProgress").style.width = `100%`;
-        document.getElementById("scannerStatus").innerText = `DECRYPTING PAYLOAD: 100%`;
+        
+        const finalFill = document.getElementById("scannerProgress");
+        const finalTxt = document.getElementById("scannerStatus");
+        if (finalFill) finalFill.style.width = `100%`;
+        if (finalTxt) finalTxt.innerText = `DECRYPTING PROTOBUF SCHEMAS: 100%`;
 
         setTimeout(() => {
-            if (data.error) {
-                updateStatusUI("ERROR", "#ff4444");
-                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
-                return;
+            try {
+                if (data.error) {
+                    updateStatusUI("ERROR", "#ff4444");
+                    output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
+                    return;
+                }
+
+                document.getElementById("stringCount").innerText = data.count || 0;
+                document.getElementById("linkCount").innerText = data.raw_count || 0;
+                updateStatusUI("ONLINE", "#00ff95");
+
+                currentLinksArray = data.urls || [];
+                apiCachedData = data; 
+                
+                saveToHistory(apiName);
+                renderOutput(data);
+            } catch (innerErr) {
+                updateStatusUI("FAULT", "#ff4444");
+                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Interface Render Fault: ${innerErr.message}</div>`;
             }
-
-            document.getElementById("stringCount").innerText = data.count || 0;
-            document.getElementById("linkCount").innerText = data.raw_count || 0;
-            updateStatusUI("ONLINE", "#00ff95");
-
-            currentLinksArray = data.urls || [];
-            apiCachedData = data; 
-            
-            saveToHistory(apiName);
-            renderOutput(data);
-        }, 300);
+        }, 200);
 
     } catch (err) {
         clearInterval(interval);
@@ -1040,7 +1140,7 @@ function copyCategoryUrls(category) {
 
     if (urls.length === 0) return;
     navigator.clipboard.writeText(urls.join("\n"));
-    displayToast(`Copied all discovered ${category.toUpperCase()} endpoints`);
+    displayToast(`Copied all ${category.toUpperCase()} endpoints`);
 }
 
 function openLightbox(src) {
@@ -1069,7 +1169,7 @@ function renderOutput(data) {
             }
         });
 
-        // De-duplicate tuples by link url
+        // De-duplicate URLs based on absolute path
         const seen = new Set();
         processedTuples = processedTuples.filter(item => {
             const duplicate = seen.has(item.link);
@@ -1078,7 +1178,7 @@ function renderOutput(data) {
         });
 
         processedTuples.sort((a, b) => a.text.localeCompare(b.text));
-        currentLinksArray = processedTuples.map(item => item.text);
+        currentLinksArray = processedTuples.map(item => item.link);
 
         if (processedTuples.length === 0) {
             output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
@@ -1102,15 +1202,16 @@ function renderOutput(data) {
                         </div>
                     </div>`;
                 grouped.images.forEach(item => {
+                    const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="url-row" data-url="${item.text}">
+                    <div class="url-row" data-url="${cleanDisplayPath}">
                         <div class="media-preview-container">
                             <img src="${item.link}" class="img-preview-thumb" loading="lazy" onclick="openLightbox('${item.link}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
-                        <div class="row-actions-block">
-                            <!-- Clean SVG vector copy icon -->
-                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 22px;v44px;border-radius:4px;border:1px solid var(--border);margin-right:12px;v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
+                            <!-- Clean SVG copy vector -->
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
                 });
@@ -1129,13 +1230,14 @@ function renderOutput(data) {
                         </div>
                     </div>`;
                 grouped.videos.forEach(item => {
+                    const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="url-row" data-url="${item.text}">
+                    <div class="url-row" data-url="${cleanDisplayPath}">
                         <div class="media-preview-container">
                             <video src="${item.link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
-                        <div class="row-actions-block">
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
                             <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
@@ -1155,13 +1257,14 @@ function renderOutput(data) {
                         </div>
                     </div>`;
                 grouped.audio.forEach(item => {
+                    const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="url-row" data-url="${item.text}">
+                    <div class="url-row" data-url="${cleanDisplayPath}">
                         <div class="media-preview-container">
                             <audio src="${item.link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
-                        <div class="row-actions-block">
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
                             <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
@@ -1181,10 +1284,11 @@ function renderOutput(data) {
                         </div>
                     </div>`;
                 grouped.other.forEach(item => {
+                    const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="url-row" data-url="${item.text}">
-                        <a href="${item.link.startsWith('http') ? item.link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${item.text}</a>
-                        <div class="row-actions-block">
+                    <div class="url-row" data-url="${cleanDisplayPath}">
+                        <a href="${item.link.startsWith('http') ? item.link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
                             <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
@@ -1225,10 +1329,22 @@ function renderOutput(data) {
     performSearch();
 }
 
+function copyIndividualText(text) {
+    navigator.clipboard.writeText(text);
+    displayToast("URL buffered to clipboard");
+}
+
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
     displayToast("Console content buffered");
+}
+
+function clearHistory() {
+    queryHistory = [];
+    localStorage.removeItem("ff_query_history");
+    updateHistoryUI();
+    displayToast("Cache flushed");
 }
 
 function clearOutput() {
@@ -1397,17 +1513,35 @@ function escapePattern(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-document.getElementById("searchBox").addEventListener("keydown", function(e) {
-    if (searchMatches.length === 0) return;
-    if (e.key === "Enter") {
-        e.preventDefault();
-        if (e.shiftKey) {
-            navigateSearch(-1);
-        } else {
-            navigateSearch(1);
-        }
+function updateSearchStatsUI() {
+    const len = searchMatches.length;
+    const cur = len > 0 ? currentMatchIndex + 1 : 0;
+    document.getElementById("searchCount").innerText = `${cur}/${len}`;
+    const state = len === 0;
+    document.getElementById("prevSearchBtn").disabled = state;
+    document.getElementById("nextSearchBtn").disabled = state;
+}
+
+function applyFocusHighlight() {
+    searchMatches.forEach(el => el.classList.remove("match-active"));
+    if (currentMatchIndex >= 0 && currentMatchIndex < searchMatches.length) {
+        const target = searchMatches[currentMatchIndex];
+        target.classList.add("match-active");
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
     }
-});
+}
+
+function navigateSearch(offset) {
+    if (searchMatches.length === 0) return;
+    currentMatchIndex += offset;
+    if (currentMatchIndex >= searchMatches.length) currentMatchIndex = 0;
+    if (currentMatchIndex < 0) currentMatchIndex = searchMatches.length - 1;
+    updateSearchStatsUI();
+    applyFocusHighlight();
+}
 </script>
 
 </body>
