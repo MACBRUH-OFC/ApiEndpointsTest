@@ -3,24 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Garena Engine | API Management Console</title>
+<title>FREE FIRE API ENGINE - CONTROL CONSOLE</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
 <style>
+@font-face {
+    font-family: 'GFF';
+    src: url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
+}
+
 :root {
-    --bg-main: #09090b;
-    --bg-card: #18181b;
-    --border: #27272a;
-    --border-hover: #3f3f46;
-    --text-primary: #f4f4f5;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
-    --accent: #f59e0b;
-    --accent-hover: #d97706;
-    --accent-glow: rgba(245, 158, 11, 0.12);
-    --success: #10b981;
-    --error: #ef4444;
-    --panel: #111114;
-    --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
+    --amber: #ffb700;
+    --amber-glow: rgba(255, 183, 0, 0.25);
+    --bg: #030305;
+    --panel: #07070b;
+    --card: #0c0c14;
+    --border: #131320;
+    --border-glow: rgba(255, 183, 0, 0.1);
+    --border-hover: #212133;
+    --text: #e2e8f0;
+    --muted: #4e5d73;
+    --success: #00ff88;
+    --error: #ff3344;
 }
 
 * {
@@ -30,314 +35,353 @@
 }
 
 body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 183, 0, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%),
+        linear-gradient(rgba(18, 18, 24, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 18, 24, 0.3) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
-    letter-spacing: -0.1px;
-    padding-bottom: 80px;
+    letter-spacing: -0.2px;
+    padding-bottom: 50px;
 }
 
-/* Custom modern scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #040406;
 }
 ::-webkit-scrollbar-thumb {
-    background: #2d2d34;
+    background: #171724;
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
 }
 
 .wrapper {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 40px 24px;
 }
 
-/* Premium Header styling */
+/* Header Grid UI */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
     padding-bottom: 24px;
-    margin-bottom: 36px;
+    margin-bottom: 35px;
 }
 
-.brand-wrapper {
+.brand-group {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-.brand-text {
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: -0.5px;
-    color: #ffffff;
+.brand-logo {
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 12px rgba(255,183,0,0.2));
 }
 
-.brand-text span {
-    color: var(--accent);
-}
-
-.live-badge {
+.badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--bg-card);
+    padding: 6px 12px;
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-secondary);
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--muted);
 }
 
-.pulsing-dot {
-    width: 6px;
-    height: 6px;
+.dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: var(--success);
-    box-shadow: 0 0 8px var(--success);
-    animation: smoothPulse 2s infinite alternate;
+    background: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
+    animation: pulseGlow 1.8s infinite alternate;
 }
 
-@keyframes smoothPulse {
-    0% { transform: scale(0.95); opacity: 0.6; }
-    100% { transform: scale(1.15); opacity: 1; }
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 4px var(--amber); }
+    100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px var(--amber); }
 }
 
-/* Base Dashboard Card Structure */
-.panel-card {
-    background: var(--bg-card);
+.engine-title {
+    font-family: 'GFF', sans-serif;
+    font-size: 20px;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+.engine-title span {
+    color: var(--amber);
+    text-shadow: 0 0 15px var(--amber-glow);
+}
+
+/* Base Component Containers */
+.dashboard-container {
+    background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
 }
 
-.panel-title {
-    font-size: 11px;
-    font-weight: 700;
+.dashboard-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 183, 0, 0.08), transparent);
+}
+
+.container-title {
+    font-size: 10px;
+    font-weight: 800;
     text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 1.2px;
-    margin-bottom: 16px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-left: 3px solid var(--amber);
+    padding-left: 10px;
 }
 
-.clear-pills {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 11px;
+.clear-history-btn {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.clear-pills:hover {
+.clear-history-btn:hover {
     color: var(--error);
 }
 
-/* User Input Fields */
-.input-group {
+/* User Input Engine Form */
+.input-row {
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
-.search-field {
+.main-input {
     width: 100%;
-    height: 52px;
-    background: #0d0d10;
+    height: 54px;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     color: #ffffff;
-    padding: 0 160px 0 16px;
+    padding: 0 160px 0 18px;
     font-size: 14px;
-    font-family: var(--font-mono);
+    font-family: monospace;
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.search-field:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 14px var(--accent-glow);
+.main-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.12);
 }
 
-.trigger-btn {
+.run-action-btn {
     position: absolute;
-    right: 6px;
-    top: 6px;
-    height: 40px;
-    padding: 0 20px;
-    background: var(--accent);
+    right: 8px;
+    top: 8px;
+    height: 38px;
+    padding: 0 24px;
+    background: var(--amber);
     border: none;
     border-radius: 6px;
     color: #000000;
+    font-family: 'GFF', sans-serif;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background 0.15s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 183, 0, 0.2);
 }
 
-.trigger-btn:hover {
-    background: var(--accent-hover);
+.run-action-btn:hover {
+    background: #e6a400;
+    transform: translateY(-1px);
 }
 
-.pills-container {
+/* Query History Row */
+.history-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
+    min-height: 26px;
 }
 
 .history-pill {
     padding: 6px 12px;
-    background: #111114;
+    background: #000000;
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
+    font-size: 11px;
+    color: #a0aec0;
     cursor: pointer;
-    font-family: var(--font-mono);
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    font-family: monospace;
 }
 
 .history-pill:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(255, 183, 0, 0.02);
 }
 
-/* Node Server Selectors */
-.grid-servers {
+/* Regional Nodes */
+.server-selector {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
     gap: 8px;
 }
 
-.server-btn {
-    height: 38px;
-    background: #111114;
+.srv-chip {
+    height: 36px;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
 }
 
-.server-btn:hover {
+.srv-chip:hover {
     border-color: var(--border-hover);
-    color: #ffffff;
+    color: #fff;
 }
 
-.server-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
+.srv-chip.active {
+    background: var(--amber);
+    border-color: var(--amber);
     color: #000000;
-    box-shadow: 0 2px 10px var(--accent-glow);
+    box-shadow: 0 4px 15px rgba(255, 183, 0, 0.2);
 }
 
-/* Perspective view toggles */
-.grid-perspectives {
+/* Perspective view modes */
+.view-options {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
 }
 
-.view-btn {
-    height: 42px;
-    background: #111114;
+.opt-toggle {
+    height: 40px;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
 
-.view-btn:hover {
+.opt-toggle:hover {
     border-color: var(--border-hover);
     color: #ffffff;
 }
 
-.view-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(245, 158, 11, 0.04);
+.opt-toggle.active {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(255, 183, 0, 0.02);
 }
 
-/* Performance Metrics and KPIs */
-.grid-metrics {
+/* Output metrics cards */
+.metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
 
 .metric-card {
-    background: #111114;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 18px 20px;
+    border-radius: 10px;
+    padding: 16px 20px;
     position: relative;
     overflow: hidden;
 }
 
-.metric-card::after {
+.metric-card::before {
     content: '';
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     width: 3px;
     height: 100%;
     background: var(--border);
 }
 
-.metric-card.active-state::after {
-    background: var(--accent);
+.metric-card.active-metric::before {
+    background: var(--amber);
 }
 
-.metric-label {
+.metric-card .lbl {
     font-size: 10px;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--muted);
     letter-spacing: 0.8px;
     margin-bottom: 6px;
 }
 
-.metric-value {
-    font-size: 24px;
-    font-weight: 700;
-    font-family: var(--font-mono);
+.metric-card .val {
+    font-size: 22px;
+    font-weight: 800;
+    font-family: monospace;
+    color: #ffffff;
 }
 
-/* Output Toolbar Controller */
-.toolbar-console {
+/* Output deck toolbar */
+.control-deck {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -345,16 +389,20 @@ header {
     margin-bottom: 16px;
 }
 
-.search-console {
+.search-wrapper {
     flex: 1;
     display: flex;
     align-items: center;
-    background: #0d0d10;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0 12px;
+    border-radius: 8px;
+    padding: 0 14px;
     height: 40px;
-    gap: 8px;
+    gap: 10px;
+}
+
+.search-wrapper:focus-within {
+    border-color: var(--border-hover);
 }
 
 .search-input {
@@ -364,45 +412,47 @@ header {
     outline: none;
     color: #ffffff;
     font-size: 13px;
-    font-family: var(--font-mono);
+    font-family: monospace;
 }
 
-.search-badge {
+.search-counter {
     font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
+    color: var(--muted);
+    font-family: monospace;
     white-space: nowrap;
-    background: var(--bg-card);
-    padding: 2px 6px;
+    background: var(--card);
+    padding: 3px 6px;
     border-radius: 4px;
     border: 1px solid var(--border);
 }
 
-.nav-arrows {
+.search-nav {
     display: flex;
     gap: 4px;
 }
 
-.arrow-btn {
+.search-step-btn {
     width: 26px;
     height: 26px;
-    background: var(--bg-card);
+    background: var(--card);
     border: 1px solid var(--border);
-    color: var(--text-muted);
+    color: var(--muted);
     cursor: pointer;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s ease;
 }
 
-.arrow-btn:hover:not(:disabled) {
+.search-step-btn:hover:not(:disabled) {
     color: #fff;
     border-color: var(--border-hover);
 }
 
-.arrow-btn:disabled {
-    opacity: 0.2;
+.search-step-btn:disabled {
+    opacity: 0.15;
     cursor: not-allowed;
 }
 
@@ -411,57 +461,66 @@ header {
     gap: 8px;
 }
 
-.action-btn {
+.util-btn {
     height: 40px;
     padding: 0 16px;
-    background: #111114;
+    background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-secondary);
+    border-radius: 8px;
+    color: #a0aec0;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 }
 
-.action-btn:hover {
+.util-btn:hover {
     border-color: var(--border-hover);
     color: #ffffff;
 }
 
-/* Monitor Window Layout */
-.monitor-viewport {
+.util-btn svg {
+    width: 14px;
+    height: 14px;
+    color: var(--muted);
+}
+
+/* Console Display monitor */
+.console-monitor {
     width: 100%;
-    height: 520px;
-    background: #040406;
+    height: 500px;
+    background: #000000;
+    background-image: 
+        linear-gradient(rgba(18, 18, 24, 0.45) 50%, rgba(0, 0, 0, 0.45) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.005), rgba(0, 255, 0, 0.003), rgba(0, 0, 255, 0.005));
+    background-size: 100% 4px, 6px 100%;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: auto;
-    color: #d1d5db;
-    font-family: var(--font-mono);
-    position: relative;
+    color: #a0aec0;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Category Sections */
-.category-group {
-    border-bottom: 1px solid var(--border);
+/* Group sections on Links Only */
+.group-block {
+    border-bottom: 1px solid #0d0d14;
 }
 
-.category-group:last-child {
+.group-block:last-child {
     border-bottom: none;
 }
 
-.category-header {
+.group-header {
+    font-family: 'GFF', sans-serif;
     font-size: 11px;
-    font-weight: 700;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--amber);
     letter-spacing: 1px;
     padding: 12px 18px;
-    background: #0a0a0d;
+    background: #040407;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -471,67 +530,76 @@ header {
     z-index: 10;
 }
 
-.category-meta {
+.group-meta {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.copy-group-btn {
+.group-copy-btn {
     background: transparent;
     border: none;
-    color: var(--text-muted);
-    font-size: 10px;
-    font-weight: 600;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
-    transition: color 0.15s ease;
-}
-
-.copy-group-btn:hover {
-    color: var(--accent);
-}
-
-.count-badge {
-    background: rgba(245, 158, 11, 0.08);
-    padding: 2px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
-    font-size: 10px;
-    color: var(--accent);
-    border: 1px solid rgba(245, 158, 11, 0.15);
-}
-
-/* Item Rows */
-.row-item {
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    padding: 10px 18px;
-    border-bottom: 1px solid #0d0d10;
-    font-family: var(--font-mono);
+    gap: 4px;
+}
+
+.group-copy-btn:hover {
+    color: var(--amber);
+    background: rgba(255, 183, 0, 0.05);
+}
+
+.group-count {
+    background: rgba(255, 183, 0, 0.05);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--amber);
+    border: 1px solid rgba(255, 183, 0, 0.1);
+}
+
+/* Rows styling */
+.url-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    border-bottom: 1px solid #06060a;
+    font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #040406;
+    background: #010103;
+    transition: background 0.15s ease;
 }
 
-.row-item:hover {
-    background: #08080c;
+.url-row:hover {
+    background: #07070c;
 }
 
-.row-item:last-child {
+.url-row:last-child {
     border-bottom: none;
 }
 
-.url-link {
-    color: #60a5fa;
+.url-href {
+    color: #4ea2ff;
     text-decoration: none;
+    transition: color 0.15s ease;
 }
 
-.url-link:hover {
-    color: #93c5fd;
+.url-href:hover {
+    color: #82bdff;
     text-decoration: underline;
 }
 
-.actions-cell {
+.row-actions-block {
     margin-left: auto;
     display: flex;
     align-items: center;
@@ -540,20 +608,21 @@ header {
     flex-shrink: 0;
 }
 
-.icon-copy-action {
+.copy-svg-icon {
     width: 14px;
     height: 14px;
-    color: var(--text-muted);
+    color: var(--muted);
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: all 0.2s ease;
 }
 
-.icon-copy-action:hover {
-    color: var(--accent);
+.copy-svg-icon:hover {
+    color: var(--amber);
+    transform: scale(1.1);
 }
 
-/* Medias previews */
-.preview-box {
+/* Multimedia previews */
+.media-preview-container {
     flex-shrink: 0;
     margin-right: 14px;
     width: 44px;
@@ -567,93 +636,123 @@ header {
     justify-content: center;
 }
 
-.thumb-preview {
+.img-preview-thumb, .video-preview-thumb {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     cursor: pointer;
     display: block;
+    transition: filter 0.2s ease;
 }
 
-.player-audio {
+.img-preview-thumb:hover, .video-preview-thumb:hover {
+    filter: brightness(1.2);
+}
+
+.audio-preview-player {
     height: 28px;
     width: 150px;
+    border-radius: 5px;
+    background: #000000;
 }
 
-/* Decoded response Row styling */
-.decoded-text-row {
-    padding: 10px 18px;
-    border-bottom: 1px solid #0d0d10;
-    font-family: var(--font-mono);
+/* Decoded Row elements */
+.decoded-row {
+    padding: 12px 18px;
+    border-bottom: 1px solid #06060a;
+    font-family: monospace;
     font-size: 13px;
-    color: var(--text-primary);
+    color: var(--text);
     word-break: break-all;
+    background: #010103;
 }
 
-/* Scanning Simulator Styles */
-.loading-viewport {
-    padding: 60px 40px;
+.decoded-row:last-child {
+    border-bottom: none;
+}
+
+/* Highlights */
+mark.search-match {
+    background-color: var(--amber);
+    color: #000000;
+    border-radius: 1px;
+    padding: 0 1px;
+}
+
+mark.search-match.match-active {
+    background-color: #ff5500;
+    color: #ffffff;
+}
+
+/* Custom terminal execution visuals */
+.scanner-loader {
+    padding: 50px 30px;
     text-align: center;
+    font-family: monospace;
 }
 
-.viewport-log-text {
+.scanner-text {
     font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--amber);
     margin-bottom: 20px;
+    animation: pulseBlink 1.2s infinite alternate;
 }
 
-.progress-track {
+@keyframes pulseBlink {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.scanner-bar-container {
     width: 100%;
-    max-width: 400px;
-    height: 6px;
-    background: #111114;
-    border-radius: 10px;
-    margin: 0 auto 30px;
+    max-width: 350px;
+    height: 8px;
+    background: #08080c;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 0 auto;
     overflow: hidden;
+    position: relative;
+    margin-bottom: 30px;
 }
 
-.progress-fill {
+.scanner-bar-fill {
     width: 0%;
     height: 100%;
-    background: var(--accent);
-    box-shadow: 0 0 10px var(--accent);
+    background: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
     transition: width 0.1s linear;
 }
 
-.log-scroller-panel {
+.scanner-log-panel {
     text-align: left;
     margin: 0 auto;
     width: 100%;
-    max-width: 500px;
-    font-size: 11px;
-    color: var(--text-muted);
-    background: #000000;
+    max-width: 480px;
+    font-size: 12px;
+    color: var(--muted);
     border: 1px solid var(--border);
-    padding: 14px;
-    border-radius: 6px;
+    background: #020204;
+    padding: 16px;
+    border-radius: 8px;
     height: 130px;
     overflow: hidden;
 }
 
-.log-item-line {
-    margin-bottom: 6px;
+.scanner-log-line {
+    margin-bottom: 8px;
+    animation: slideInUp 0.15s ease-out;
 }
 
-/* Highlight matching classes */
-mark.search-match {
-    background-color: var(--accent);
-    color: #000000;
-    border-radius: 2px;
+@keyframes slideInUp {
+    from { transform: translateY(5px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
-mark.search-match.match-active {
-    background-color: #f97316;
-    color: #ffffff;
-}
-
-/* Lightbox Modal */
-.overlay-lightbox {
+/* Modal and notifications */
+.lightbox-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -664,24 +763,24 @@ mark.search-match.match-active {
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    backdrop-filter: blur(4px);
 }
 
-.lightbox-body {
+.lightbox-content {
     position: relative;
-    max-width: 85%;
-    max-height: 85%;
+    max-width: 90%;
+    max-height: 90%;
 }
 
-.lightbox-body img {
+.lightbox-content img {
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 85vh;
     object-fit: contain;
     border: 1px solid var(--border);
     border-radius: 8px;
+    background: #000000;
 }
 
-.lightbox-close-btn {
+.lightbox-close {
     position: absolute;
     top: -40px;
     right: 0;
@@ -692,33 +791,33 @@ mark.search-match.match-active {
     cursor: pointer;
 }
 
-/* Notifications */
-.toast-notice {
+.toast {
     position: fixed;
     bottom: 24px;
     right: 24px;
     background: #ffffff;
     color: #000000;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 700;
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(15px);
     transition: all 0.2s ease;
     z-index: 1000;
+    pointer-events: none;
 }
 
-.toast-notice.show {
+.toast.show {
     opacity: 1;
     transform: translateY(0);
 }
 
 @media (max-width: 768px) {
     header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .toolbar-console { flex-direction: column; align-items: stretch; gap: 10px; }
-    .grid-servers { grid-template-columns: repeat(4, 1fr); }
-    .grid-metrics { grid-template-columns: 1fr; gap: 10px; }
+    .control-deck { flex-direction: column; align-items: stretch; gap: 10px; }
+    .server-selector { grid-template-columns: repeat(4, 1fr); }
+    .metrics-row { grid-template-columns: 1fr; gap: 10px; }
 }
 </style>
 </head>
@@ -726,118 +825,140 @@ mark.search-match.match-active {
 
 <div class="wrapper">
 
-    <!-- Navbar Module -->
+    <!-- Header block -->
     <header>
-        <div class="brand-wrapper">
-            <span class="brand-text">Garena <span>Console</span></span>
-            <div class="live-badge">
-                <div class="pulsing-dot"></div>
-                <span>NODE OPERATOR: READY</span>
+        <div class="brand-group">
+            <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
+            <div class="badge">
+                <div class="dot"></div>
+                <span id="activeVersionLabel">LOAD IN PROGRESS...</span>
             </div>
         </div>
+        <div class="engine-title">API <span>TOOL</span></div>
     </header>
 
-    <!-- Section 1: Query Router -->
-    <div class="panel-card">
-        <div class="panel-title">
-            <span>Query Pipeline Routing</span>
-            <button class="clear-pills" onclick="clearHistory()">Reset History</button>
+    <!-- Form Targets container -->
+    <div class="dashboard-container">
+        <div class="container-title">
+            <span>Target Pipeline Input</span>
+            <span class="clear-history-btn" onclick="clearHistory()">Clear History</span>
         </div>
-        <div class="input-group">
-            <input type="text" id="apiName" class="search-field" placeholder="Enter Garena API target path (e.g. LoginGetDesc)...">
-            <button class="trigger-btn" onclick="runAPI()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M10 9l5 3-5 3V9z"/></svg>
-                Run Pipeline
+        <div class="input-row">
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)..." onkeydown="if(event.key === 'Enter') runAPI()">
+            <button class="run-action-btn" onclick="runAPI()">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                SCAN ENGINE
             </button>
         </div>
-        <div class="pills-container" id="historyContainer"></div>
+
+        <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- Section 2: Regional Cluster grid -->
-    <div class="panel-card">
-        <div class="panel-title">Regional Server Clusters</div>
-        <div class="grid-servers" id="serverSelectorGrid">
-            <button class="server-btn active" onclick="setServer(this,'ind')">IND</button>
-            <button class="server-btn" onclick="setServer(this,'br')">BR</button>
-            <button class="server-btn" onclick="setServer(this,'na')">NA</button>
-            <button class="server-btn" onclick="setServer(this,'sac')">SAC</button>
-            <button class="server-btn" onclick="setServer(this,'mea')">MEA</button>
-            <button class="server-btn" onclick="setServer(this,'vn')">VN</button>
-            <button class="server-btn" onclick="setServer(this,'bd')">BD</button>
-            <button class="server-btn" onclick="setServer(this,'pk')">PK</button>
-            <button class="server-btn" onclick="setServer(this,'sg')">SG</button>
-            <button class="server-btn" onclick="setServer(this,'id')">ID</button>
-            <button class="server-btn" onclick="setServer(this,'cis')">CIS</button>
-            <button class="server-btn" onclick="setServer(this,'th')">TH</button>
-            <button class="server-btn" onclick="setServer(this,'tw')">TW</button>
-            <button class="server-btn" onclick="setServer(this,'eu')">EU</button>
+    <!-- Cluster Region configuration -->
+    <div class="dashboard-container">
+        <div class="container-title">Target Region Cluster</div>
+        <div class="server-selector" id="serverSelectorGrid">
+            <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
+            <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
+            <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
+            <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
+            <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
+            <button class="srv-chip" onclick="setServer(this,'sac')">SAC</button>
+            <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
+            <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
+            <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
+            <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
+            <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
+            <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
+            <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
+            <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
         </div>
     </div>
 
-    <!-- Section 3: Data perspectives -->
-    <div class="panel-card">
-        <div class="panel-title">Perspective Viewports</div>
-        <div class="grid-perspectives">
-            <button class="view-btn active" id="btn-links" onclick="setViewMode('links')">Links Only</button>
-            <button class="view-btn" id="btn-decoded" onclick="setViewMode('decoded')">Decoded strings</button>
-            <button class="view-btn" id="btn-raw" onclick="setViewMode('raw')">Raw payload</button>
+    <!-- Perspectives modes toggles -->
+    <div class="dashboard-container">
+        <div class="container-title">Output Perspective View</div>
+        <div class="view-options">
+            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                LINKS ONLY
+            </button>
+            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                DECODED RESPONSE
+            </button>
+            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                RAW RESPONSE
+            </button>
         </div>
     </div>
 
-    <!-- Section 4: KPI Monitor Metrics -->
-    <div class="panel-card">
-        <div class="panel-title">Data Pipeline Metrics</div>
-        <div class="grid-metrics">
-            <div class="metric-card active-state">
-                <div class="metric-label">Parsed Strings</div>
-                <div class="metric-value" id="stringCount">0</div>
+    <!-- Metrics Cards container -->
+    <div class="dashboard-container">
+        <div class="container-title">Execution State Metrics</div>
+        <div class="metrics-row">
+            <div class="metric-card active-metric">
+                <div class="lbl">Total Extracted Strings</div>
+                <div class="val" id="stringCount">0</div>
             </div>
-            <div class="metric-card active-state">
-                <div class="metric-label">Asset URLs</div>
-                <div class="metric-value" id="linkCount">0</div>
+            <div class="metric-card active-metric">
+                <div class="lbl">Discovered Links</div>
+                <div class="val" id="linkCount">0</div>
             </div>
-            <div class="metric-card active-state">
-                <div class="metric-label">Connection Status</div>
-                <div class="metric-value" id="statusText" style="color: var(--text-muted);">IDLE</div>
+            <div class="metric-card active-metric">
+                <div class="lbl">Engine Status</div>
+                <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
     </div>
 
-    <!-- Section 5: Control monitors terminal -->
-    <div class="panel-card">
-        <div class="panel-title">Output System Viewport</div>
-        <div class="toolbar-console">
-            <div class="search-console">
-                <input type="text" class="search-input" id="searchBox" placeholder="Filter strings..." oninput="performSearch()">
-                <span class="search-badge" id="searchCount">0/0</span>
-                <div class="nav-arrows">
-                    <button class="arrow-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" disabled>▲</button>
-                    <button class="arrow-btn" id="nextSearchBtn" onclick="navigateSearch(1)" disabled>▼</button>
+    <!-- Output window monitor -->
+    <div class="dashboard-container">
+        <div class="container-title">Console Output Monitor</div>
+        <div class="control-deck">
+            <div class="search-wrapper">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
+                <span class="search-counter" id="searchCount">0/0</span>
+                <div class="search-nav">
+                    <button class="search-step-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" disabled>▲</button>
+                    <button class="search-step-btn" id="nextSearchBtn" onclick="navigateSearch(1)" disabled>▼</button>
                 </div>
             </div>
+            
             <div class="utility-actions">
-                <button class="action-btn" onclick="copyOutput()">Copy</button>
-                <button class="action-btn" onclick="downloadOutput()">Download</button>
-                <button class="action-btn" onclick="clearOutput()">Flush</button>
+                <button class="util-btn" onclick="copyOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    Copy
+                </button>
+                <button class="util-btn" onclick="downloadOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download
+                </button>
+                <button class="util-btn" onclick="clearOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Reset
+                </button>
             </div>
         </div>
-        <div class="monitor-viewport" id="output">SYSTEM LOG: DEVICE STATUS STANDBY</div>
+
+        <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
     </div>
 </div>
 
-<!-- Preview overlay -->
-<div id="imageLightbox" class="overlay-lightbox" onclick="closeLightbox()">
-    <div class="lightbox-body" onclick="event.stopPropagation()">
-        <img id="lightboxImage" src="" alt="Preview viewport">
-        <button class="lightbox-close-btn" onclick="closeLightbox()">✕</button>
+<div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <img id="lightboxImage" src="" alt="Preview">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     </div>
 </div>
 
-<div class="toast-notice" id="toastNotifier">Success: Copied to clipboard</div>
+<div class="toast" id="toastNotifier">Copied to clipboard</div>
 
 <script>
 let selectedServer = "ind";
-let viewMode = "links";
+let viewMode = "links"; 
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -855,20 +976,41 @@ const VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ];
 
+// Execute dynamic parameters initialization on launch
 document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
+    initializeVersion();
 });
+
+async function initializeVersion() {
+    try {
+        const res = await fetch("/get_version");
+        const data = await res.json();
+        const lbl = document.getElementById("activeVersionLabel");
+        if (lbl) {
+            if (data.success && data.version) {
+                lbl.innerText = `ENGINE ONLINE: ${data.version}`;
+            } else {
+                lbl.innerText = "ENGINE ONLINE: OB53 (FALLBACK)";
+            }
+        }
+    } catch(e) {
+        const lbl = document.getElementById("activeVersionLabel");
+        if (lbl) lbl.innerText = "CONNECTION RUNTIME FAULT";
+    }
+}
 
 function setServer(btn, server) {
     selectedServer = server;
-    document.querySelectorAll(".server-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".srv-chip").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 }
 
 function setViewMode(mode) {
     viewMode = mode;
-    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-    document.getElementById(`btn-${mode}`).classList.add("active");
+    document.querySelectorAll(".opt-toggle").forEach(b => b.classList.remove("active"));
+    const activeBtn = document.getElementById(`btn-${mode}`);
+    if (activeBtn) activeBtn.classList.add("active");
     if (apiCachedData) {
         renderOutput(apiCachedData);
     }
@@ -876,17 +1018,19 @@ function setViewMode(mode) {
 
 function updateHistoryUI() {
     const container = document.getElementById("historyContainer");
+    if (!container) return;
     if (queryHistory.length === 0) {
-        container.innerHTML = `<span style="color: var(--text-muted); font-style: italic; font-size:12px;">No scan history stored.</span>`;
+        container.innerHTML = `<span style="color: var(--muted); font-style: italic; font-size:11px;">No scan history stored.</span>`;
         return;
     }
-    container.innerHTML = `<span style="color: var(--text-muted); font-size:11px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
+    container.innerHTML = `<span style="color: var(--muted); font-size:10px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
     queryHistory.forEach(endpoint => {
         const pill = document.createElement("button");
         pill.className = "history-pill";
         pill.innerText = endpoint;
         pill.onclick = () => {
-            document.getElementById("apiName").value = endpoint;
+            const apiField = document.getElementById("apiName");
+            if (apiField) apiField.value = endpoint;
             runAPI();
         };
         container.appendChild(pill);
@@ -906,20 +1050,24 @@ function clearHistory() {
     queryHistory = [];
     localStorage.removeItem("ff_query_history");
     updateHistoryUI();
-    displayToast("History cleared");
+    displayToast("History flushed");
 }
 
 function updateStatusUI(status, hexColor) {
     const el = document.getElementById("statusText");
-    el.innerText = status;
-    el.style.color = hexColor || "var(--text-primary)";
+    if (el) {
+        el.innerText = status;
+        el.style.color = hexColor || "var(--text)";
+    }
 }
 
 function displayToast(msg) {
     const toast = document.getElementById("toastNotifier");
-    toast.innerText = msg;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1800);
+    if (toast) {
+        toast.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1800);
+    }
 }
 
 function processHtmlUrl(val, isExplicitUrl = false) {
@@ -951,7 +1099,7 @@ function processHtmlUrl(val, isExplicitUrl = false) {
         return { text: val, link: linkUrl };
     }
 
-    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
+    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "facebook.com", "x.com", "linktr.ee"];
     if (social_domains.some(domain => val_lower.includes(domain))) {
         let linkUrl = val;
         if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
@@ -980,33 +1128,37 @@ function getDisplayPath(fullLink) {
 }
 
 async function runAPI() {
-    const apiName = document.getElementById("apiName").value.trim();
+    const apiField = document.getElementById("apiName");
+    if (!apiField) return;
+    const apiName = apiField.value.trim();
     if (!apiName) {
         alert("Enter a target endpoint path string.");
         return;
     }
 
-    updateStatusUI("SCANNING", "var(--accent)");
+    updateStatusUI("SCANNING", "var(--amber)");
     resetSearchState();
 
     const output = document.getElementById("output");
+    if (!output) return;
+
     output.innerHTML = `
-    <div class="loading-viewport">
-        <div class="viewport-log-text" id="scannerStatus">Connecting Server: 0%</div>
-        <div class="progress-track">
-            <div class="progress-fill" id="scannerProgress"></div>
+    <div class="scanner-loader">
+        <div class="scanner-text" id="scannerStatus">INITIATING DECODER PIPELINE: 0%</div>
+        <div class="scanner-bar-container">
+            <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
-        <div class="log-scroller-panel" id="scannerLogs">
-            <div class="log-item-line">> Pre-loaded cached game dynamic settings...</div>
+        <div class="scanner-log-panel" id="scannerLogs">
+            <div class="scanner-log-line">> Directing request handshake connections...</div>
         </div>
     </div>`;
 
     const logs = [
-        "Resolving secure regional client routing target...",
-        "Querying dynamic client encryption handshake variables...",
-        "Validating cached server security token metrics...",
-        "Sending encrypted decompressed server packet buffers...",
-        "Scanning decompressed response output strings..."
+        "Connecting dynamic client entry-points...",
+        "Evaluating releaseVersion and authorization status...",
+        "Dispatching request to regional Garena gateways...",
+        "Decompressing Garena server-side binary payload bytes...",
+        "Requesting binary extraction from decoder API endpoint..."
     ];
 
     let progress = 0;
@@ -1021,18 +1173,18 @@ async function runAPI() {
             const logBox = document.getElementById("scannerLogs");
             
             if (fill) fill.style.width = `${progress}%`;
-            if (txt) txt.innerText = `Connecting Server: ${progress}%`;
+            if (txt) txt.innerText = `SCANNING SYSTEM CHANNELS: ${progress}%`;
             
-            if (logBox && logIndex < logs.length && progress > (logIndex * 15)) {
+            if (logBox && logIndex < logs.length && progress > (logIndex * 18)) {
                 const line = document.createElement("div");
-                line.className = "log-item-line";
+                line.className = "scanner-log-line";
                 line.innerText = `> ${logs[logIndex]}`;
                 logBox.appendChild(line);
                 logBox.scrollTop = logBox.scrollHeight;
                 logIndex++;
             }
         }
-    }, 120);
+    }, 110);
 
     try {
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
@@ -1044,19 +1196,22 @@ async function runAPI() {
         const finalFill = document.getElementById("scannerProgress");
         const finalTxt = document.getElementById("scannerStatus");
         if (finalFill) finalFill.style.width = `100%`;
-        if (finalTxt) finalTxt.innerText = `Processing Server Handshake: 100%`;
+        if (finalTxt) finalTxt.innerText = `DECODING COMPLETE: 100%`;
 
         setTimeout(() => {
             try {
                 if (data.error) {
-                    updateStatusUI("FAULT", "var(--error)");
-                    output.innerHTML = `<div style="color:var(--error); font-family:var(--font-mono); padding: 18px;">Execution Error: ${data.error}</div>`;
+                    updateStatusUI("ERROR", "#ff3344");
+                    output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Engine Fault: ${data.error}</div>`;
                     return;
                 }
 
-                document.getElementById("stringCount").innerText = data.count || 0;
-                document.getElementById("linkCount").innerText = data.raw_count || 0;
-                updateStatusUI("ACTIVE", "var(--success)");
+                const strCountEl = document.getElementById("stringCount");
+                const linkCountEl = document.getElementById("linkCount");
+                if (strCountEl) strCountEl.innerText = data.count || 0;
+                if (linkCountEl) linkCountEl.innerText = data.raw_count || 0;
+                
+                updateStatusUI("ONLINE", "#00ff88");
 
                 currentLinksArray = data.urls || [];
                 apiCachedData = data; 
@@ -1064,19 +1219,20 @@ async function runAPI() {
                 saveToHistory(apiName);
                 renderOutput(data);
             } catch (innerErr) {
-                updateStatusUI("FAULT", "var(--error)");
-                output.innerHTML = `<div style="color:var(--error); font-family:var(--font-mono); padding: 18px;">Display Render Error: ${innerErr.message}</div>`;
+                updateStatusUI("FAULT", "#ff3344");
+                output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Display Render Error: ${innerErr.message}</div>`;
             }
         }, 200);
 
     } catch (err) {
         clearInterval(interval);
-        updateStatusUI("FAULT", "var(--error)");
-        output.innerHTML = `<div style="color:var(--error); font-family:var(--font-mono); padding: 18px;">System dropped server packet handshake connection.</div>`;
+        updateStatusUI("FAULT", "#ff3344");
+        output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Handshake interface interruption.</div>`;
     }
 }
 
 function copyCategoryUrls(category) {
+    if (!apiCachedData) return;
     const urls = [];
     const allCandidates = [];
     if (apiCachedData.urls) apiCachedData.urls.forEach(u => allCandidates.push({val: u, explicit: true}));
@@ -1093,22 +1249,26 @@ function copyCategoryUrls(category) {
     
     const uniqueUrls = [...new Set(urls)];
     navigator.clipboard.writeText(uniqueUrls.join("\n"));
-    displayToast(`Copied ${uniqueUrls.length} links to clipboard`);
+    displayToast(`Buffered ${uniqueUrls.length} links`);
 }
 
 function openLightbox(src) {
     const lightbox = document.getElementById("imageLightbox");
     const img = document.getElementById("lightboxImage");
-    img.src = src;
-    lightbox.style.display = "flex";
+    if (lightbox && img) {
+        img.src = src;
+        lightbox.style.display = "flex";
+    }
 }
 
 function closeLightbox() {
-    document.getElementById("imageLightbox").style.display = "none";
+    const lightbox = document.getElementById("imageLightbox");
+    if (lightbox) lightbox.style.display = "none";
 }
 
 function renderOutput(data) {
     const output = document.getElementById("output");
+    if (!output) return;
     output.innerHTML = ""; 
 
     if (viewMode === "links") {
@@ -1135,7 +1295,7 @@ function renderOutput(data) {
         currentLinksArray = processedTuples.map(item => item.link);
 
         if (processedTuples.length === 0) {
-            output.innerHTML = `<div style="color:var(--text-muted); font-style:italic; padding: 24px;">No URLs extracted from decrypted payloads.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No URLs extracted.</div>`;
             lastOutputText = "";
         } else {
             const grouped = { images: [], videos: [], audio: [], other: [] };
@@ -1146,24 +1306,24 @@ function renderOutput(data) {
             let finalHtml = "";
 
             if (grouped.images.length > 0) {
-                let sectionHtml = `<div class="category-group" id="block-images">
-                    <div class="category-header">
-                        <span>Images / Textures</span>
-                        <div class="category-meta">
-                            <button class="copy-group-btn" onclick="copyCategoryUrls('images')">Copy Category</button>
-                            <span class="count-badge" id="badge-images">${grouped.images.length}</span>
+                let sectionHtml = `<div class="group-block" id="block-images">
+                    <div class="group-header">
+                        <span>IMAGES / TEXTURES</span>
+                        <div class="group-meta">
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('images')">Copy Group</button>
+                            <span class="group-count" id="badge-images">${grouped.images.length}</span>
                         </div>
                     </div>`;
                 grouped.images.forEach(item => {
                     const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="row-item" data-url="${cleanDisplayPath}">
-                        <div class="preview-box">
-                            <img src="${item.link}" class="thumb-preview" loading="lazy" onclick="openLightbox('${item.link}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
+                    <div class="url-row" data-url="${cleanDisplayPath}">
+                        <div class="media-preview-container">
+                            <img src="${item.link}" class="img-preview-thumb" loading="lazy" onclick="openLightbox('${item.link}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-link" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
-                        <div class="actions-cell" onclick="event.stopPropagation();">
-                            <svg class="icon-copy-action" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
                 });
@@ -1172,24 +1332,24 @@ function renderOutput(data) {
             }
 
             if (grouped.videos.length > 0) {
-                let sectionHtml = `<div class="category-group" id="block-videos">
-                    <div class="category-header">
-                        <span>Videos / Animations</span>
-                        <div class="category-meta">
-                            <button class="copy-group-btn" onclick="copyCategoryUrls('videos')">Copy Category</button>
-                            <span class="count-badge" id="badge-videos">${grouped.videos.length}</span>
+                let sectionHtml = `<div class="group-block" id="block-videos">
+                    <div class="group-header">
+                        <span>VIDEOS / MOVIE CLIPS</span>
+                        <div class="group-meta">
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('videos')">Copy Group</button>
+                            <span class="group-count" id="badge-videos">${grouped.videos.length}</span>
                         </div>
                     </div>`;
                 grouped.videos.forEach(item => {
                     const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="row-item" data-url="${cleanDisplayPath}">
-                        <div class="preview-box">
-                            <video src="${item.link}" class="thumb-preview" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
+                    <div class="url-row" data-url="${cleanDisplayPath}">
+                        <div class="media-preview-container">
+                            <video src="${item.link}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-link" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
-                        <div class="actions-cell" onclick="event.stopPropagation();">
-                            <svg class="icon-copy-action" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
                 });
@@ -1198,24 +1358,24 @@ function renderOutput(data) {
             }
 
             if (grouped.audio.length > 0) {
-                let sectionHtml = `<div class="category-group" id="block-audio">
-                    <div class="category-header">
-                        <span>Audio Soundtracks</span>
-                        <div class="category-meta">
-                            <button class="copy-group-btn" onclick="copyCategoryUrls('audio')">Copy Category</button>
-                            <span class="count-badge" id="badge-audio">${grouped.audio.length}</span>
+                let sectionHtml = `<div class="group-block" id="block-audio">
+                    <div class="group-header">
+                        <span>AUDIO FILES</span>
+                        <div class="group-meta">
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('audio')">Copy Group</button>
+                            <span class="group-count" id="badge-audio">${grouped.audio.length}</span>
                         </div>
                     </div>`;
                 grouped.audio.forEach(item => {
                     const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="row-item" data-url="${cleanDisplayPath}">
-                        <div class="preview-box">
-                            <audio src="${item.link}" controls class="player-audio" onclick="event.stopPropagation();"></audio>
+                    <div class="url-row" data-url="${cleanDisplayPath}">
+                        <div class="media-preview-container">
+                            <audio src="${item.link}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
                         </div>
-                        <a href="${item.link}" target="_blank" class="url-link" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
-                        <div class="actions-cell" onclick="event.stopPropagation();">
-                            <svg class="icon-copy-action" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
                 });
@@ -1224,21 +1384,21 @@ function renderOutput(data) {
             }
 
             if (grouped.other.length > 0) {
-                let sectionHtml = `<div class="category-group" id="block-other">
-                    <div class="category-header">
-                        <span>Config Paths & Values</span>
-                        <div class="category-meta">
-                            <button class="copy-group-btn" onclick="copyCategoryUrls('other')">Copy Category</button>
-                            <span class="count-badge" id="badge-other">${grouped.other.length}</span>
+                let sectionHtml = `<div class="group-block" id="block-other">
+                    <div class="group-header">
+                        <span>CONFIG / OTHER PATHS</span>
+                        <div class="group-meta">
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('other')">Copy Group</button>
+                            <span class="group-count" id="badge-other">${grouped.other.length}</span>
                         </div>
                     </div>`;
                 grouped.other.forEach(item => {
                     const cleanDisplayPath = getDisplayPath(item.link);
                     sectionHtml += `
-                    <div class="row-item" data-url="${cleanDisplayPath}">
-                        <a href="${item.link.startsWith('http') ? item.link : '#'}" target="_blank" class="url-link" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
-                        <div class="actions-cell" onclick="event.stopPropagation();">
-                            <svg class="icon-copy-action" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    <div class="url-row" data-url="${cleanDisplayPath}">
+                        <a href="${item.link.startsWith('http') ? item.link : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
+                        <div class="row-actions-block" onclick="event.stopPropagation();">
+                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
                 });
@@ -1253,7 +1413,7 @@ function renderOutput(data) {
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="color:var(--text-muted); font-style:italic; padding: 24px;">No string structures decoded.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No decoded values found.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
@@ -1262,8 +1422,8 @@ function renderOutput(data) {
                 cleanStr = cleanStr.replace(/\.ktx(p)?/gi, '.jpg');
 
                 html += `
-                <div class="decoded-text-row" data-text="${cleanStr}">
-                    <span class="decoded-item-content">${cleanStr}</span>
+                <div class="decoded-row" data-text="${cleanStr}">
+                    <span class="decoded-text">${cleanStr}</span>
                 </div>`;
             });
             output.innerHTML = html;
@@ -1278,24 +1438,38 @@ function renderOutput(data) {
     performSearch();
 }
 
+function copyIndividualText(text) {
+    navigator.clipboard.writeText(text);
+    displayToast("URL buffered");
+}
+
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
-    displayToast("Console logs copied to clipboard");
+    displayToast("Buffered to Clipboard");
 }
 
 function clearOutput() {
-    document.getElementById("output").innerHTML = "SYSTEM LOG: LOG VIEWPORT FLUSHED";
-    document.getElementById("stringCount").innerText = "0";
-    document.getElementById("linkCount").innerText = "0";
-    document.getElementById("apiName").value = "";
-    document.getElementById("searchBox").value = "";
-    updateStatusUI("IDLE", "var(--text-muted)");
+    const out = document.getElementById("output");
+    if (out) out.innerHTML = "SYSTEM LOG: COLD RESET COMPLETED";
+    
+    const sC = document.getElementById("stringCount");
+    const lC = document.getElementById("linkCount");
+    if (sC) sC.innerText = "0";
+    if (lC) lC.innerText = "0";
+    
+    const apiField = document.getElementById("apiName");
+    if (apiField) apiField.value = "";
+    
+    const searchField = document.getElementById("searchBox");
+    if (searchField) searchField.value = "";
+    
+    updateStatusUI("IDLE", "var(--muted)");
     lastOutputText = "";
     apiCachedData = null;
     currentLinksArray = [];
     resetSearchState();
-    displayToast("Console flushed");
+    displayToast("System caches cleared");
 }
 
 function downloadOutput() {
@@ -1303,45 +1477,41 @@ function downloadOutput() {
     const blob = new Blob([lastOutputText], { type: "text/plain" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `ff_console_${selectedServer}_logs.log`;
+    a.download = `ff_api_logs_${selectedServer}.json`;
     a.click();
 }
 
 function performSearch() {
-    const query = document.getElementById("searchBox").value.trim().toLowerCase();
+    const sB = document.getElementById("searchBox");
+    if (!sB) return;
+    const query = sB.value.trim().toLowerCase();
+    
     const output = document.getElementById("output");
+    if (!output) return;
     
     if (viewMode === "links") {
         if (!apiCachedData) return;
-        const groups = output.querySelectorAll(".category-group");
+        const groups = output.querySelectorAll(".group-block");
         let visibleCount = 0;
         
         groups.forEach(group => {
-            const rows = group.querySelectorAll(".row-item");
+            const rows = group.querySelectorAll(".url-row");
             let groupVisibleCount = 0;
             
             rows.forEach(row => {
                 const url = row.getAttribute("data-url") || "";
-                const linkElement = row.querySelector(".url-link");
+                const hrefElement = row.querySelector(".url-href");
                 
-                if (linkElement) {
+                if (hrefElement) {
                     if (!query) {
                         row.style.display = "flex";
-                        linkElement.innerHTML = url;
+                        hrefElement.innerHTML = url;
                         groupVisibleCount++;
                     } else if (url.toLowerCase().includes(query)) {
                         row.style.display = "flex";
                         groupVisibleCount++;
                         const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                        linkElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
-                    } else {
-                        row.style.display = "none";
-                    }
-                } else {
-                    const rowText = row.textContent || "";
-                    if (!query || rowText.toLowerCase().includes(query)) {
-                        row.style.display = "flex";
-                        groupVisibleCount++;
+                        hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
                     } else {
                         row.style.display = "none";
                     }
@@ -1350,7 +1520,7 @@ function performSearch() {
             
             if (groupVisibleCount > 0) {
                 group.style.display = "block";
-                const badge = group.querySelector(".count-badge");
+                const badge = group.querySelector(".group-count");
                 if (badge) badge.innerText = groupVisibleCount;
                 visibleCount += groupVisibleCount;
             } else {
@@ -1363,31 +1533,23 @@ function performSearch() {
     } 
     else if (viewMode === "decoded") {
         if (!apiCachedData) return;
-        const rows = output.querySelectorAll(".decoded-text-row");
+        const rows = output.querySelectorAll(".decoded-row");
         let visibleCount = 0;
         
         rows.forEach(row => {
             const text = row.getAttribute("data-text") || "";
-            const textSpan = row.querySelector(".decoded-item-content");
+            const textElement = row.querySelector(".decoded-text");
             
-            if (textSpan) {
+            if (textElement) {
                 if (!query) {
                     row.style.display = "block";
-                    textSpan.innerHTML = text;
+                    textElement.innerHTML = text;
                     visibleCount++;
                 } else if (text.toLowerCase().includes(query)) {
                     row.style.display = "block";
                     visibleCount++;
                     const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                    textSpan.innerHTML = text.replace(regex, `<mark class="search-match">$1</mark>`);
-                } else {
-                    row.style.display = "none";
-                }
-            } else {
-                const rowText = row.textContent || "";
-                if (!query || rowText.toLowerCase().includes(query)) {
-                    row.style.display = "block";
-                    visibleCount++;
+                    textElement.innerHTML = text.replace(regex, `<mark class="search-match">$1</mark>`);
                 } else {
                     row.style.display = "none";
                 }
@@ -1421,15 +1583,23 @@ function performSearch() {
 
 function updateSearchStats(visibleCount, query) {
     const total = viewMode === "links" ? (currentLinksArray.length) : (apiCachedData ? apiCachedData.strings.length : 0);
+    const counterEl = document.getElementById("searchCount");
+    if (!counterEl) return;
+
     if (!query) {
-        document.getElementById("searchCount").innerText = `${total}/${total}`;
+        counterEl.innerText = `${total}/${total}`;
         resetSearchState();
     } else {
         const matchLen = searchMatches.length;
-        document.getElementById("searchCount").innerText = `Filtered: ${visibleCount} | Matches: ${matchLen}`;
+        counterEl.innerText = `Filtered: ${visibleCount} | Matches: ${matchLen}`;
+        
+        const prevBtn = document.getElementById("prevSearchBtn");
+        const nextBtn = document.getElementById("nextSearchBtn");
+        
         const state = matchLen === 0;
-        document.getElementById("prevSearchBtn").disabled = state;
-        document.getElementById("nextSearchBtn").disabled = state;
+        if (prevBtn) prevBtn.disabled = state;
+        if (nextBtn) nextBtn.disabled = state;
+        
         if (matchLen > 0) {
             currentMatchIndex = 0;
             applyFocusHighlight();
@@ -1464,10 +1634,15 @@ function escapePattern(str) {
 function updateSearchStatsUI() {
     const len = searchMatches.length;
     const cur = len > 0 ? currentMatchIndex + 1 : 0;
-    document.getElementById("searchCount").innerText = `${cur}/${len}`;
+    const counterEl = document.getElementById("searchCount");
+    if (counterEl) counterEl.innerText = `${cur}/${len}`;
+    
+    const prevBtn = document.getElementById("prevSearchBtn");
+    const nextBtn = document.getElementById("nextSearchBtn");
     const state = len === 0;
-    document.getElementById("prevSearchBtn").disabled = state;
-    document.getElementById("nextSearchBtn").disabled = state;
+    
+    if (prevBtn) prevBtn.disabled = state;
+    if (nextBtn) nextBtn.disabled = state;
 }
 
 function applyFocusHighlight() {
