@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Garena Web Engine Console</title>
+<title>Garena API Engine Console</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -14,15 +14,15 @@
 }
 
 :root {
-    --yellow: #f5a623;
-    --yellow-glow: rgba(245, 166, 35, 0.25);
-    --bg: #0b0f19;
-    --panel: #111827;
-    --card: #1f2937;
-    --border: #374151;
-    --border-hover: #4b5563;
-    --text: #f3f4f6;
-    --muted: #9ca3af;
+    --yellow: #f59e0b;
+    --yellow-glow: rgba(245, 158, 11, 0.2);
+    --bg: #090d16;
+    --panel: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --border-hover: #475569;
+    --text: #f8fafc;
+    --muted: #94a3b8;
     --success: #10b981;
     --error: #ef4444;
 }
@@ -36,7 +36,7 @@
 body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
     letter-spacing: -0.1px;
     padding-bottom: 60px;
@@ -47,10 +47,10 @@ body {
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #080b11;
+    background: #04070d;
 }
 ::-webkit-scrollbar-thumb {
-    background: #1f2937;
+    background: #1e293b;
     border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -159,7 +159,7 @@ header {
 .main-input {
     width: 100%;
     height: 52px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 8px;
     color: #ffffff;
@@ -191,7 +191,7 @@ header {
     transition: background 0.15s ease;
 }
 .run-action-btn:hover {
-    background: #d98d1a;
+    background: #d97706;
 }
 
 .history-row {
@@ -203,7 +203,7 @@ header {
 
 .history-pill {
     padding: 5px 10px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 11px;
@@ -219,13 +219,13 @@ header {
 
 .server-selector {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
     gap: 8px;
 }
 
 .srv-chip {
     height: 36px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--muted);
@@ -256,7 +256,7 @@ header {
 
 .opt-toggle {
     height: 40px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 12px;
@@ -275,7 +275,7 @@ header {
 .opt-toggle.active {
     border-color: var(--yellow);
     color: var(--yellow);
-    background: rgba(245, 166, 35, 0.05);
+    background: rgba(245, 158, 11, 0.05);
 }
 
 .metrics-row {
@@ -285,7 +285,7 @@ header {
 }
 
 .metric-card {
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 16px 20px;
@@ -321,7 +321,7 @@ header {
     flex: 1;
     display: flex;
     align-items: center;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 0 12px;
@@ -381,7 +381,7 @@ header {
 .util-btn {
     height: 40px;
     padding: 0 14px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--muted);
@@ -401,7 +401,7 @@ header {
 .console-monitor {
     width: 100%;
     height: 500px;
-    background: #080b11;
+    background: #04070d;
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: auto;
@@ -423,7 +423,7 @@ header {
     color: var(--yellow);
     letter-spacing: 1px;
     padding: 12px 16px;
-    background: #05070c;
+    background: #020408;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -453,27 +453,27 @@ header {
 }
 .group-copy-btn:hover {
     color: var(--yellow);
-    background: rgba(245, 166, 35, 0.05);
+    background: rgba(245, 158, 11, 0.05);
 }
 
 .group-count {
-    background: rgba(245, 166, 35, 0.08);
+    background: rgba(245, 158, 11, 0.08);
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 10px;
     color: var(--yellow);
-    border: 1px solid rgba(245, 166, 35, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.15);
 }
 
 .url-row {
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    border-bottom: 1px solid #111827;
+    border-bottom: 1px solid #1e293b;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #04060a;
+    background: #04070d;
 }
 .url-row:last-child {
     border-bottom: none;
@@ -545,12 +545,12 @@ header {
 
 .decoded-row {
     padding: 10px 16px;
-    border-bottom: 1px solid #111827;
+    border-bottom: 1px solid #1e293b;
     font-family: monospace;
     font-size: 13px;
-    color: #d1d5db;
+    color: #e2e8f0;
     word-break: break-all;
-    background: #04060a;
+    background: #04070d;
 }
 .decoded-row:last-child {
     border-bottom: none;
@@ -562,7 +562,7 @@ mark.search-match {
     border-radius: 1px;
 }
 mark.search-match.match-active {
-    background-color: #f59e0b;
+    background-color: #d97706;
     color: #ffffff;
 }
 
@@ -589,7 +589,7 @@ mark.search-match.match-active {
     width: 100%;
     max-width: 320px;
     height: 8px;
-    background: #1f2937;
+    background: #1e293b;
     border: 1px solid var(--border);
     border-radius: 4px;
     margin: 0 auto;
@@ -614,7 +614,7 @@ mark.search-match.match-active {
     font-size: 11px;
     color: var(--muted);
     border: 1px solid var(--border);
-    background: #080b11;
+    background: #04070d;
     padding: 12px;
     border-radius: 6px;
     height: 120px;
@@ -715,7 +715,7 @@ mark.search-match.match-active {
         <div class="engine-title">API <span>TOOL</span></div>
     </header>
 
-    <!-- Pipeline targets -->
+    <!-- Pipeline target configurations -->
     <div class="dashboard-container">
         <div class="container-title">
             <span>Target Pipeline Input</span>
@@ -729,7 +729,7 @@ mark.search-match.match-active {
         <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- Server selector list -->
+    <!-- Target server selector cluster -->
     <div class="dashboard-container">
         <div class="container-title">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
@@ -750,7 +750,7 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Display perspectives switcher -->
+    <!-- Output tab configurations -->
     <div class="dashboard-container">
         <div class="container-title">Output Perspective View</div>
         <div class="view-options">
@@ -769,7 +769,7 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Execution state indicators -->
+    <!-- Operational metrics tracker -->
     <div class="dashboard-container">
         <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
@@ -836,7 +836,7 @@ let viewMode = "links";
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
-let releaseVersion = "OB53"; // Fallback default version
+let releaseVersion = "OB53"; 
 
 let searchMatches = [];
 let currentMatchIndex = -1;
@@ -856,7 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
 });
 
-// Strict HTML Entity Escaper to prevent DOM breakdowns
+// Robust HTML Entity Escaper to prevent DOM breakdowns
 function escapeHtml(str) {
     if (typeof str !== 'string') return '';
     return str
@@ -1024,7 +1024,7 @@ async function runAPI() {
             <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
         <div class="scanner-log-panel" id="scannerLogs">
-            <div class="scanner-log-line">> Establishing server handshake handshake...</div>
+            <div class="scanner-log-line">> Establishing server handshake configurations...</div>
         </div>
     </div>`;
 
@@ -1063,7 +1063,6 @@ async function runAPI() {
     }, 120);
 
     try {
-        // Automatically injects version parameter from local storage state
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}&version=${releaseVersion}`;
         const res = await fetch(endpoint);
         const data = await res.json();
@@ -1379,7 +1378,7 @@ function performSearch() {
                 const url = row.getAttribute("data-url") || "";
                 const hrefElement = row.querySelector(".url-href");
                 
-                if (hrefElement) {  // Strict null safety checking
+                if (hrefElement) {  // Strict safety guards
                     if (!query) {
                         row.style.display = "flex";
                         hrefElement.innerHTML = escapeHtml(url);
@@ -1417,7 +1416,7 @@ function performSearch() {
             const text = row.getAttribute("data-text") || "";
             const textElement = row.querySelector(".decoded-text");
             
-            if (textElement) {  // Strict null safety checking
+            if (textElement) {  // Strict safety guards
                 if (!query) {
                     row.style.display = "block";
                     textElement.innerHTML = escapeHtml(text);
