@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, Response
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 import gzip
+import zlib
 import binascii
 import json
 import time
@@ -11,43 +12,85 @@ from urllib.parse import urlparse
 
 app = Flask(__name__)
 
-# Regional credentials
-UID_PASSWORDS = {
-    "ind": {"uid": "4258906717", "password": "RockingGamerz65-1WDTR63DX"},
-    "mea": {"uid": "4103849657", "password": "EF315D040E99F9B63D79C7AEE6DC697F297D298EF384BAA4E50E003DB56514C4"},
-    "id": {"uid": "4109659017", "password": "7CE44389FE7D03FF892E682D00C5BE586B12789019CCCB466080CED41806DBAB"},
-    "cis": {"uid": "3301239795", "password": "DD40EE772FCBD61409BB15033E3DE1B1C54EDA83B75DF0CDD24C34C7C8798475"},
-    "br": {"uid": "4113330289", "password": "FA684A835410A8AFFE785552154AD87A4CB928C03D8870DEE37AB7C019B2D162"},
-    "latam": {"uid": "4113343938", "password": "F7F739FCFB96A09B019D87C6B45174B76FAE406A4CD7A785F187E46C7F7A71FF"},
-    "vn": {"uid": "4113363250", "password": "47269BFC4695E93FFABA1AA426847669D12AF36F6B7FCA52BF660459EE2B4092"},
-    "tw": {"uid": "4113375272", "password": "6AB01F7FB110A4C9EB95DBA21BD0E63E622DF8E566157811910F81E54394A17D"},
-    "th": {"uid": "4113415247", "password": "2542DD73DD60B33E183C6A894F9F6A2FC7DAEC457B826C71D44BFD4470788BBB"},
-    "sg": {"uid": "4139211052", "password": "3BA22FEF36B7118B9FB1E1EB3E5A6DD84BDE696BD66B494269496E9834F00F3B"},
-    "eu": {"uid": "4139177376", "password": "E29B0A5C48E8B426BE3E9D977927606842310E2F14EB108F2B5D7F73D9C4B105"},
-    "na": {"uid": "4139196327", "password": "FA680B796474B22907BFD3DF2AFA29577FA43C5B2068417AA24453F25212B854"},
-    "pk": {"uid": "4139224003", "password": "1812098F2587DCAEF5CC21EAD93FAA751D212CD81C586CFD4B4F48C1B49D2A88"},
-    "bd": {"uid": "4139230703", "password": "6C2D5409593C61CFD31CDA18146054D05E72F261F24343CDEA75AEF38ADF5C95"}
+VERSION_API = "https://ff-version.vercel.app/update"
+DECODER_API = "https://protobuf-decoder-seven.vercel.app/decode"
+JWT_API = "https://macxjwt.vercel.app/get_jwt_token"
+
+# Regional credentials and client routing
+REGIONS = {
+    "ind": {
+        "client": "https://client.ind.freefiremobile.com",
+        "uid": "4258906717",
+        "password": "RockingGamerz65-1WDTR63DX"
+    },
+    "br": {
+        "client": "https://client.us.freefiremobile.com",
+        "uid": "4113330289",
+        "password": "FA684A835410A8AFFE785552154AD87A4CB928C03D8870DEE37AB7C019B2D162"
+    },
+    "na": {
+        "client": "https://client.us.freefiremobile.com",
+        "uid": "4139196327",
+        "password": "FA680B796474B22907BFD3DF2AFA29577FA43C5B2068417AA24453F25212B854"
+    },
+    "sac": {
+        "client": "https://client.us.freefiremobile.com",
+        "uid": "4113343938",
+        "password": "F7F739FCFB96A09B019D87C6B45174B76FAE406A4CD7A785F187E46C7F7A71FF"
+    },
+    "mea": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4103849657",
+        "password": "EF315D040E99F9B63D79C7AEE6DC697F297D298EF384BAA4E50E003DB56514C4"
+    },
+    "vn": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "3688702515",
+        "password": "18E3450FC131F6414A775896EDA8075A37818FEFEE7A795ED4BC7764346A5EEF"
+    },
+    "bd": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4139230703",
+        "password": "6C2D5409593C61CFD31CDA18146054D05E72F261F24343CDEA75AEF38ADF5C95"
+    },
+    "pk": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4139224003",
+        "password": "1812098F2587DCAEF5CC21EAD93FAA751D212CD81C586CFD4B4F48C1B49D2A88"
+    },
+    "sg": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4139211052",
+        "password": "3BA22FEF36B7118B9FB1E1EB3E5A6DD84BDE696BD66B494269496E9834F00F3B"
+    },
+    "id": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4109659017",
+        "password": "7CE44389FE7D03FF892E682D00C5BE586B12789019CCCB466080CED41806DBAB"
+    },
+    "cis": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "3301239795",
+        "password": "DD40EE772FCBD61409BB15033E3DE1B1C54EDA83B75DF0CDD24C34C7C8798475"
+    },
+    "th": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4113415247",
+        "password": "2542DD73DD60B33E183C6A894F9F6A2FC7DAEC457B826C71D44BFD4470788BBB"
+    },
+    "tw": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4113375272",
+        "password": "6AB01F7FB110A4C9EB95DBA21BD0E63E622DF8E566157811910F81E54394A17D"
+    },
+    "eu": {
+        "client": "https://clientbp.ggpolarbear.com",
+        "uid": "4139177376",
+        "password": "E29B0A5C48E8B426BE3E9D977927606842310E2F14EB108F2B5D7F73D9C4B105"
+    }
 }
 
-# Regional API entry-points
-API_DOMAINS = {
-    "ind": "https://client.ind.freefiremobile.com/",
-    "mea": "https://clientbp.ggpolarbear.com/",
-    "id": "https://clientbp.ggpolarbear.com/",
-    "cis": "https://clientbp.ggpolarbear.com/",
-    "br": "https://client.us.freefiremobile.com/",
-    "latam": "https://client.us.freefiremobile.com/",
-    "vn": "https://clientbp.ggpolarbear.com/",
-    "tw": "https://clientbp.ggpolarbear.com/",
-    "th": "https://clientbp.ggpolarbear.com/",
-    "sg": "https://clientbp.ggpolarbear.com/",
-    "eu": "https://clientbp.ggpolarbear.com/",
-    "na": "https://client.us.freefiremobile.com/",
-    "pk": "https://clientbp.ggpolarbear.com/",
-    "bd": "https://clientbp.ggpolarbear.com/"
-}
-
-# Explicit mapped endpoint hex payloads
+# Payload dictionary mapping matching endpoint configurations
 ENDPOINT_HEX_PAYLOADS = {
     "LoginGetDesc": "19d87e64f15e9db87392bc99506f0b94",
     "LoginGetAccountInfo": "701ab6a8dcd2e32bde5efd87d0da7545",
@@ -58,9 +101,10 @@ ENDPOINT_HEX_PAYLOADS = {
     "GetCollabDesc": "1a725b2c56ec52ba7d09623454c0a003"
 }
 
-server_tokens = {key: None for key in UID_PASSWORDS.keys()}
+# Global Token Cache
+server_tokens = {key: None for key in REGIONS.keys()}
 
-# Expiring version cache
+# Expiring dynamic release version cache
 VERSION_CACHE = {
     "version": None,
     "last_fetched": 0
@@ -72,17 +116,31 @@ VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ]
 
-# Set up an HTTP session with connection pooling and automated retry capabilities
+# Set up an HTTP session with connection pooling and robust retry strategies
 http_session = requests.Session()
-retries = Retry(
-    total=3,
-    backoff_factor=0.3,
-    status_forcelist=[500, 502, 503, 504],
-    raise_on_status=False
+retry_strategy = Retry(
+    total=5,
+    backoff_factor=1,
+    status_forcelist=[429, 500, 502, 503, 504],
+    allowed_methods=["GET", "POST"]
 )
-adapter = HTTPAdapter(max_retries=retries)
-http_session.mount("https://", adapter)
+adapter = HTTPAdapter(
+    max_retries=retry_strategy,
+    pool_connections=100,
+    pool_maxsize=100
+)
 http_session.mount("http://", adapter)
+http_session.mount("https://", adapter)
+
+BASE_HEADERS = {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "User-Agent": "UnityPlayer/2022.3.47f1 (UnityWebRequest/1.0, libcurl/8.5.0-DEV)",
+    "X-GA": "v1 1",
+    "X-Unity-Version": "2022.3.47f1"
+}
 
 
 @app.route("/")
@@ -90,19 +148,35 @@ def home():
     return render_template("ui.html")
 
 
+def decompress_data(data):
+    try:
+        return gzip.decompress(data)
+    except:
+        pass
+    try:
+        return zlib.decompress(data)
+    except:
+        pass
+    try:
+        return zlib.decompress(data, -zlib.MAX_WBITS)
+    except:
+        pass
+    return data
+
+
 def get_release_version():
     current_time = time.time()
-    # Cache version for 1 hour to prevent API throttling
+    # Cache version configuration dynamically for up to 1 hour
     if VERSION_CACHE["version"] and (current_time - VERSION_CACHE["last_fetched"] < 3600):
         return VERSION_CACHE["version"]
     try:
-        r = http_session.get("https://ff-version.vercel.app/update", timeout=10)
-        if r.status_code == 200:
-            version = r.json().get("latest_release_version")
-            if version:
-                VERSION_CACHE["version"] = version
-                VERSION_CACHE["last_fetched"] = current_time
-                return version
+        response = http_session.get(VERSION_API, timeout=15)
+        response.raise_for_status()
+        version = response.json().get("latest_release_version")
+        if version:
+            VERSION_CACHE["version"] = version
+            VERSION_CACHE["last_fetched"] = current_time
+            return version
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
         
@@ -111,48 +185,61 @@ def get_release_version():
     return "OB53"
 
 
+# Pre-fetch dynamic version on startup loading
+try:
+    initial_version = get_release_version()
+    print(f"[*] Pre-fetched dynamic game version loaded: {initial_version}")
+except Exception as startup_err:
+    print(f"[!] Initial version fetch failed, will fetch on demand: {startup_err}")
+
+
 def get_payload_for_endpoint(endpoint_name):
     if not endpoint_name:
         return "8533b7e1d34a5dfd9a830ee5cc36664e"
-        
     clean_name = endpoint_name.strip()
     for endpoint, hex_val in ENDPOINT_HEX_PAYLOADS.items():
         if endpoint.lower() == clean_name.lower():
             return hex_val.replace(" ", "").lower()
-            
     return "8533b7e1d34a5dfd9a830ee5cc36664e"
 
 
-def get_token(server):
-    if server_tokens[server]:
-        return server_tokens[server]
-
+def decode_protobuf(raw_hex):
     try:
-        uid = UID_PASSWORDS[server]["uid"]
-        password = UID_PASSWORDS[server]["password"]
-        version = get_release_version()
-
-        token_url = f"https://macxjwt.vercel.app/get_jwt_token?uid={uid}&password={password}&version={version}"
-
-        response = http_session.get(
-            token_url,
-            timeout=15,
-            headers={
-                "User-Agent": "Mozilla/5.0",
-                "Accept": "*/*"
-            }
+        decoder_response = http_session.post(
+            DECODER_API,
+            json={"data": raw_hex},
+            timeout=30
         )
-
-        if response.status_code == 200:
-            token_res = response.json()
-            token = token_res.get("token")
-            if token:
-                server_tokens[server] = token
-                return token
-
+        decoder_response.raise_for_status()
+        decoder_json = decoder_response.json()
+        protobuf = decoder_json.get("protobuf", {})
+        if isinstance(protobuf, str):
+            try:
+                protobuf = json.loads(protobuf)
+            except:
+                protobuf = {}
+        if not isinstance(protobuf, dict):
+            protobuf = {}
+        return protobuf
     except Exception as e:
-        print("Token extraction failed:", e)
+        print("Protobuf decoder lookup failed:", e)
+        return {}
 
+
+def get_token(region_data, release_version):
+    for _ in range(3):
+        try:
+            jwt_response = http_session.get(
+                f"{JWT_API}?uid={region_data['uid']}&password={region_data['password']}&version={release_version}",
+                timeout=20
+            )
+            jwt_response.raise_for_status()
+            jwt_json = jwt_response.json()
+            token = jwt_json.get("token")
+            if token:
+                return token
+        except:
+            pass
     return None
 
 
@@ -162,13 +249,13 @@ def run_script():
         server = request.args.get("server")
         api_name = request.args.get("name")
 
-        if server not in UID_PASSWORDS:
-            return jsonify({"error": "Invalid server selection"})
+        if not server or server not in REGIONS:
+            return jsonify({"error": "Invalid region server selection"})
 
         if not api_name:
-            return jsonify({"error": "Missing target API name parameter"})
+            return jsonify({"error": "Missing API name parameter"})
 
-        # Normalize relative path vs absolute URLs
+        # Route extraction for relative vs absolute queries
         if "://" in api_name:
             api_path = urlparse(api_name).path.lstrip("/")
         else:
@@ -178,24 +265,22 @@ def run_script():
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
         release_version = get_release_version()
-        token = get_token(server)
+        region_data = REGIONS[server]
 
+        # Token handling logic
+        token = server_tokens[server]
         if not token:
-            return jsonify({"error": f"Failed to acquire security token for {server.upper()}"})
+            token = get_token(region_data, release_version)
+            if not token:
+                return jsonify({"error": f"Failed to acquire authorization token for {server.upper()}"})
+            server_tokens[server] = token
 
-        headers = {
-            "Accept": "*/*",
-            "Accept-Encoding": "deflate, gzip",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "ReleaseVersion": release_version,
-            "User-Agent": "UnityPlayer/2022.3.47f1",
-            "X-GA": "v1 1",
-            "X-Unity-Version": "2022.3.47f1",
-            "Authorization": f"Bearer {token}"
-        }
+        headers = BASE_HEADERS.copy()
+        headers["Authorization"] = f"Bearer {token}"
+        headers["ReleaseVersion"] = release_version
 
         binary_payload = binascii.unhexlify(payload_hex)
-        url = API_DOMAINS[server].rstrip("/") + "/" + api_path
+        url = region_data["client"].rstrip("/") + "/" + api_path
 
         try:
             response = http_session.post(
@@ -209,14 +294,12 @@ def run_script():
         except requests.exceptions.ConnectionError as ce:
             return jsonify({"error": f"Connection error communicating with {server.upper()}: {str(ce)}"})
 
-        # Handle token expiration on 401
+        # Handle token expiration (401 status)
         if response.status_code == 401:
-            server_tokens[server] = None
-            token = get_token(server)
-
+            token = get_token(region_data, release_version)
             if not token:
-                return jsonify({"error": f"Token refresh failure on region {server.upper()}"})
-
+                return jsonify({"error": f"Token verification refresh failure on {server.upper()}"})
+            server_tokens[server] = token
             headers["Authorization"] = f"Bearer {token}"
 
             try:
@@ -232,37 +315,21 @@ def run_script():
                 return jsonify({"error": f"Connection retry error: {str(ce)}"})
 
         response.raise_for_status()
-        content = response.content
+        
+        # Exact decompression procedure
+        raw_data = decompress_data(response.content)
+        if not raw_data:
+            return jsonify({"error": "Received empty decompressed data from Garena server"})
 
-        try:
-            if content[:2] == b'\x1f\x8b':
-                content = gzip.decompress(content)
-        except Exception:
-            pass
+        raw_hex = raw_data.hex()
+        decoded_raw_text = raw_data.decode("utf-8", errors="ignore")
 
-        decoded = content.decode("utf-8", errors="ignore")
+        # Decode via Protobuf API as specified
+        protobuf_data = decode_protobuf(raw_hex)
 
-        # Extraction waterfall:
         extracted_strings = set()
 
-        # Phase 1: Try Protobuf decoder
-        protobuf_data = {}
-        try:
-            dec_res = http_session.post(
-                "https://protobuf-decoder-seven.vercel.app/decode",
-                json={"data": content.hex()},
-                timeout=12
-            )
-            if dec_res.status_code == 200:
-                protobuf_data = dec_res.json().get("protobuf", {})
-                if isinstance(protobuf_data, str):
-                    try:
-                        protobuf_data = json.loads(protobuf_data)
-                    except Exception:
-                        protobuf_data = {}
-        except Exception as e:
-            print("External Protobuf parsing bypass:", e)
-
+        # Step 1: Recursive extraction from JSON-based structures
         def extract_strings_from_protobuf(data):
             if isinstance(data, dict):
                 for val in data.values():
@@ -275,30 +342,12 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
-        # Phase 2: Handle fallback if JSON data is sent as clean text instead of binary protobuf
-        try:
-            raw_json = json.loads(decoded)
-            def extract_from_json(obj):
-                if isinstance(obj, dict):
-                    for k, v in obj.items():
-                        if isinstance(k, str):
-                            extracted_strings.add(k)
-                        extract_from_json(v)
-                elif isinstance(obj, list):
-                    for item in obj:
-                        extract_from_json(item)
-                elif isinstance(obj, str):
-                    extracted_strings.add(obj)
-            extract_from_json(raw_json)
-        except Exception:
-            pass
-
-        # Phase 3: Fallback Unix 'strings' implementation on decrypted binary stream
+        # Step 2: Fallback Unix-style strings extraction on raw decompressed bytes
         def extract_ascii_strings(binary_data, min_len=4):
             result = []
             current = []
             for byte in binary_data:
-                if 32 <= byte <= 126:  # Printable range
+                if 32 <= byte <= 126:
                     current.append(chr(byte))
                 else:
                     if len(current) >= min_len:
@@ -308,36 +357,33 @@ def run_script():
                 result.append("".join(current))
             return result
 
-        for s in extract_ascii_strings(content):
-            cleaned = s.strip()
-            # Clean off basic system structural junk characters
+        for ascii_str in extract_ascii_strings(raw_data):
+            cleaned = ascii_str.strip()
             if len(cleaned) >= 4 and not cleaned.startswith(("%%", "##", "$$")):
                 extracted_strings.add(cleaned)
 
-        # Phase 4: Fallback regex patterns directly matching potential relative asset folders or URLs
+        # Step 3: Fallback Regex scanning for nested URL/asset structures
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)[\w\-_/]*)',
-            decoded,
+            decoded_raw_text,
             re.IGNORECASE
         )
         for path in found_paths:
             extracted_strings.add(path)
 
-        # Final sorting and isolation of URLs
+        # Finalize and isolate legitimate URLs
         urls = set()
         for val in extracted_strings:
             val = val.strip()
             if not val:
                 continue
-
             val_lower = val.lower()
 
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # Check valid extensions or directories
-            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")) or ("local/" in val_lower):
+            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")) or ("local/" in val_lower) or ("test/" in val_lower):
                 urls.add(val)
                 continue
 
@@ -356,7 +402,7 @@ def run_script():
             "raw_count": len(urls_list),
             "strings": sorted(list(extracted_strings)),
             "urls": urls_list,
-            "raw_response": decoded
+            "raw_response": decoded_raw_text
         })
 
     except Exception as e:
