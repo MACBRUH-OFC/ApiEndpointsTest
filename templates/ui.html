@@ -14,18 +14,18 @@
 }
 
 :root {
-    --amber: #ffb700;
-    --amber-glow: rgba(255, 183, 0, 0.25);
-    --bg: #030305;
-    --panel: #07070b;
-    --card: #0c0c14;
-    --border: #131320;
-    --border-glow: rgba(255, 183, 0, 0.1);
-    --border-hover: #212133;
-    --text: #e2e8f0;
-    --muted: #4e5d73;
-    --success: #00ff88;
-    --error: #ff3344;
+    --yellow: #ffde00;
+    --bg: #030303;
+    --panel: #0a0a0a;
+    --card: #0f0f0f;
+    --border: #161616;
+    --border-hover: #262626;
+    --text: #e0e0e0;
+    --muted: #606060;
+    
+    --match-bg: #ffd000;
+    --match-text: #000000;
+    --match-active: #ff5e00;
 }
 
 * {
@@ -36,34 +36,25 @@
 
 body {
     background-color: var(--bg);
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(255, 183, 0, 0.04) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%),
-        linear-gradient(rgba(18, 18, 24, 0.3) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(18, 18, 24, 0.3) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     letter-spacing: -0.2px;
-    padding-bottom: 50px;
 }
 
-/* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #040406;
+    background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #171724;
-    border-radius: 10px;
+    background: #1c1c1c;
+    border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--amber);
-    box-shadow: 0 0 10px var(--amber);
+    background: var(--yellow);
 }
 
 .wrapper {
@@ -73,14 +64,13 @@ body {
     padding: 40px 24px;
 }
 
-/* Header Grid UI */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 35px;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
 }
 
 .brand-group {
@@ -90,86 +80,69 @@ header {
 }
 
 .brand-logo {
-    height: 28px;
+    height: 24px;
     object-fit: contain;
-    filter: drop-shadow(0 0 12px rgba(255,183,0,0.2));
 }
 
 .badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    background: var(--card);
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     color: var(--muted);
 }
 
 .dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: var(--amber);
-    box-shadow: 0 0 10px var(--amber);
-    animation: pulseGlow 1.8s infinite alternate;
+    background: var(--yellow);
+    box-shadow: 0 0 8px var(--yellow);
+    animation: pulseGlow 2s infinite alternate;
 }
 
 @keyframes pulseGlow {
-    0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 4px var(--amber); }
-    100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px var(--amber); }
+    0% { transform: scale(0.9); box-shadow: 0 0 4px var(--yellow); }
+    100% { transform: scale(1.1); box-shadow: 0 0 12px var(--yellow); }
 }
 
 .engine-title {
     font-family: 'GFF', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-style: italic;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #ffffff;
 }
 .engine-title span {
-    color: var(--amber);
-    text-shadow: 0 0 15px var(--amber-glow);
+    color: var(--yellow);
 }
 
-/* Base Component Containers */
 .dashboard-container {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
-    position: relative;
-    overflow: hidden;
-}
-
-.dashboard-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 183, 0, 0.08), transparent);
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .container-title {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--muted);
     letter-spacing: 1.5px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-left: 3px solid var(--amber);
-    padding-left: 10px;
+    border-left: 2px solid var(--yellow);
+    padding-left: 8px;
 }
 
 .clear-history-btn {
@@ -178,48 +151,45 @@ header {
     text-transform: uppercase;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    transition: color 0.15s ease;
+    letter-spacing: 0.5px;
 }
 
 .clear-history-btn:hover {
-    color: var(--error);
+    color: #ff4444;
 }
 
-/* User Input Engine Form */
 .input-row {
     position: relative;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .main-input {
     width: 100%;
-    height: 54px;
+    height: 52px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 8px;
     color: #ffffff;
-    padding: 0 160px 0 18px;
+    padding: 0 140px 0 16px;
     font-size: 14px;
     font-family: monospace;
     outline: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
 }
 
 .main-input:focus {
-    border-color: var(--amber);
-    box-shadow: 0 0 20px rgba(255, 183, 0, 0.12);
+    border-color: var(--yellow);
+    box-shadow: 0 0 14px rgba(255, 222, 0, 0.12);
 }
 
 .run-action-btn {
     position: absolute;
-    right: 8px;
-    top: 8px;
-    height: 38px;
-    padding: 0 24px;
-    background: var(--amber);
+    right: 6px;
+    top: 6px;
+    height: 40px;
+    padding: 0 20px;
+    background: var(--yellow);
     border: none;
     border-radius: 6px;
     color: #000000;
@@ -227,66 +197,54 @@ header {
     font-size: 13px;
     font-weight: 900;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(255, 183, 0, 0.2);
+    transition: background 0.15s ease;
 }
 
 .run-action-btn:hover {
-    background: #e6a400;
-    transform: translateY(-1px);
+    background: #e5c800;
 }
 
-/* Query History Row */
 .history-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
-    min-height: 26px;
 }
 
 .history-pill {
-    padding: 6px 12px;
+    padding: 4px 10px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 11px;
-    color: #a0aec0;
+    color: #a0a0a0;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     font-family: monospace;
 }
 
 .history-pill:hover {
-    border-color: var(--amber);
-    color: var(--amber);
-    background: rgba(255, 183, 0, 0.02);
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255, 222, 0, 0.02);
 }
 
-/* Regional Nodes */
 .server-selector {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 6px;
 }
 
 .srv-chip {
-    height: 36px;
+    height: 34px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--muted);
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    transition: all 0.15s ease;
 }
 
 .srv-chip:hover {
@@ -295,98 +253,80 @@ header {
 }
 
 .srv-chip.active {
-    background: var(--amber);
-    border-color: var(--amber);
+    background: var(--yellow);
+    border-color: var(--yellow);
     color: #000000;
-    box-shadow: 0 4px 15px rgba(255, 183, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 222, 0, 0.25);
 }
 
-/* Perspective view modes */
 .view-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 8px;
 }
 
 .opt-toggle {
-    height: 40px;
+    padding: 8px 16px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 11px;
     font-weight: 700;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .opt-toggle:hover {
     border-color: var(--border-hover);
-    color: #ffffff;
 }
 
 .opt-toggle.active {
-    border-color: var(--amber);
-    color: var(--amber);
-    background: rgba(255, 183, 0, 0.02);
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255, 222, 0, 0.02);
 }
 
-/* Output metrics cards */
 .metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 12px;
 }
 
 .metric-card {
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 20px;
-    position: relative;
-    overflow: hidden;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 2px solid var(--border);
 }
 
-.metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--border);
-}
-
-.metric-card.active-metric::before {
-    background: var(--amber);
+.metric-card.active-metric {
+    border-left: 2px solid var(--yellow);
 }
 
 .metric-card .lbl {
     font-size: 10px;
     text-transform: uppercase;
     color: var(--muted);
-    letter-spacing: 0.8px;
-    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
 .metric-card .val {
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 700;
     font-family: monospace;
-    color: #ffffff;
 }
 
-/* Output deck toolbar */
 .control-deck {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .search-wrapper {
@@ -395,10 +335,9 @@ header {
     align-items: center;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0 14px;
-    height: 40px;
-    gap: 10px;
+    border-radius: 6px;
+    padding: 0 12px;
+    height: 38px;
 }
 
 .search-wrapper:focus-within {
@@ -412,7 +351,6 @@ header {
     outline: none;
     color: #ffffff;
     font-size: 13px;
-    font-family: monospace;
 }
 
 .search-counter {
@@ -420,61 +358,57 @@ header {
     color: var(--muted);
     font-family: monospace;
     white-space: nowrap;
-    background: var(--card);
-    padding: 3px 6px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
+    margin-right: 8px;
 }
 
 .search-nav {
     display: flex;
-    gap: 4px;
+    gap: 2px;
 }
 
 .search-step-btn {
-    width: 26px;
-    height: 26px;
-    background: var(--card);
-    border: 1px solid var(--border);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
     color: var(--muted);
     cursor: pointer;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    transition: all 0.2s ease;
+    font-size: 11px;
 }
 
 .search-step-btn:hover:not(:disabled) {
     color: #fff;
-    border-color: var(--border-hover);
+    background: var(--card);
 }
 
 .search-step-btn:disabled {
-    opacity: 0.15;
+    opacity: 0.2;
     cursor: not-allowed;
 }
 
 .utility-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .util-btn {
-    height: 40px;
-    padding: 0 16px;
+    height: 38px;
+    padding: 0 14px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    color: #a0aec0;
+    border-radius: 6px;
+    color: #a0a0a0;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
+    gap: 6px;
+    transition: all 0.15s ease;
 }
 
 .util-btn:hover {
@@ -482,31 +416,23 @@ header {
     color: #ffffff;
 }
 
-.util-btn svg {
-    width: 14px;
-    height: 14px;
-    color: var(--muted);
-}
-
-/* Console Display monitor */
 .console-monitor {
     width: 100%;
     height: 500px;
     background: #000000;
-    background-image: 
-        linear-gradient(rgba(18, 18, 24, 0.45) 50%, rgba(0, 0, 0, 0.45) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.005), rgba(0, 255, 0, 0.003), rgba(0, 0, 255, 0.005));
+    background-image: linear-gradient(rgba(10, 10, 10, 0.45) 50%, rgba(0, 0, 0, 0.45) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
     background-size: 100% 4px, 6px 100%;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 8px;
+    padding: 0;
     overflow: auto;
-    color: #a0aec0;
+    color: #bbbbbb;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Group sections on Links Only */
 .group-block {
-    border-bottom: 1px solid #0d0d14;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #141414;
 }
 
 .group-block:last-child {
@@ -517,10 +443,10 @@ header {
     font-family: 'GFF', sans-serif;
     font-size: 11px;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--yellow);
     letter-spacing: 1px;
-    padding: 12px 18px;
-    background: #040407;
+    padding: 12px 14px;
+    background: #060606;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -533,7 +459,7 @@ header {
 .group-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .group-copy-btn {
@@ -544,44 +470,41 @@ header {
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.15s ease;
 }
 
 .group-copy-btn:hover {
-    color: var(--amber);
-    background: rgba(255, 183, 0, 0.05);
+    color: var(--yellow);
+    background: rgba(255, 222, 0, 0.05);
 }
 
 .group-count {
-    background: rgba(255, 183, 0, 0.05);
+    background: rgba(255, 222, 0, 0.08);
     padding: 2px 8px;
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 10px;
-    font-weight: 700;
-    color: var(--amber);
-    border: 1px solid rgba(255, 183, 0, 0.1);
+    color: var(--yellow);
+    border: 1px solid rgba(255, 222, 0, 0.15);
 }
 
-/* Rows styling */
 .url-row {
     display: flex;
     align-items: center;
-    padding: 12px 18px;
-    border-bottom: 1px solid #06060a;
+    padding: 10px 14px;
+    border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #010103;
+    background: #020202;
+    position: relative;
+    cursor: pointer;
     transition: background 0.15s ease;
 }
 
 .url-row:hover {
-    background: #07070c;
+    background: #0a0a0a;
 }
 
 .url-row:last-child {
@@ -589,13 +512,13 @@ header {
 }
 
 .url-href {
-    color: #4ea2ff;
+    color: #58a6ff;
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color 0.1s ease;
 }
 
 .url-href:hover {
-    color: #82bdff;
+    color: #79b8ff;
     text-decoration: underline;
 }
 
@@ -603,8 +526,8 @@ header {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-left: 16px;
+    gap: 8px;
+    padding-left: 12px;
     flex-shrink: 0;
 }
 
@@ -613,18 +536,17 @@ header {
     height: 14px;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.15s ease, transform 0.1s ease;
 }
 
 .copy-svg-icon:hover {
-    color: var(--amber);
+    color: var(--yellow);
     transform: scale(1.1);
 }
 
-/* Multimedia previews */
 .media-preview-container {
     flex-shrink: 0;
-    margin-right: 14px;
+    margin-right: 12px;
     width: 44px;
     height: 44px;
     background: #000000;
@@ -642,7 +564,7 @@ header {
     object-fit: contain;
     cursor: pointer;
     display: block;
-    transition: filter 0.2s ease;
+    transition: filter 0.15s ease;
 }
 
 .img-preview-thumb:hover, .video-preview-thumb:hover {
@@ -651,78 +573,72 @@ header {
 
 .audio-preview-player {
     height: 28px;
-    width: 150px;
-    border-radius: 5px;
+    width: 140px;
+    border-radius: 4px;
     background: #000000;
 }
 
-/* Decoded Row elements */
 .decoded-row {
-    padding: 12px 18px;
-    border-bottom: 1px solid #06060a;
+    padding: 8px 14px;
+    border-bottom: 1px solid #141414;
     font-family: monospace;
     font-size: 13px;
-    color: var(--text);
+    color: #bbbbbb;
     word-break: break-all;
-    background: #010103;
 }
 
 .decoded-row:last-child {
     border-bottom: none;
 }
 
-/* Highlights */
 mark.search-match {
-    background-color: var(--amber);
-    color: #000000;
+    background-color: var(--match-bg);
+    color: var(--match-text);
     border-radius: 1px;
-    padding: 0 1px;
 }
 
 mark.search-match.match-active {
-    background-color: #ff5500;
+    background-color: var(--match-active);
     color: #ffffff;
 }
 
-/* Custom terminal execution visuals */
 .scanner-loader {
-    padding: 50px 30px;
+    padding: 30px;
     text-align: center;
     font-family: monospace;
 }
 
 .scanner-text {
     font-size: 13px;
-    font-weight: 700;
     letter-spacing: 1px;
-    color: var(--amber);
-    margin-bottom: 20px;
-    animation: pulseBlink 1.2s infinite alternate;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    animation: pulseBlink 1.5s infinite alternate;
 }
 
 @keyframes pulseBlink {
-    0% { opacity: 0.5; }
+    0% { opacity: 0.6; }
     100% { opacity: 1; }
 }
 
 .scanner-bar-container {
     width: 100%;
-    max-width: 350px;
+    max-width: 320px;
     height: 8px;
-    background: #08080c;
+    background: #111111;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 4px;
     margin: 0 auto;
     overflow: hidden;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .scanner-bar-fill {
     width: 0%;
     height: 100%;
-    background: var(--amber);
-    box-shadow: 0 0 10px var(--amber);
+    background: var(--yellow);
+    box-shadow: 0 0 10px var(--yellow);
     transition: width 0.1s linear;
 }
 
@@ -730,19 +646,19 @@ mark.search-match.match-active {
     text-align: left;
     margin: 0 auto;
     width: 100%;
-    max-width: 480px;
-    font-size: 12px;
+    max-width: 450px;
+    font-size: 11px;
     color: var(--muted);
     border: 1px solid var(--border);
-    background: #020204;
-    padding: 16px;
-    border-radius: 8px;
-    height: 130px;
+    background: #030303;
+    padding: 12px;
+    border-radius: 6px;
+    height: 120px;
     overflow: hidden;
 }
 
 .scanner-log-line {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     animation: slideInUp 0.15s ease-out;
 }
 
@@ -751,7 +667,6 @@ mark.search-match.match-active {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Modal and notifications */
 .lightbox-overlay {
     position: fixed;
     top: 0;
@@ -773,11 +688,12 @@ mark.search-match.match-active {
 
 .lightbox-content img {
     max-width: 100%;
-    max-height: 85vh;
+    max-height: 90vh;
     object-fit: contain;
     border: 1px solid var(--border);
     border-radius: 8px;
     background: #000000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
 .lightbox-close {
@@ -789,20 +705,25 @@ mark.search-match.match-active {
     color: #ffffff;
     font-size: 24px;
     cursor: pointer;
+    transition: color 0.1s ease;
+}
+
+.lightbox-close:hover {
+    color: var(--yellow);
 }
 
 .toast {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 20px;
+    right: 20px;
     background: #ffffff;
     color: #000000;
-    padding: 12px 20px;
+    padding: 10px 18px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 700;
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(10px);
     transition: all 0.2s ease;
     z-index: 1000;
     pointer-events: none;
@@ -814,10 +735,10 @@ mark.search-match.match-active {
 }
 
 @media (max-width: 768px) {
-    header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .control-deck { flex-direction: column; align-items: stretch; gap: 10px; }
+    header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .control-deck { flex-direction: column; align-items: stretch; gap: 8px; }
     .server-selector { grid-template-columns: repeat(4, 1fr); }
-    .metrics-row { grid-template-columns: 1fr; gap: 10px; }
+    .metrics-row { grid-template-columns: 1fr; gap: 8px; }
 }
 </style>
 </head>
@@ -825,36 +746,33 @@ mark.search-match.match-active {
 
 <div class="wrapper">
 
-    <!-- Header block -->
+    <!-- Header Block -->
     <header>
         <div class="brand-group">
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
             <div class="badge">
                 <div class="dot"></div>
-                <span id="activeVersionLabel">LOAD IN PROGRESS...</span>
+                <span>LIVE RESPONDER</span>
             </div>
         </div>
         <div class="engine-title">API <span>TOOL</span></div>
     </header>
 
-    <!-- Form Targets container -->
+    <!-- Pipeline targets -->
     <div class="dashboard-container">
         <div class="container-title">
             <span>Target Pipeline Input</span>
             <span class="clear-history-btn" onclick="clearHistory()">Clear History</span>
         </div>
         <div class="input-row">
-            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)..." onkeydown="if(event.key === 'Enter') runAPI()">
-            <button class="run-action-btn" onclick="runAPI()">
-                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                SCAN ENGINE
-            </button>
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
+            <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
         <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- Cluster Region configuration -->
+    <!-- Cluster Nodes -->
     <div class="dashboard-container">
         <div class="container-title">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
@@ -863,7 +781,7 @@ mark.search-match.match-active {
             <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
             <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
             <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
-            <button class="srv-chip" onclick="setServer(this,'sac')">SAC</button>
+            <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
             <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
             <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
             <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
@@ -875,7 +793,7 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Perspectives modes toggles -->
+    <!-- Output views -->
     <div class="dashboard-container">
         <div class="container-title">Output Perspective View</div>
         <div class="view-options">
@@ -894,31 +812,31 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Metrics Cards container -->
+    <!-- Operational Metrics -->
     <div class="dashboard-container">
         <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
-            <div class="metric-card active-metric">
+            <div class="metric-card active-metric" id="card-strings">
                 <div class="lbl">Total Extracted Strings</div>
                 <div class="val" id="stringCount">0</div>
             </div>
-            <div class="metric-card active-metric">
+            <div class="metric-card active-metric" id="card-links">
                 <div class="lbl">Discovered Links</div>
                 <div class="val" id="linkCount">0</div>
             </div>
-            <div class="metric-card active-metric">
+            <div class="metric-card active-metric" id="card-status">
                 <div class="lbl">Engine Status</div>
                 <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
     </div>
 
-    <!-- Output window monitor -->
+    <!-- Output Terminal Console Wrapper -->
     <div class="dashboard-container">
         <div class="container-title">Console Output Monitor</div>
         <div class="control-deck">
             <div class="search-wrapper">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 8px; color: var(--muted);"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
                 <span class="search-counter" id="searchCount">0/0</span>
                 <div class="search-nav">
@@ -929,15 +847,15 @@ mark.search-match.match-active {
             
             <div class="utility-actions">
                 <button class="util-btn" onclick="copyOutput()">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
                     Copy
                 </button>
                 <button class="util-btn" onclick="downloadOutput()">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Download
                 </button>
                 <button class="util-btn" onclick="clearOutput()">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     Reset
                 </button>
             </div>
@@ -947,6 +865,7 @@ mark.search-match.match-active {
     </div>
 </div>
 
+<!-- Lightbox Modal -->
 <div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
     <div class="lightbox-content" onclick="event.stopPropagation()">
         <img id="lightboxImage" src="" alt="Preview">
@@ -958,7 +877,7 @@ mark.search-match.match-active {
 
 <script>
 let selectedServer = "ind";
-let viewMode = "links"; 
+let viewMode = "links";
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -976,29 +895,9 @@ const VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ];
 
-// Execute dynamic parameters initialization on launch
 document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
-    initializeVersion();
 });
-
-async function initializeVersion() {
-    try {
-        const res = await fetch("/get_version");
-        const data = await res.json();
-        const lbl = document.getElementById("activeVersionLabel");
-        if (lbl) {
-            if (data.success && data.version) {
-                lbl.innerText = `ENGINE ONLINE: ${data.version}`;
-            } else {
-                lbl.innerText = "ENGINE ONLINE: OB53 (FALLBACK)";
-            }
-        }
-    } catch(e) {
-        const lbl = document.getElementById("activeVersionLabel");
-        if (lbl) lbl.innerText = "CONNECTION RUNTIME FAULT";
-    }
-}
 
 function setServer(btn, server) {
     selectedServer = server;
@@ -1009,8 +908,8 @@ function setServer(btn, server) {
 function setViewMode(mode) {
     viewMode = mode;
     document.querySelectorAll(".opt-toggle").forEach(b => b.classList.remove("active"));
-    const activeBtn = document.getElementById(`btn-${mode}`);
-    if (activeBtn) activeBtn.classList.add("active");
+    const targetBtn = document.getElementById(`btn-${mode}`);
+    if (targetBtn) targetBtn.classList.add("active");
     if (apiCachedData) {
         renderOutput(apiCachedData);
     }
@@ -1050,7 +949,7 @@ function clearHistory() {
     queryHistory = [];
     localStorage.removeItem("ff_query_history");
     updateHistoryUI();
-    displayToast("History flushed");
+    displayToast("Cache flushed");
 }
 
 function updateStatusUI(status, hexColor) {
@@ -1099,7 +998,7 @@ function processHtmlUrl(val, isExplicitUrl = false) {
         return { text: val, link: linkUrl };
     }
 
-    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "facebook.com", "x.com", "linktr.ee"];
+    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
     if (social_domains.some(domain => val_lower.includes(domain))) {
         let linkUrl = val;
         if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
@@ -1136,29 +1035,29 @@ async function runAPI() {
         return;
     }
 
-    updateStatusUI("SCANNING", "var(--amber)");
+    updateStatusUI("SCANNING", "var(--yellow)");
     resetSearchState();
 
     const output = document.getElementById("output");
     if (!output) return;
-
     output.innerHTML = `
     <div class="scanner-loader">
-        <div class="scanner-text" id="scannerStatus">INITIATING DECODER PIPELINE: 0%</div>
+        <div class="scanner-text" id="scannerStatus">INITIATING PIPELINE SCAN: 0%</div>
         <div class="scanner-bar-container">
             <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
         <div class="scanner-log-panel" id="scannerLogs">
-            <div class="scanner-log-line">> Directing request handshake connections...</div>
+            <div class="scanner-log-line">> Establishing tunnel connections...</div>
         </div>
     </div>`;
 
     const logs = [
-        "Connecting dynamic client entry-points...",
-        "Evaluating releaseVersion and authorization status...",
-        "Dispatching request to regional Garena gateways...",
-        "Decompressing Garena server-side binary payload bytes...",
-        "Requesting binary extraction from decoder API endpoint..."
+        "Establishing handshake connections...",
+        "Querying regional configurations...",
+        "Validating regional dynamic schemas...",
+        "Verification sequence authorization...",
+        "Pushing clean response parsing blocks...",
+        "Decompressing payload stream targets..."
     ];
 
     let progress = 0;
@@ -1173,9 +1072,9 @@ async function runAPI() {
             const logBox = document.getElementById("scannerLogs");
             
             if (fill) fill.style.width = `${progress}%`;
-            if (txt) txt.innerText = `SCANNING SYSTEM CHANNELS: ${progress}%`;
+            if (txt) txt.innerText = `SCANNING TARGET PIPELINE: ${progress}%`;
             
-            if (logBox && logIndex < logs.length && progress > (logIndex * 18)) {
+            if (logBox && logIndex < logs.length && progress > (logIndex * 15)) {
                 const line = document.createElement("div");
                 line.className = "scanner-log-line";
                 line.innerText = `> ${logs[logIndex]}`;
@@ -1184,7 +1083,7 @@ async function runAPI() {
                 logIndex++;
             }
         }
-    }, 110);
+    }, 120);
 
     try {
         let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}`;
@@ -1196,22 +1095,21 @@ async function runAPI() {
         const finalFill = document.getElementById("scannerProgress");
         const finalTxt = document.getElementById("scannerStatus");
         if (finalFill) finalFill.style.width = `100%`;
-        if (finalTxt) finalTxt.innerText = `DECODING COMPLETE: 100%`;
+        if (finalTxt) finalTxt.innerText = `PROCESSING RESPONSE PACKETS: 100%`;
 
         setTimeout(() => {
             try {
                 if (data.error) {
-                    updateStatusUI("ERROR", "#ff3344");
-                    output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Engine Fault: ${data.error}</div>`;
+                    updateStatusUI("FAULT", "#ff4444");
+                    output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404; line-height: 1.6;">Engine Fault: ${data.error}</div>`;
                     return;
                 }
 
                 const strCountEl = document.getElementById("stringCount");
-                const linkCountEl = document.getElementById("linkCount");
+                const lnkCountEl = document.getElementById("linkCount");
                 if (strCountEl) strCountEl.innerText = data.count || 0;
-                if (linkCountEl) linkCountEl.innerText = data.raw_count || 0;
-                
-                updateStatusUI("ONLINE", "#00ff88");
+                if (lnkCountEl) lnkCountEl.innerText = data.raw_count || 0;
+                updateStatusUI("ONLINE", "#00ff95");
 
                 currentLinksArray = data.urls || [];
                 apiCachedData = data; 
@@ -1219,15 +1117,15 @@ async function runAPI() {
                 saveToHistory(apiName);
                 renderOutput(data);
             } catch (innerErr) {
-                updateStatusUI("FAULT", "#ff3344");
-                output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Display Render Error: ${innerErr.message}</div>`;
+                updateStatusUI("FAULT", "#ff4444");
+                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404; line-height: 1.6;">Display Render Error: ${innerErr.message}</div>`;
             }
         }, 200);
 
     } catch (err) {
         clearInterval(interval);
-        updateStatusUI("FAULT", "#ff3344");
-        output.innerHTML = `<div style="color:#ff3344; font-family:monospace; padding: 24px; background:#0c0404;">Handshake interface interruption.</div>`;
+        updateStatusUI("FAULT", "#ff4444");
+        output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404; line-height: 1.6;">Connection dropped. Please re-run request.</div>`;
     }
 }
 
@@ -1249,7 +1147,7 @@ function copyCategoryUrls(category) {
     
     const uniqueUrls = [...new Set(urls)];
     navigator.clipboard.writeText(uniqueUrls.join("\n"));
-    displayToast(`Buffered ${uniqueUrls.length} links`);
+    displayToast(`Copied ${uniqueUrls.length} ${category.toUpperCase()} links`);
 }
 
 function openLightbox(src) {
@@ -1295,7 +1193,7 @@ function renderOutput(data) {
         currentLinksArray = processedTuples.map(item => item.link);
 
         if (processedTuples.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No URLs extracted.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No mapped urls or asset paths found in this payload.</div>`;
             lastOutputText = "";
         } else {
             const grouped = { images: [], videos: [], audio: [], other: [] };
@@ -1334,7 +1232,7 @@ function renderOutput(data) {
             if (grouped.videos.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-videos">
                     <div class="group-header">
-                        <span>VIDEOS / MOVIE CLIPS</span>
+                        <span>VIDEOS / CINEMATICS</span>
                         <div class="group-meta">
                             <button class="group-copy-btn" onclick="copyCategoryUrls('videos')">Copy Group</button>
                             <span class="group-count" id="badge-videos">${grouped.videos.length}</span>
@@ -1360,7 +1258,7 @@ function renderOutput(data) {
             if (grouped.audio.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-audio">
                     <div class="group-header">
-                        <span>AUDIO FILES</span>
+                        <span>AUDIO ELEMENTS</span>
                         <div class="group-meta">
                             <button class="group-copy-btn" onclick="copyCategoryUrls('audio')">Copy Group</button>
                             <span class="group-count" id="badge-audio">${grouped.audio.length}</span>
@@ -1386,7 +1284,7 @@ function renderOutput(data) {
             if (grouped.other.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-other">
                     <div class="group-header">
-                        <span>CONFIG / OTHER PATHS</span>
+                        <span>OTHER ENDPOINTS / CONFS</span>
                         <div class="group-meta">
                             <button class="group-copy-btn" onclick="copyCategoryUrls('other')">Copy Group</button>
                             <span class="group-count" id="badge-other">${grouped.other.length}</span>
@@ -1413,7 +1311,7 @@ function renderOutput(data) {
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No decoded values found.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No extracted text or values found.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
@@ -1440,28 +1338,27 @@ function renderOutput(data) {
 
 function copyIndividualText(text) {
     navigator.clipboard.writeText(text);
-    displayToast("URL buffered");
+    displayToast("URL buffered to clipboard");
 }
 
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
-    displayToast("Buffered to Clipboard");
+    displayToast("Console content buffered");
 }
 
 function clearOutput() {
-    const out = document.getElementById("output");
-    if (out) out.innerHTML = "SYSTEM LOG: COLD RESET COMPLETED";
+    const outEl = document.getElementById("output");
+    if (outEl) outEl.innerHTML = "SYSTEM LOG: FLUSH COMPLETED";
     
-    const sC = document.getElementById("stringCount");
-    const lC = document.getElementById("linkCount");
-    if (sC) sC.innerText = "0";
-    if (lC) lC.innerText = "0";
+    const strCountEl = document.getElementById("stringCount");
+    const lnkCountEl = document.getElementById("linkCount");
+    if (strCountEl) strCountEl.innerText = "0";
+    if (lnkCountEl) lnkCountEl.innerText = "0";
     
     const apiField = document.getElementById("apiName");
-    if (apiField) apiField.value = "";
-    
     const searchField = document.getElementById("searchBox");
+    if (apiField) apiField.value = "";
     if (searchField) searchField.value = "";
     
     updateStatusUI("IDLE", "var(--muted)");
@@ -1477,15 +1374,14 @@ function downloadOutput() {
     const blob = new Blob([lastOutputText], { type: "text/plain" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `ff_api_logs_${selectedServer}.json`;
+    a.download = `ff_api_logs_${selectedServer}.log`;
     a.click();
 }
 
 function performSearch() {
-    const sB = document.getElementById("searchBox");
-    if (!sB) return;
-    const query = sB.value.trim().toLowerCase();
-    
+    const searchField = document.getElementById("searchBox");
+    if (!searchField) return;
+    const query = searchField.value.trim().toLowerCase();
     const output = document.getElementById("output");
     if (!output) return;
     
@@ -1502,19 +1398,17 @@ function performSearch() {
                 const url = row.getAttribute("data-url") || "";
                 const hrefElement = row.querySelector(".url-href");
                 
-                if (hrefElement) {
-                    if (!query) {
-                        row.style.display = "flex";
-                        hrefElement.innerHTML = url;
-                        groupVisibleCount++;
-                    } else if (url.toLowerCase().includes(query)) {
-                        row.style.display = "flex";
-                        groupVisibleCount++;
-                        const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                        hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
-                    } else {
-                        row.style.display = "none";
-                    }
+                if (!query) {
+                    row.style.display = "flex";
+                    if (hrefElement) hrefElement.innerHTML = url;
+                    groupVisibleCount++;
+                } else if (url.toLowerCase().includes(query)) {
+                    row.style.display = "flex";
+                    groupVisibleCount++;
+                    const regex = new RegExp(`(${escapePattern(query)})`, "gi");
+                    if (hrefElement) hrefElement.innerHTML = url.replace(regex, `<mark class="search-match">$1</mark>`);
+                } else {
+                    row.style.display = "none";
                 }
             });
             
@@ -1540,19 +1434,17 @@ function performSearch() {
             const text = row.getAttribute("data-text") || "";
             const textElement = row.querySelector(".decoded-text");
             
-            if (textElement) {
-                if (!query) {
-                    row.style.display = "block";
-                    textElement.innerHTML = text;
-                    visibleCount++;
-                } else if (text.toLowerCase().includes(query)) {
-                    row.style.display = "block";
-                    visibleCount++;
-                    const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                    textElement.innerHTML = text.replace(regex, `<mark class="search-match">$1</mark>`);
-                } else {
-                    row.style.display = "none";
-                }
+            if (!query) {
+                row.style.display = "block";
+                if (textElement) textElement.innerHTML = text;
+                visibleCount++;
+            } else if (text.toLowerCase().includes(query)) {
+                row.style.display = "block";
+                visibleCount++;
+                const regex = new RegExp(`(${escapePattern(query)})`, "gi");
+                if (textElement) textElement.innerHTML = text.replace(regex, `<mark class="search-match">$1</mark>`);
+            } else {
+                row.style.display = "none";
             }
         });
         
@@ -1585,18 +1477,17 @@ function updateSearchStats(visibleCount, query) {
     const total = viewMode === "links" ? (currentLinksArray.length) : (apiCachedData ? apiCachedData.strings.length : 0);
     const counterEl = document.getElementById("searchCount");
     if (!counterEl) return;
-
+    
     if (!query) {
         counterEl.innerText = `${total}/${total}`;
         resetSearchState();
     } else {
         const matchLen = searchMatches.length;
         counterEl.innerText = `Filtered: ${visibleCount} | Matches: ${matchLen}`;
+        const state = matchLen === 0;
         
         const prevBtn = document.getElementById("prevSearchBtn");
         const nextBtn = document.getElementById("nextSearchBtn");
-        
-        const state = matchLen === 0;
         if (prevBtn) prevBtn.disabled = state;
         if (nextBtn) nextBtn.disabled = state;
         
@@ -1632,15 +1523,15 @@ function escapePattern(str) {
 }
 
 function updateSearchStatsUI() {
+    const counterEl = document.getElementById("searchCount");
+    if (!counterEl) return;
     const len = searchMatches.length;
     const cur = len > 0 ? currentMatchIndex + 1 : 0;
-    const counterEl = document.getElementById("searchCount");
-    if (counterEl) counterEl.innerText = `${cur}/${len}`;
+    counterEl.innerText = `${cur}/${len}`;
+    const state = len === 0;
     
     const prevBtn = document.getElementById("prevSearchBtn");
     const nextBtn = document.getElementById("nextSearchBtn");
-    const state = len === 0;
-    
     if (prevBtn) prevBtn.disabled = state;
     if (nextBtn) nextBtn.disabled = state;
 }
