@@ -1,12 +1,16 @@
 from flask import Flask, jsonify, request, render_template
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 import gzip
 import binascii
-import re
 import json
+import time
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
+# Regional credentials
 UID_PASSWORDS = {
     "ind": {"uid": "4258906717", "password": "RockingGamerz65-1WDTR63DX"},
     "mea": {"uid": "4103849657", "password": "EF315D040E99F9B63D79C7AEE6DC697F297D298EF384BAA4E50E003DB56514C4"},
@@ -24,6 +28,7 @@ UID_PASSWORDS = {
     "bd": {"uid": "4139230703", "password": "6C2D5409593C61CFD31CDA18146054D05E72F261F24343CDEA75AEF38ADF5C95"}
 }
 
+# Regional domains
 API_DOMAINS = {
     "ind": "https://client.ind.freefiremobile.com/",
     "mea": "https://clientbp.ggpolarbear.com/",
@@ -41,16 +46,42 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-server_tokens = {key: None for key in UID_PASSWORDS.keys()}
-VERSION_CACHE = {"version": None}
+# Endpoint hex payloads mapping (without spaces)
+ENDPOINT_HEX_PAYLOADS = {
+    "LoginGetDesc": "19d87e64f15e9db87392bc99506f0b94",
+    "LoginGetAccountInfo": "701ab6a8dcd2e32bde5efd87d0da7545",
+    "GetMailList": "59f0b3e90a6ff6ffed2f612996c74b04",
+    "GetLimitedEventOpenInfo": "1a725b2c56ec52ba7d09623454c0a003",
+    "GetCustomEventOpenInfo": "9aeaea80bb2ba264078712b7c32a4116",
+    "GetBPAllDescs": "1a725b2c56ec52ba7d09623454c0a003",
+    "GetCollabDesc": "1a725b2c56ec52ba7d09623454c0a003"
+}
 
-BASE_LINK = "https://dl.dir.freefiremobile.com/common/"
+server_tokens = {key: None for key in UID_PASSWORDS.keys()}
+
+# Expiring version cache
+VERSION_CACHE = {
+    "version": None,
+    "last_fetched": 0
+}
 
 VALID_EXTENSIONS = [
     "png", "jpg", "jpeg", "webp", "gif",
     "bmp", "ktx", "html", "json",
     "mp4", "mp3", "wav", "ogg", "webm"
 ]
+
+# Set up an HTTP session with automatic connection pooling and retry capabilities
+http_session = requests.Session()
+retries = Retry(
+    total=3,
+    backoff_factor=0.3,
+    status_forcelist=[500, 502, 503, 504],
+    raise_on_status=False
+)
+adapter = HTTPAdapter(max_retries=retries)
+http_session.mount("https://", adapter)
+http_session.mount("http://", adapter)
 
 
 @app.route("/")
@@ -59,18 +90,45 @@ def home():
 
 
 def get_release_version():
-    if VERSION_CACHE["version"]:
+    current_time = time.time()
+    # Cache version for 1 hour (3600 seconds) to avoid breaking during running execution
+    if VERSION_CACHE["version"] and (current_time - VERSION_CACHE["last_fetched"] < 3600):
         return VERSION_CACHE["version"]
     try:
-        r = requests.get("https://ff-version.vercel.app/update", timeout=10)
+        r = http_session.get("https://ff-version.vercel.app/update", timeout=10)
         if r.status_code == 200:
             version = r.json().get("latest_release_version")
             if version:
                 VERSION_CACHE["version"] = version
+                VERSION_CACHE["last_fetched"] = current_time
                 return version
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
-    return "OB53"  # Standard dynamic fallback
+        
+    # Return previously cached version if available, otherwise default fallback
+    if VERSION_CACHE["version"]:
+        return VERSION_CACHE["version"]
+    return "OB53"
+
+
+def get_payload_for_endpoint(endpoint_name):
+    """
+    Cleans and retrieves the correct hexadecimal payload for the given endpoint name.
+    Falls back to the default hex payload if the endpoint is not explicitly mapped.
+    """
+    if not endpoint_name:
+        return "8533b7e1d34a5dfd9a830ee5cc36664e"
+        
+    # Standardize string format
+    clean_name = endpoint_name.strip()
+    
+    # Case-insensitive lookup match
+    for endpoint, hex_val in ENDPOINT_HEX_PAYLOADS.items():
+        if endpoint.lower() == clean_name.lower():
+            # Remove any possible space formatting
+            return hex_val.replace(" ", "").lower()
+            
+    return "8533b7e1d34a5dfd9a830ee5cc36664e"
 
 
 def get_token(server):
@@ -84,7 +142,7 @@ def get_token(server):
 
         token_url = f"https://macxjwt.vercel.app/get_jwt_token?uid={uid}&password={password}&version={version}"
 
-        response = requests.get(
+        response = http_session.get(
             token_url,
             timeout=15,
             headers={
@@ -111,13 +169,22 @@ def run_script():
     try:
         server = request.args.get("server")
         api_name = request.args.get("name")
-        payload_hex = "8533b7e1d34a5dfd9a830ee5cc36664e"  # Fixed request payload
 
         if server not in UID_PASSWORDS:
             return jsonify({"error": "Invalid server"})
 
         if not api_name:
             return jsonify({"error": "Missing API name"})
+
+        # Handle either relative path, absolute path, or full URLs gracefully
+        if "://" in api_name:
+            api_path = urlparse(api_name).path.lstrip("/")
+        else:
+            api_path = api_name.lstrip("/")
+
+        # Retrieve matching endpoint payload hex based on name
+        clean_api_name = api_path.split("/")[-1]
+        payload_hex = get_payload_for_endpoint(clean_api_name)
 
         release_version = get_release_version()
         token = get_token(server)
@@ -137,14 +204,19 @@ def run_script():
         }
 
         binary_payload = binascii.unhexlify(payload_hex)
-        url = API_DOMAINS[server].rstrip("/") + "/" + api_name.lstrip("/")
+        url = API_DOMAINS[server].rstrip("/") + "/" + api_path
 
-        response = requests.post(
-            url,
-            headers=headers,
-            data=binary_payload,
-            timeout=25
-        )
+        try:
+            response = http_session.post(
+                url,
+                headers=headers,
+                data=binary_payload,
+                timeout=25
+            )
+        except requests.exceptions.Timeout:
+            return jsonify({"error": f"Request to server timed out. Server region {server} is taking too long to respond."})
+        except requests.exceptions.ConnectionError as ce:
+            return jsonify({"error": f"Failed to connect to the regional server. Region {server} might be unreachable. Detail: {str(ce)}"})
 
         if response.status_code == 401:
             server_tokens[server] = None
@@ -155,12 +227,17 @@ def run_script():
 
             headers["Authorization"] = f"Bearer {token}"
 
-            response = requests.post(
-                url,
-                headers=headers,
-                data=binary_payload,
-                timeout=25
-            )
+            try:
+                response = http_session.post(
+                    url,
+                    headers=headers,
+                    data=binary_payload,
+                    timeout=25
+                )
+            except requests.exceptions.Timeout:
+                return jsonify({"error": f"Request retry timed out on server {server}."})
+            except requests.exceptions.ConnectionError as ce:
+                return jsonify({"error": f"Failed to connect during retry on server {server}."})
 
         response.raise_for_status()
         content = response.content
@@ -168,15 +245,15 @@ def run_script():
         try:
             if content[:2] == b'\x1f\x8b':
                 content = gzip.decompress(content)
-        except:
+        except Exception:
             pass
 
         decoded = content.decode("utf-8", errors="ignore")
 
-        # Decode response utilising the external Protobuf decoding endpoint
+        # Decode response utilizing the external Protobuf decoding endpoint
         protobuf_data = {}
         try:
-            dec_res = requests.post(
+            dec_res = http_session.post(
                 "https://protobuf-decoder-seven.vercel.app/decode",
                 json={"data": content.hex()},
                 timeout=15
@@ -186,7 +263,7 @@ def run_script():
                 if isinstance(protobuf_data, str):
                     try:
                         protobuf_data = json.loads(protobuf_data)
-                    except:
+                    except Exception:
                         protobuf_data = {}
         except Exception as e:
             print("Protobuf decoder lookup failed:", e)
@@ -218,7 +295,7 @@ def run_script():
                 urls.add(val)
                 continue
 
-            # 2. Extract relative paths ending in valid extensions (e.g. Local/IND/, test/, OB16/)
+            # 2. Extract relative paths ending in valid extensions
             if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
                 urls.add(val)
                 continue
