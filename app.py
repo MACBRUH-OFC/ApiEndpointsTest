@@ -30,7 +30,7 @@ UID_PASSWORDS = {
     "bd": {"uid": "4139230703", "password": "6C2D5409593C61CFD31CDA18146054D05E72F261F24343CDEA75AEF38ADF5C95"}
 }
 
-# Regional API domains
+# Regional domains
 API_DOMAINS = {
     "ind": "https://client.ind.freefiremobile.com/",
     "mea": "https://clientbp.ggpolarbear.com/",
@@ -48,7 +48,7 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-# Explicitly matched endpoint request payloads
+# Explicit mapped endpoint hex payloads
 ENDPOINT_HEX_PAYLOADS = {
     "LoginGetDesc": "19d87e64f15e9db87392bc99506f0b94",
     "LoginGetAccountInfo": "701ab6a8dcd2e32bde5efd87d0da7545",
@@ -61,10 +61,8 @@ ENDPOINT_HEX_PAYLOADS = {
 
 server_tokens = {key: None for key in UID_PASSWORDS.keys()}
 
-# Expiring version cache
 VERSION_CACHE = {
-    "version": None,
-    "last_fetched": 0
+    "version": None
 }
 
 VALID_EXTENSIONS = [
@@ -73,13 +71,13 @@ VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ]
 
-# Configure HTTP Session with persistent pooling and retry parameters
+# Set up optimized HTTP session with retry logic
 http_session = requests.Session()
 retries = Retry(
     total=5,
     backoff_factor=1,
     status_forcelist=[429, 500, 502, 503, 504],
-    raise_on_status=False
+    allowed_methods=["GET", "POST"]
 )
 adapter = HTTPAdapter(max_retries=retries, pool_connections=100, pool_maxsize=100)
 http_session.mount("https://", adapter)
@@ -108,31 +106,27 @@ def decompress_data(data):
 
 
 def get_release_version():
-    current_time = time.time()
-    # Cache and reuse the version dynamically for up to 1 hour
-    if VERSION_CACHE["version"] and (current_time - VERSION_CACHE["last_fetched"] < 3600):
-        return VERSION_CACHE["version"]
-    try:
-        r = http_session.get("https://ff-version.vercel.app/update", timeout=15)
-        if r.status_code == 200:
-            version = r.json().get("latest_release_version")
-            if version:
-                VERSION_CACHE["version"] = version
-                VERSION_CACHE["last_fetched"] = current_time
-                return version
-    except Exception as e:
-        print("Failed to fetch game version dynamically:", e)
-        
     if VERSION_CACHE["version"]:
         return VERSION_CACHE["version"]
-    return "OB53"
+    try:
+        response = http_session.get("https://ff-version.vercel.app/update", timeout=15)
+        response.raise_for_status()
+        version = response.json().get("latest_release_version")
+        if version:
+            VERSION_CACHE["version"] = version
+            return version
+    except Exception as e:
+        print("Failed to fetch game version dynamically:", e)
+    return "OB53"  # Standard dynamic fallback
 
 
-# Preload version cache on application startup
-try:
-    get_release_version()
-except Exception:
-    pass
+@app.route("/get_version")
+def get_version_route():
+    try:
+        version = get_release_version()
+        return jsonify({"version": version})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 def get_payload_for_endpoint(endpoint_name):
@@ -145,41 +139,21 @@ def get_payload_for_endpoint(endpoint_name):
     return "8533b7e1d34a5dfd9a830ee5cc36664e"
 
 
-def extract_clean_asset_path(raw_str):
-    """
-    Cleans raw string sequences containing internal control data/offsets and extracts
-    valid asset locations or absolute URLs.
-    """
-    url_match = re.search(r'(https?://[^\s"\'()<>]+)', raw_str)
-    if url_match:
-        return url_match.group(1).rstrip(",.;)('\"")
-    
-    extensions_pattern = "|".join(VALID_EXTENSIONS) + "|ff_extend|ktxp"
-    path_pattern = rf'([\w\-_/]+\.(?:{extensions_pattern}))'
-    path_match = re.search(path_pattern, raw_str, re.IGNORECASE)
-    if path_match:
-        return path_match.group(1)
-        
-    return None
-
-
-def get_token(server):
+def get_token(server, release_version):
     if server_tokens[server]:
         return server_tokens[server]
-
     try:
         uid = UID_PASSWORDS[server]["uid"]
         password = UID_PASSWORDS[server]["password"]
-        version = get_release_version()
-
-        token_url = f"https://macxjwt.vercel.app/get_jwt_token?uid={uid}&password={password}&version={version}"
-
+        token_url = f"https://macxjwt.vercel.app/get_jwt_token?uid={uid}&password={password}&version={release_version}"
         response = http_session.get(
             token_url,
             timeout=20,
-            headers={"User-Agent": "Mozilla/5.0", "Accept": "*/*"}
+            headers={
+                "User-Agent": "Mozilla/5.0",
+                "Accept": "*/*"
+            }
         )
-
         if response.status_code == 200:
             token_res = response.json()
             token = token_res.get("token")
@@ -187,7 +161,7 @@ def get_token(server):
                 server_tokens[server] = token
                 return token
     except Exception as e:
-        print(f"Token generation failed on server {server}:", e)
+        print("Token extraction failed:", e)
     return None
 
 
@@ -196,6 +170,7 @@ def run_script():
     try:
         server = request.args.get("server")
         api_name = request.args.get("name")
+        version_param = request.args.get("version")  # Extracted from webpage parameter
 
         if server not in UID_PASSWORDS:
             return jsonify({"error": "Invalid server selection"})
@@ -203,7 +178,6 @@ def run_script():
         if not api_name:
             return jsonify({"error": "Missing target API name parameter"})
 
-        # Handle full paths vs relative endpoints
         if "://" in api_name:
             api_path = urlparse(api_name).path.lstrip("/")
         else:
@@ -212,15 +186,17 @@ def run_script():
         clean_api_name = api_path.split("/")[-1]
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
-        release_version = get_release_version()
-        token = get_token(server)
+        # Uses version parameter passed from frontend, otherwise queries dynamically
+        release_version = version_param if version_param else get_release_version()
+        token = get_token(server, release_version)
 
         if not token:
-            return jsonify({"error": f"Failed to acquire authorization token for region {server.upper()}"})
+            return jsonify({"error": f"Failed to acquire security token for {server.upper()}"})
 
         headers = {
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
             "Content-Type": "application/x-www-form-urlencoded",
             "ReleaseVersion": release_version,
             "User-Agent": "UnityPlayer/2022.3.47f1 (UnityWebRequest/1.0, libcurl/8.5.0-DEV)",
@@ -240,18 +216,15 @@ def run_script():
                 timeout=30
             )
         except requests.exceptions.Timeout:
-            return jsonify({"error": f"Timeout connecting to Garena regional server: {server.upper()}"})
+            return jsonify({"error": f"Timeout connecting to regional server: {server.upper()}"})
         except requests.exceptions.ConnectionError as ce:
             return jsonify({"error": f"Connection error communicating with {server.upper()}: {str(ce)}"})
 
-        # Trigger token recovery on 401
         if response.status_code == 401:
             server_tokens[server] = None
-            token = get_token(server)
-
+            token = get_token(server, release_version)
             if not token:
-                return jsonify({"error": f"Authentication retry sequence failed on region {server.upper()}"})
-
+                return jsonify({"error": f"Token refresh failure on region {server.upper()}"})
             headers["Authorization"] = f"Bearer {token}"
 
             try:
@@ -262,24 +235,20 @@ def run_script():
                     timeout=30
                 )
             except requests.exceptions.Timeout:
-                return jsonify({"error": "Timeout on connection retry sequence."})
+                return jsonify({"error": "Timeout on token verification retry request."})
             except requests.exceptions.ConnectionError as ce:
-                return jsonify({"error": f"Connection error on retry sequence: {str(ce)}"})
+                return jsonify({"error": f"Connection retry error: {str(ce)}"})
 
         response.raise_for_status()
-        content = response.content
+        content = decompress_data(response.content)
+        decoded = content.decode("utf-8", errors="ignore")
 
-        # Decompress response content BEFORE hexing and parsing
-        decompressed_content = decompress_data(content)
-        decoded = decompressed_content.decode("utf-8", errors="ignore")
-        raw_hex = decompressed_content.hex()
-
-        # Decrypt response utilizing the external Protobuf decoding endpoint
+        # Decode using the Protobuf decoder API
         protobuf_data = {}
         try:
             dec_res = http_session.post(
                 "https://protobuf-decoder-seven.vercel.app/decode",
-                json={"data": raw_hex},
+                json={"data": content.hex()},
                 timeout=30
             )
             if dec_res.status_code == 200:
@@ -290,7 +259,7 @@ def run_script():
                     except Exception:
                         protobuf_data = {}
         except Exception as e:
-            print("External Protobuf extraction bypass:", e)
+            print("Protobuf decoder lookup failed:", e)
 
         extracted_strings = set()
 
@@ -304,10 +273,9 @@ def run_script():
             elif isinstance(data, str):
                 extracted_strings.add(data)
 
-        # Extraction Layer 1: Protobuf structural data
         extract_strings_from_protobuf(protobuf_data)
 
-        # Extraction Layer 2: Local JSON structural data
+        # local json fallback parsing
         try:
             raw_json = json.loads(decoded)
             def extract_from_json(obj):
@@ -325,7 +293,7 @@ def run_script():
         except Exception:
             pass
 
-        # Extraction Layer 3: Binary ASCII extraction
+        # String extraction fallback from binary stream
         def extract_ascii_strings(binary_data, min_len=4):
             result = []
             current = []
@@ -340,12 +308,12 @@ def run_script():
                 result.append("".join(current))
             return result
 
-        for s in extract_ascii_strings(decompressed_content):
+        for s in extract_ascii_strings(content):
             cleaned = s.strip()
             if len(cleaned) >= 4 and not cleaned.startswith(("%%", "##", "$$")):
                 extracted_strings.add(cleaned)
 
-        # Extraction Layer 4: Global regex searches on raw decoded text
+        # Direct path searches using regexes
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)[\w\-_/]*)',
             decoded,
@@ -354,12 +322,25 @@ def run_script():
         for path in found_paths:
             extracted_strings.add(path)
 
-        # Final cleaning and matching of discovered relative assets
         urls = set()
         for val in extracted_strings:
-            cleaned_path = extract_clean_asset_path(val)
-            if cleaned_path:
-                urls.add(cleaned_path)
+            val = val.strip()
+            if not val:
+                continue
+            val_lower = val.lower()
+
+            if val_lower.startswith(("http://", "https://")):
+                urls.add(val)
+                continue
+            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")) or ("local/" in val_lower):
+                urls.add(val)
+                continue
+            social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"]
+            if any(domain in val_lower for domain in social_domains):
+                if not val_lower.startswith(("http://", "https://")):
+                    val = "https://" + val
+                urls.add(val)
+                continue
 
         urls_list = sorted(list(urls))
 
