@@ -729,7 +729,7 @@ mark.search-match.match-active {
         <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- Target server selector cluster -->
+    <!-- Server selector list -->
     <div class="dashboard-container">
         <div class="container-title">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
@@ -750,7 +750,7 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Output tab configurations -->
+    <!-- Display perspectives switcher -->
     <div class="dashboard-container">
         <div class="container-title">Output Perspective View</div>
         <div class="view-options">
@@ -769,7 +769,7 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Operational metrics tracker -->
+    <!-- Execution state indicators -->
     <div class="dashboard-container">
         <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
@@ -836,7 +836,7 @@ let viewMode = "links";
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
-let releaseVersion = "OB53"; 
+let releaseVersion = "OB53";
 
 let searchMatches = [];
 let currentMatchIndex = -1;
@@ -856,7 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
 });
 
-// Robust HTML Entity Escaper to prevent DOM breakdowns
+// Strictly sanitizes text context injection preventing parsing breakage
 function escapeHtml(str) {
     if (typeof str !== 'string') return '';
     return str
@@ -877,7 +877,7 @@ async function fetchReleaseVersion() {
             document.getElementById("versionBadge").innerText = `VERSION: ${releaseVersion}`;
         }
     } catch (e) {
-        console.error("Failed to load release version from backend, checking fallback", e);
+        console.error("Using persistent fallback release version configuration", e);
         const saved = localStorage.getItem("ff_release_version");
         if (saved) {
             releaseVersion = saved;
@@ -1024,7 +1024,7 @@ async function runAPI() {
             <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
         <div class="scanner-log-panel" id="scannerLogs">
-            <div class="scanner-log-line">> Establishing server handshake configurations...</div>
+            <div class="scanner-log-line">> Establishing server handshake handshake...</div>
         </div>
     </div>`;
 
