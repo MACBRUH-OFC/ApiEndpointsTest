@@ -9,16 +9,7 @@ from urllib.parse import urlparse
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-# Safely handle flask_cors if present in the environment
-try:
-    from flask_cors import CORS
-    has_cors = True
-except ImportError:
-    has_cors = False
-
 app = Flask(__name__)
-if has_cors:
-    CORS(app)
 
 VERSION_API = "https://ff-version.vercel.app/update"
 DECODER_API = "https://protobuf-decoder-seven.vercel.app/decode"
@@ -188,15 +179,6 @@ def get_release_version():
     return version
 
 
-@app.route("/get_version")
-def get_version_route():
-    try:
-        version = get_release_version()
-        return jsonify({"version": version})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 def get_token(region_data, release_version):
     for _ in range(3):
         try:
@@ -225,9 +207,6 @@ def get_payload_for_endpoint(endpoint_name):
 
 
 def normalize_garena_path(path):
-    """
-    Cleans Garena trailing digits on file extensions (e.g. .png0 -> .png)
-    """
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
         r'.\1',
@@ -238,9 +217,6 @@ def normalize_garena_path(path):
 
 
 def extract_clean_path_from_string(val):
-    """
-    Isolates asset paths from Garena payload prefixes (e.g. '105;-378;0*test/img.png0' -> 'test/img.png')
-    """
     match = re.search(
         r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
         val,
@@ -273,7 +249,25 @@ def decode_protobuf(raw_hex):
     return protobuf
 
 
+# Double routing maps route target variants to resolve Vercel base-directory redirects
+@app.route("/")
+@app.route("/api")
+def home():
+    return render_template("ui.html")
+
+
+@app.route("/get_version")
+@app.route("/api/get_version")
+def get_version_route():
+    try:
+        version = get_release_version()
+        return jsonify({"version": version})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/run_script")
+@app.route("/api/run_script")
 def run_script():
     try:
         server = request.args.get("server", "ind").lower()
@@ -294,7 +288,6 @@ def run_script():
         clean_api_name = api_path.split("/")[-1]
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
-        # Uses the version cached by the browser, falls back dynamically otherwise
         release_version = version_param if version_param else get_release_version()
         
         region_data = REGIONS[server]
@@ -307,7 +300,6 @@ def run_script():
         headers["Authorization"] = f"Bearer {token}"
         headers["ReleaseVersion"] = release_version
 
-        # Match exact slash joins from reference logic
         url = f"{region_data['client']}/{api_path}"
 
         try:
@@ -318,11 +310,10 @@ def run_script():
                 timeout=30
             )
         except requests.exceptions.Timeout:
-            return jsonify({"error": f"Timeout connecting to regional server: {server.upper()}"})
+            return jsonify({"error": f"Timeout connecting to Garena edge node on {server.upper()}"})
         except requests.exceptions.ConnectionError as ce:
             return jsonify({"error": f"Connection lost on {server.upper()}: {str(ce)}"})
 
-        # Retries on 401 token expiration
         if response.status_code == 401:
             token = get_token(region_data, release_version)
             if not token:
@@ -344,7 +335,6 @@ def run_script():
         raw_hex = raw.hex()
         decoded = raw.decode("utf-8", errors="ignore")
 
-        # Decode using the protobuf API
         protobuf_data = decode_protobuf(raw_hex)
 
         extracted_strings = set()
@@ -365,17 +355,14 @@ def run_script():
                     except Exception:
                         pass
 
-        # 1. Protobuf extraction
         extract_strings_recursively(protobuf_data)
 
-        # 2. Local JSON extraction checks
         try:
             raw_json = json.loads(decoded)
             extract_strings_recursively(raw_json)
         except Exception:
             pass
 
-        # 3. Memory scan backup parsing
         def extract_ascii_strings(binary_data, min_len=4):
             result = []
             current = []
@@ -395,7 +382,6 @@ def run_script():
             if len(cleaned) >= 4 and not cleaned.startswith(("%%", "##", "$$")):
                 extracted_strings.add(cleaned)
 
-        # 4. Filter asset paths
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded,
