@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-# Attempt to configure flask_cors cleanly without throwing deployment errors if missing
+# Safely handle flask_cors if present in the environment
 try:
     from flask_cors import CORS
     has_cors = True
@@ -118,6 +118,8 @@ ENDPOINT_HEX_PAYLOADS = {
     "GetCollabDesc": "1a725b2c56ec52ba7d09623454c0a003"
 }
 
+server_tokens = {key: None for key in REGIONS.keys()}
+
 VERSION_CACHE = {
     "version": None
 }
@@ -224,7 +226,7 @@ def get_payload_for_endpoint(endpoint_name):
 
 def normalize_garena_path(path):
     """
-    Cleans trailing trailing Garena digits on extensions (e.g. .png0 -> .png)
+    Cleans Garena trailing digits on file extensions (e.g. .png0 -> .png)
     """
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
@@ -237,7 +239,7 @@ def normalize_garena_path(path):
 
 def extract_clean_path_from_string(val):
     """
-    Isolates folder assets from Garena payload prefix parameters (e.g. '105;-378;0*test/img.png0').
+    Isolates asset paths from Garena payload prefixes (e.g. '105;-378;0*test/img.png0' -> 'test/img.png')
     """
     match = re.search(
         r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
@@ -292,20 +294,20 @@ def run_script():
         clean_api_name = api_path.split("/")[-1]
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
-        # Utilize version loaded dynamically by frontend, otherwise dynamic fetch
+        # Uses the version cached by the browser, falls back dynamically otherwise
         release_version = version_param if version_param else get_release_version()
         
         region_data = REGIONS[server]
         token = get_token(region_data, release_version)
 
         if not token:
-            return jsonify({"error": "Dynamic bearer token generation failed"})
+            return jsonify({"error": "Bearer token generation failed"})
 
         headers = BASE_HEADERS.copy()
         headers["Authorization"] = f"Bearer {token}"
         headers["ReleaseVersion"] = release_version
 
-        # Ensure correct slash joining matching your reference code
+        # Match exact slash joins from reference logic
         url = f"{region_data['client']}/{api_path}"
 
         try:
@@ -316,15 +318,15 @@ def run_script():
                 timeout=30
             )
         except requests.exceptions.Timeout:
-            return jsonify({"error": f"Timeout connecting to Garena edge node on {server.upper()}"})
+            return jsonify({"error": f"Timeout connecting to regional server: {server.upper()}"})
         except requests.exceptions.ConnectionError as ce:
-            return jsonify({"error": f"Connection lost on cluster {server.upper()}: {str(ce)}"})
+            return jsonify({"error": f"Connection lost on {server.upper()}: {str(ce)}"})
 
         # Retries on 401 token expiration
         if response.status_code == 401:
             token = get_token(region_data, release_version)
             if not token:
-                return jsonify({"error": "Bearer token refresh failed"})
+                return jsonify({"error": "Token verification handshake failed"})
             headers["Authorization"] = f"Bearer {token}"
             response = SESSION.post(
                 url,
@@ -337,12 +339,12 @@ def run_script():
         raw = decompress_data(response.content)
 
         if not raw:
-            return jsonify({"error": "The regional pipeline returned an empty response stream."})
+            return jsonify({"error": "Empty response stream received."})
 
         raw_hex = raw.hex()
         decoded = raw.decode("utf-8", errors="ignore")
 
-        # Unpack protobuf structures
+        # Decode using the protobuf API
         protobuf_data = decode_protobuf(raw_hex)
 
         extracted_strings = set()
@@ -356,7 +358,6 @@ def run_script():
                     extract_strings_recursively(item)
             elif isinstance(obj, str):
                 extracted_strings.add(obj)
-                # Unpack potential nested serialized json inside protobuf fields
                 if obj.strip().startswith(("{", "[")):
                     try:
                         nested_json = json.loads(obj)
@@ -364,17 +365,17 @@ def run_script():
                     except Exception:
                         pass
 
-        # 1. Recursive extraction from protobuf dictionary
+        # 1. Protobuf extraction
         extract_strings_recursively(protobuf_data)
 
-        # 2. Local decompressed json backup checks
+        # 2. Local JSON extraction checks
         try:
             raw_json = json.loads(decoded)
             extract_strings_recursively(raw_json)
         except Exception:
             pass
 
-        # 3. Direct ASCII memory scanning
+        # 3. Memory scan backup parsing
         def extract_ascii_strings(binary_data, min_len=4):
             result = []
             current = []
