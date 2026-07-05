@@ -1,5 +1,4 @@
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
+from flask import Flask, jsonify, request, render_template, Response
 import requests
 import gzip
 import zlib
@@ -8,10 +7,18 @@ import json
 import re
 from urllib.parse import urlparse
 from requests.adapters import HTTPAdapter
-from urllib3.util import Retry
+from urllib3.util.retry import Retry
+
+# Attempt to configure flask_cors cleanly without throwing deployment errors if missing
+try:
+    from flask_cors import CORS
+    has_cors = True
+except ImportError:
+    has_cors = False
 
 app = Flask(__name__)
-CORS(app)
+if has_cors:
+    CORS(app)
 
 VERSION_API = "https://ff-version.vercel.app/update"
 DECODER_API = "https://protobuf-decoder-seven.vercel.app/decode"
@@ -150,11 +157,6 @@ BASE_HEADERS = {
 }
 
 
-@app.route("/")
-def home():
-    return render_template("ui.html")
-
-
 def decompress_data(data):
     try:
         return gzip.decompress(data)
@@ -212,7 +214,7 @@ def get_token(region_data, release_version):
 
 def get_payload_for_endpoint(endpoint_name):
     if not endpoint_name:
-        return "19d87e64f15e9db87392bc99506f0b94"  # Default fallback
+        return "19d87e64f15e9db87392bc99506f0b94"
     clean_name = endpoint_name.strip()
     for endpoint, hex_val in ENDPOINT_HEX_PAYLOADS.items():
         if endpoint.lower() == clean_name.lower():
@@ -222,7 +224,7 @@ def get_payload_for_endpoint(endpoint_name):
 
 def normalize_garena_path(path):
     """
-    Strips trailing packer indexes (such as .png0, .jpg3) to yield exact browser asset links.
+    Cleans trailing trailing Garena digits on extensions (e.g. .png0 -> .png)
     """
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
@@ -247,6 +249,28 @@ def extract_clean_path_from_string(val):
     return normalize_garena_path(val)
 
 
+def decode_protobuf(raw_hex):
+    decoder_response = SESSION.post(
+        DECODER_API,
+        json={"data": raw_hex},
+        timeout=30
+    )
+    decoder_response.raise_for_status()
+    decoder_json = decoder_response.json()
+    protobuf = decoder_json.get("protobuf", {})
+
+    if isinstance(protobuf, str):
+        try:
+            protobuf = json.loads(protobuf)
+        except Exception:
+            protobuf = {}
+
+    if not isinstance(protobuf, dict):
+        protobuf = {}
+
+    return protobuf
+
+
 @app.route("/run_script")
 def run_script():
     try:
@@ -258,7 +282,7 @@ def run_script():
             return jsonify({"error": "Invalid regional server selection"})
 
         if not api_name:
-            return jsonify({"error": "Missing endpoint route target"})
+            return jsonify({"error": "Missing target API endpoint name"})
 
         if "://" in api_name:
             api_path = urlparse(api_name).path.lstrip("/")
@@ -268,7 +292,7 @@ def run_script():
         clean_api_name = api_path.split("/")[-1]
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
-        # Utilize version from frontend client state if loaded, else dynamic fetch
+        # Utilize version loaded dynamically by frontend, otherwise dynamic fetch
         release_version = version_param if version_param else get_release_version()
         
         region_data = REGIONS[server]
@@ -281,7 +305,8 @@ def run_script():
         headers["Authorization"] = f"Bearer {token}"
         headers["ReleaseVersion"] = release_version
 
-        url = region_data["client"].rstrip("/") + "/" + api_path
+        # Ensure correct slash joining matching your reference code
+        url = f"{region_data['client']}/{api_path}"
 
         try:
             response = SESSION.post(
@@ -295,7 +320,7 @@ def run_script():
         except requests.exceptions.ConnectionError as ce:
             return jsonify({"error": f"Connection lost on cluster {server.upper()}: {str(ce)}"})
 
-        # Handle 401 token refreshes
+        # Retries on 401 token expiration
         if response.status_code == 401:
             token = get_token(region_data, release_version)
             if not token:
@@ -317,23 +342,8 @@ def run_script():
         raw_hex = raw.hex()
         decoded = raw.decode("utf-8", errors="ignore")
 
-        # Decode using the Vercel Protobuf decoder api
-        protobuf_data = {}
-        try:
-            decoder_response = SESSION.post(
-                DECODER_API,
-                json={"data": raw_hex},
-                timeout=30
-            )
-            if decoder_response.status_code == 200:
-                protobuf_data = decoder_response.json().get("protobuf", {})
-                if isinstance(protobuf_data, str):
-                    try:
-                        protobuf_data = json.loads(protobuf_data)
-                    except Exception:
-                        protobuf_data = {}
-        except Exception as e:
-            print("Protobuf decoder lookup failed:", e)
+        # Unpack protobuf structures
+        protobuf_data = decode_protobuf(raw_hex)
 
         extracted_strings = set()
 
@@ -346,7 +356,7 @@ def run_script():
                     extract_strings_recursively(item)
             elif isinstance(obj, str):
                 extracted_strings.add(obj)
-                # Unpack potential embedded stringified json packets
+                # Unpack potential nested serialized json inside protobuf fields
                 if obj.strip().startswith(("{", "[")):
                     try:
                         nested_json = json.loads(obj)
@@ -354,7 +364,7 @@ def run_script():
                     except Exception:
                         pass
 
-        # 1. Unpack protobuf decoder objects
+        # 1. Recursive extraction from protobuf dictionary
         extract_strings_recursively(protobuf_data)
 
         # 2. Local decompressed json backup checks
@@ -393,7 +403,6 @@ def run_script():
         for path in found_paths:
             extracted_strings.add(path)
 
-        # Sanitize and extract actual targets
         clean_strings = set()
         urls = set()
 
@@ -430,6 +439,14 @@ def run_script():
 
     except Exception as e:
         return jsonify({"error": str(e)})
+
+
+@app.after_request
+def after_request(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
 
 
 if __name__ == "__main__":
