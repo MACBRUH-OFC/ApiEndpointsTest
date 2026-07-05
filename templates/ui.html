@@ -14,17 +14,20 @@
 }
 
 :root {
-    --yellow: #ffde00;
-    --bg: #030303;
-    --panel: #0a0a0a;
-    --card: #0f0f0f;
-    --border: #1a1a1a;
-    --border-hover: #2d2d2d;
-    --text: #e0e0e0;
-    --muted: #606060;
+    --yellow: #ffd000;
+    --yellow-glow: rgba(255, 208, 0, 0.3);
+    --bg: #030305;
+    --panel: #08080c;
+    --card: #0d0d14;
+    --border: #181824;
+    --border-hover: #2e2e42;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #10b981;
+    --error: #ef4444;
+    --blue: #3b82f6;
     
-    /* Contrast highlights */
-    --match-bg: #ffe600;
+    --match-bg: #ffd000;
     --match-text: #000000;
     --match-active: #ff5e00;
 }
@@ -37,43 +40,51 @@
 
 body {
     background-color: var(--bg);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 208, 0, 0.03) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%),
+        linear-gradient(rgba(18, 18, 24, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 18, 24, 0.3) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     letter-spacing: -0.2px;
+    padding-bottom: 50px;
 }
 
-/* Scrollbars styling */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #040406;
 }
 ::-webkit-scrollbar-thumb {
-    background: #1e1e1e;
-    border-radius: 3px;
+    background: #1c1c28;
+    border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--yellow);
+    box-shadow: 0 0 8px var(--yellow);
 }
 
 .wrapper {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 40px 24px;
 }
 
-/* Header Optimization */
+/* Header UI */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
-    margin-bottom: 32px;
+    padding-bottom: 24px;
+    margin-bottom: 40px;
 }
 
 .brand-group {
@@ -83,251 +94,314 @@ header {
 }
 
 .brand-logo {
-    height: 24px;
+    height: 30px;
     object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255,208,0,0.2));
 }
 
 .badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: var(--panel);
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     color: var(--muted);
 }
 
 .dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--yellow);
-    box-shadow: 0 0 8px var(--yellow);
-    animation: pulseGlow 2s infinite alternate;
+    box-shadow: 0 0 10px var(--yellow);
+    animation: pulseGlow 1.8s infinite alternate;
 }
 
 @keyframes pulseGlow {
-    0% { transform: scale(0.9); box-shadow: 0 0 4px var(--yellow); }
-    100% { transform: scale(1.1); box-shadow: 0 0 12px var(--yellow); }
+    0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 4px var(--yellow); }
+    100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px var(--yellow); }
 }
 
 .engine-title {
     font-family: 'GFF', sans-serif;
-    font-size: 18px;
+    font-size: 22px;
     font-style: italic;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255,255,255,0.1);
 }
 .engine-title span {
     color: var(--yellow);
+    text-shadow: 0 0 15px var(--yellow-glow);
 }
 
-/* Official Container Layouts */
+/* Dashboard Component Shells */
 .dashboard-container {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,208,0,0.1), transparent);
 }
 
 .container-title {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--muted);
     letter-spacing: 1.5px;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-left: 2px solid var(--yellow);
-    padding-left: 8px;
+    border-left: 3px solid var(--yellow);
+    padding-left: 10px;
 }
 
 .clear-history-btn {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     color: var(--muted);
     cursor: pointer;
-    transition: color 0.15s ease;
-    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .clear-history-btn:hover {
-    color: #ff4444;
+    color: var(--error);
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
 }
 
-/* Inputs UI */
+/* User Input Interface */
 .input-row {
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .main-input {
     width: 100%;
-    height: 52px;
+    height: 56px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     color: #ffffff;
-    padding: 0 140px 0 16px;
+    padding: 0 160px 0 18px;
     font-size: 14px;
     font-family: monospace;
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main-input:focus {
     border-color: var(--yellow);
-    box-shadow: 0 0 14px rgba(255, 222, 0, 0.12);
+    box-shadow: 0 0 20px rgba(255, 208, 0, 0.15);
 }
 
 .run-action-btn {
     position: absolute;
-    right: 6px;
-    top: 6px;
+    right: 8px;
+    top: 8px;
     height: 40px;
-    padding: 0 20px;
+    padding: 0 24px;
     background: var(--yellow);
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     color: #000000;
     font-family: 'GFF', sans-serif;
     font-size: 13px;
     font-weight: 900;
     cursor: pointer;
-    transition: background 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 208, 0, 0.2);
 }
 
 .run-action-btn:hover {
-    background: #e5c800;
+    background: #f5c000;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 208, 0, 0.3);
 }
 
-/* Recents pills layout */
+.run-action-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Query History Row */
 .history-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
+    min-height: 26px;
 }
 
 .history-pill {
-    padding: 4px 10px;
+    padding: 6px 12px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 11px;
-    color: #a0a0a0;
+    color: #a0aec0;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     font-family: monospace;
 }
 
 .history-pill:hover {
     border-color: var(--yellow);
     color: var(--yellow);
-    background: rgba(255, 222, 0, 0.02);
+    background: rgba(255, 208, 0, 0.03);
+    box-shadow: 0 2px 8px rgba(255, 208, 0, 0.1);
 }
 
+/* Regional Server Grid */
 .server-selector {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
 }
 
 .srv-chip {
-    height: 34px;
+    height: 38px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--muted);
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .srv-chip:hover {
     border-color: var(--border-hover);
     color: #fff;
+    background: rgba(255,255,255,0.01);
 }
 
 .srv-chip.active {
     background: var(--yellow);
     border-color: var(--yellow);
     color: #000000;
-    box-shadow: 0 0 10px rgba(255, 222, 0, 0.25);
+    box-shadow: 0 4px 15px rgba(255, 208, 0, 0.25);
 }
 
-/* Perspective view switcher */
+/* Perspective View Switcher */
 .view-options {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
 .opt-toggle {
-    padding: 8px 16px;
+    height: 44px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 11px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .opt-toggle:hover {
     border-color: var(--border-hover);
+    color: #ffffff;
 }
 
 .opt-toggle.active {
     border-color: var(--yellow);
     color: var(--yellow);
-    background: rgba(255, 222, 0, 0.02);
+    background: rgba(255, 208, 0, 0.03);
+    box-shadow: inset 0 0 10px rgba(255, 208, 0, 0.05);
 }
 
-/* Performance Metrics Track */
+/* Metric Display Panels */
 .metrics-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 16px;
 }
 
 .metric-card {
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
+    border-radius: 10px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--border);
+}
+
+.metric-card.active-metric::before {
+    background: var(--yellow);
 }
 
 .metric-card .lbl {
     font-size: 10px;
     text-transform: uppercase;
     color: var(--muted);
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
 }
 
 .metric-card .val {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 800;
     font-family: monospace;
+    color: #ffffff;
 }
 
-/* Control Hub Console Deck */
+/* Output Console Deck & Toolbar */
 .control-deck {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .search-wrapper {
@@ -336,13 +410,21 @@ header {
     align-items: center;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0 12px;
-    height: 38px;
+    border-radius: 8px;
+    padding: 0 14px;
+    height: 44px;
+    gap: 10px;
 }
 
 .search-wrapper:focus-within {
     border-color: var(--border-hover);
+    box-shadow: 0 0 10px rgba(255,255,255,0.02);
+}
+
+.search-icon-svg {
+    width: 16px;
+    height: 16px;
+    color: var(--muted);
 }
 
 .search-input {
@@ -352,6 +434,7 @@ header {
     outline: none;
     color: #ffffff;
     font-size: 13px;
+    font-family: monospace;
 }
 
 .search-counter {
@@ -359,83 +442,94 @@ header {
     color: var(--muted);
     font-family: monospace;
     white-space: nowrap;
-    margin-right: 8px;
+    background: var(--card);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
 }
 
 .search-nav {
     display: flex;
-    gap: 2px;
+    gap: 4px;
 }
 
 .search-step-btn {
-    width: 24px;
-    height: 24px;
-    background: transparent;
-    border: none;
+    width: 28px;
+    height: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
     color: var(--muted);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    transition: all 0.2s ease;
 }
 
 .search-step-btn:hover:not(:disabled) {
     color: #fff;
-    background: var(--card);
+    border-color: var(--border-hover);
+    background: #141420;
 }
 
 .search-step-btn:disabled {
-    opacity: 0.2;
+    opacity: 0.15;
     cursor: not-allowed;
 }
 
 .utility-actions {
     display: flex;
-    gap: 6px;
+    gap: 8px;
 }
 
 .util-btn {
-    height: 38px;
-    padding: 0 14px;
+    height: 44px;
+    padding: 0 18px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    color: #a0a0a0;
+    border-radius: 8px;
+    color: #a0aec0;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
-    transition: all 0.15s ease;
+    gap: 8px;
+    transition: all 0.2s ease;
 }
 
 .util-btn:hover {
     border-color: var(--border-hover);
     color: #ffffff;
+    background: rgba(255,255,255,0.01);
 }
 
-/* Output Monitor Console Screen background scanning scanlines */
+.util-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Console Monitor Window */
 .console-monitor {
     width: 100%;
-    height: 500px;
+    height: 520px;
     background: #000000;
-    background-image: linear-gradient(rgba(10, 10, 10, 0.45) 50%, rgba(0, 0, 0, 0.45) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    background-image: 
+        linear-gradient(rgba(18, 18, 24, 0.4) 50%, rgba(0, 0, 0, 0.4) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
     background-size: 100% 4px, 6px 100%;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0;
+    border-radius: 10px;
     overflow: auto;
-    color: #bbbbbb;
-    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    color: #a0aec0;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace;
+    position: relative;
 }
 
-/* Group Block Layouts */
+/* Group Blocks for Links mode */
 .group-block {
-    margin-bottom: 0px;
-    border-bottom: 1px solid #141414;
+    border-bottom: 1px solid #10101a;
 }
 
 .group-block:last-child {
@@ -444,12 +538,12 @@ header {
 
 .group-header {
     font-family: 'GFF', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     text-transform: uppercase;
     color: var(--yellow);
     letter-spacing: 1px;
-    padding: 12px 14px;
-    background: #060606;
+    padding: 14px 18px;
+    background: #050508;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -462,53 +556,55 @@ header {
 .group-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .group-copy-btn {
     background: transparent;
     border: none;
     color: var(--muted);
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 3px;
-    transition: all 0.15s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .group-copy-btn:hover {
     color: var(--yellow);
-    background: rgba(255, 222, 0, 0.05);
+    background: rgba(255, 208, 0, 0.05);
 }
 
 .group-count {
-    background: rgba(255, 222, 0, 0.08);
-    padding: 2px 8px;
-    border-radius: 4px;
+    background: rgba(255, 208, 0, 0.08);
+    padding: 3px 10px;
+    border-radius: 6px;
     font-size: 10px;
+    font-weight: 700;
     color: var(--yellow);
-    border: 1px solid rgba(255, 222, 0, 0.15);
+    border: 1px solid rgba(255, 208, 0, 0.15);
 }
 
-/* Row Styling with Media support */
+/* Row-by-Row Styling & Layout */
 .url-row {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
-    border-bottom: 1px solid #141414;
+    padding: 12px 18px;
+    border-bottom: 1px solid #0a0a0f;
     font-family: monospace;
     font-size: 13px;
     word-break: break-all;
-    background: #020202;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.15s ease;
+    background: #020204;
+    transition: all 0.15s ease;
 }
 
 .url-row:hover {
-    background: #0a0a0a;
+    background: #09090f;
 }
 
 .url-row:last-child {
@@ -516,13 +612,13 @@ header {
 }
 
 .url-href {
-    color: #58a6ff;
+    color: #60a5fa;
     text-decoration: none;
-    transition: color 0.1s ease;
+    transition: color 0.15s ease;
 }
 
 .url-href:hover {
-    color: #79b8ff;
+    color: #93c5fd;
     text-decoration: underline;
 }
 
@@ -530,18 +626,17 @@ header {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding-left: 12px;
+    gap: 10px;
+    padding-left: 16px;
     flex-shrink: 0;
 }
 
-/* Clean vector SVG for clipboard copy with scale animations */
 .copy-svg-icon {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     color: var(--muted);
     cursor: pointer;
-    transition: color 0.15s ease, transform 0.1s ease;
+    transition: all 0.2s ease;
 }
 
 .copy-svg-icon:hover {
@@ -549,62 +644,50 @@ header {
     transform: scale(1.1);
 }
 
-/* Fixed image thumbnails scaling */
+/* Thumbnails and Previews */
 .media-preview-container {
     flex-shrink: 0;
-    margin-right: 12px;
-    width: 44px;
-    height: 44px;
+    margin-right: 14px;
+    width: 48px;
+    height: 48px;
     background: #000000;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.img-preview-thumb {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Landscape and portrait fit center automatically with zero distortion */
-    cursor: pointer;
-    display: block;
-    transition: filter 0.15s ease;
-}
-
-.img-preview-thumb:hover {
-    filter: brightness(1.2);
-}
-
-.video-preview-thumb {
+.img-preview-thumb, .video-preview-thumb {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     cursor: pointer;
     display: block;
-    transition: filter 0.15s ease;
+    transition: filter 0.2s ease;
 }
 
-.video-preview-thumb:hover {
+.img-preview-thumb:hover, .video-preview-thumb:hover {
     filter: brightness(1.2);
 }
 
 .audio-preview-player {
-    height: 28px;
-    width: 140px;
-    border-radius: 4px;
+    height: 32px;
+    width: 160px;
+    border-radius: 6px;
     background: #000000;
 }
 
-/* Decoded Row Layouts */
+/* Decoded Row UI */
 .decoded-row {
-    padding: 8px 14px;
-    border-bottom: 1px solid #141414;
+    padding: 12px 18px;
+    border-bottom: 1px solid #0a0a0f;
     font-family: monospace;
     font-size: 13px;
-    color: #bbbbbb;
+    color: var(--text);
     word-break: break-all;
+    background: #020204;
 }
 
 .decoded-row:last-child {
@@ -615,52 +698,55 @@ header {
 mark.search-match {
     background-color: var(--match-bg);
     color: var(--match-text);
-    border-radius: 1px;
+    border-radius: 2px;
+    padding: 0 2px;
 }
 
 mark.search-match.match-active {
     background-color: var(--match-active);
     color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 94, 0, 0.5);
 }
 
-/* Premium scan log and dynamic progress scan state inside monitor */
+/* Terminal Processing Visuals */
 .scanner-loader {
-    padding: 30px;
+    padding: 50px 30px;
     text-align: center;
     font-family: monospace;
 }
 
 .scanner-text {
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 700;
     letter-spacing: 1px;
     color: var(--yellow);
-    margin-bottom: 16px;
-    animation: pulseBlink 1.5s infinite alternate;
+    margin-bottom: 20px;
+    animation: pulseBlink 1.2s infinite alternate;
 }
 
 @keyframes pulseBlink {
-    0% { opacity: 0.6; }
+    0% { opacity: 0.5; }
     100% { opacity: 1; }
 }
 
 .scanner-bar-container {
     width: 100%;
-    max-width: 320px;
-    height: 8px;
-    background: #111111;
+    max-width: 400px;
+    height: 10px;
+    background: #0c0c12;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 6px;
     margin: 0 auto;
     overflow: hidden;
     position: relative;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }
 
 .scanner-bar-fill {
     width: 0%;
     height: 100%;
     background: var(--yellow);
-    box-shadow: 0 0 10px var(--yellow);
+    box-shadow: 0 0 12px var(--yellow);
     transition: width 0.1s linear;
 }
 
@@ -668,19 +754,19 @@ mark.search-match.match-active {
     text-align: left;
     margin: 0 auto;
     width: 100%;
-    max-width: 450px;
-    font-size: 11px;
+    max-width: 500px;
+    font-size: 12px;
     color: var(--muted);
     border: 1px solid var(--border);
-    background: #030303;
-    padding: 12px;
-    border-radius: 6px;
-    height: 120px;
+    background: #040406;
+    padding: 16px;
+    border-radius: 10px;
+    height: 140px;
     overflow: hidden;
 }
 
 .scanner-log-line {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     animation: slideInUp 0.15s ease-out;
 }
 
@@ -689,17 +775,19 @@ mark.search-match.match-active {
     to { transform: translateY(0); opacity: 1; }
 }
 
+/* Lightbox overlays */
 .lightbox-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.96);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 10000;
+    backdrop-filter: blur(5px);
 }
 
 .lightbox-content {
@@ -710,45 +798,47 @@ mark.search-match.match-active {
 
 .lightbox-content img {
     max-width: 100%;
-    max-height: 90vh;
+    max-height: 85vh;
     object-fit: contain;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 12px;
     background: #000000;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
 }
 
 .lightbox-close {
     position: absolute;
-    top: -40px;
+    top: -46px;
     right: 0;
     background: transparent;
     border: none;
     color: #ffffff;
-    font-size: 24px;
+    font-size: 26px;
     cursor: pointer;
-    transition: color 0.1s ease;
+    transition: color 0.15s ease;
 }
 
 .lightbox-close:hover {
     color: var(--yellow);
 }
 
+/* Notifications */
 .toast {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 24px;
+    right: 24px;
     background: #ffffff;
     color: #000000;
-    padding: 10px 18px;
-    border-radius: 6px;
+    padding: 12px 24px;
+    border-radius: 8px;
     font-size: 12px;
     font-weight: 700;
     opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.2s ease;
+    transform: translateY(15px);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 1000;
     pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .toast.show {
@@ -757,10 +847,11 @@ mark.search-match.match-active {
 }
 
 @media (max-width: 768px) {
-    header { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .control-deck { flex-direction: column; align-items: stretch; gap: 8px; }
+    header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .control-deck { flex-direction: column; align-items: stretch; gap: 10px; }
     .server-selector { grid-template-columns: repeat(4, 1fr); }
-    .metrics-row { grid-template-columns: 1fr; gap: 8px; }
+    .metrics-row { grid-template-columns: 1fr; gap: 10px; }
+    .view-options { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -774,83 +865,97 @@ mark.search-match.match-active {
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
             <div class="badge">
                 <div class="dot"></div>
-                <span>LIVE RESPONDER</span>
+                <span>CONSOLE CORE ACTIVE</span>
             </div>
         </div>
-        <div class="engine-title">API <span>TOOL</span></div>
+        <div class="engine-title">API <span>ENGINE</span></div>
     </header>
 
-    <!-- CONTAINER 1: Pipeline inputs & query caching -->
+    <!-- Pipeline targets -->
     <div class="dashboard-container">
         <div class="container-title">
             <span>Target Pipeline Input</span>
-            <span class="clear-history-btn" onclick="clearHistory()">Clear History</span>
+            <span class="clear-history-btn" onclick="clearHistory()">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                Clear History
+            </span>
         </div>
         <div class="input-row">
-            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
-            <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)..." onkeydown="if(event.key === 'Enter') runAPI()">
+            <button class="run-action-btn" onclick="runAPI()">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                RUN PIPELINE
+            </button>
         </div>
 
-        <div class="history-row" id="historyContainer">
-            <!-- Dynamic pills populate here -->
-        </div>
+        <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- CONTAINER 2: Clusters selection -->
+    <!-- Cluster Nodes -->
     <div class="dashboard-container">
         <div class="container-title">Target Region Cluster</div>
         <div class="server-selector" id="serverSelectorGrid">
-            <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
-            <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
-            <button class="srv-chip" onclick="setServer(this,'id')">ID</button>
-            <button class="srv-chip" onclick="setServer(this,'cis')">CIS</button>
-            <button class="srv-chip" onclick="setServer(this,'br')">BR</button>
-            <button class="srv-chip" onclick="setServer(this,'latam')">LATAM</button>
-            <button class="srv-chip" onclick="setServer(this,'vn')">VN</button>
-            <button class="srv-chip" onclick="setServer(this,'tw')">TW</button>
-            <button class="srv-chip" onclick="setServer(this,'th')">TH</button>
-            <button class="srv-chip" onclick="setServer(this,'sg')">SG</button>
-            <button class="srv-chip" onclick="setServer(this,'eu')">EU</button>
-            <button class="srv-chip" onclick="setServer(this,'na')">NA</button>
-            <button class="srv-chip" onclick="setServer(this,'pk')">PK</button>
-            <button class="srv-chip" onclick="setServer(this,'bd')">BD</button>
+            <button class="srv-chip active" onclick="setServer(this,'ind')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>IND</button>
+            <button class="srv-chip" onclick="setServer(this,'mea')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>MEA</button>
+            <button class="srv-chip" onclick="setServer(this,'id')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>ID</button>
+            <button class="srv-chip" onclick="setServer(this,'cis')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>CIS</button>
+            <button class="srv-chip" onclick="setServer(this,'br')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>BR</button>
+            <button class="srv-chip" onclick="setServer(this,'latam')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>LATAM</button>
+            <button class="srv-chip" onclick="setServer(this,'vn')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>VN</button>
+            <button class="srv-chip" onclick="setServer(this,'tw')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>TW</button>
+            <button class="srv-chip" onclick="setServer(this,'th')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>TH</button>
+            <button class="srv-chip" onclick="setServer(this,'sg')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>SG</button>
+            <button class="srv-chip" onclick="setServer(this,'eu')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>EU</button>
+            <button class="srv-chip" onclick="setServer(this,'na')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>NA</button>
+            <button class="srv-chip" onclick="setServer(this,'pk')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>PK</button>
+            <button class="srv-chip" onclick="setServer(this,'bd')"><div class="dot" style="width:4px; height:4px; animation:none; background:#00ff95; box-shadow:none;"></div>BD</button>
         </div>
     </div>
 
-    <!-- CONTAINER 3: Perspective View Switcher -->
+    <!-- Output Views -->
     <div class="dashboard-container">
         <div class="container-title">Output Perspective View</div>
         <div class="view-options">
-            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
-            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED RESPONSE</button>
-            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
+            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                LINKS ONLY
+            </button>
+            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                DECODED RESPONSE
+            </button>
+            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                RAW RESPONSE
+            </button>
         </div>
     </div>
 
-    <!-- CONTAINER 4: Operational Metrics -->
+    <!-- Operational Metrics -->
     <div class="dashboard-container">
         <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
-            <div class="metric-card">
-                <div class="lbl">Total Decoded Strings</div>
+            <div class="metric-card active-metric" id="metric-strings">
+                <div class="lbl">Total Extracted Strings</div>
                 <div class="val" id="stringCount">0</div>
             </div>
-            <div class="metric-card">
+            <div class="metric-card active-metric" id="metric-links">
                 <div class="lbl">Discovered Links</div>
                 <div class="val" id="linkCount">0</div>
             </div>
-            <div class="metric-card">
+            <div class="metric-card active-metric" id="metric-status">
                 <div class="lbl">Engine Status</div>
                 <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
     </div>
 
-    <!-- CONTAINER 5: Control deck & output monitor screen -->
+    <!-- Output Terminal Console Wrapper -->
     <div class="dashboard-container">
         <div class="container-title">Console Output Monitor</div>
         <div class="control-deck">
             <div class="search-wrapper">
+                <svg class="search-icon-svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
                 <span class="search-counter" id="searchCount">0/0</span>
                 <div class="search-nav">
@@ -860,9 +965,18 @@ mark.search-match.match-active {
             </div>
             
             <div class="utility-actions">
-                <button class="util-btn" onclick="copyOutput()">Copy</button>
-                <button class="util-btn" onclick="downloadOutput()">Download</button>
-                <button class="util-btn" onclick="clearOutput()">Reset</button>
+                <button class="util-btn" onclick="copyOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    Copy
+                </button>
+                <button class="util-btn" onclick="downloadOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download
+                </button>
+                <button class="util-btn" onclick="clearOutput()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Reset
+                </button>
             </div>
         </div>
 
@@ -870,7 +984,7 @@ mark.search-match.match-active {
     </div>
 </div>
 
-<!-- Image Lightbox Modal Overlay -->
+<!-- Image Lightbox Modal -->
 <div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
     <div class="lightbox-content" onclick="event.stopPropagation()">
         <img id="lightboxImage" src="" alt="Preview">
@@ -882,7 +996,7 @@ mark.search-match.match-active {
 
 <script>
 let selectedServer = "ind";
-let viewMode = "links"; // Option states: 'links' | 'decoded' | 'raw'
+let viewMode = "links"; // Mode states: 'links' | 'decoded' | 'raw'
 let lastOutputText = "";
 let currentLinksArray = [];
 let apiCachedData = null;
@@ -900,7 +1014,7 @@ const VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ];
 
-// Initialize query history pills on page load
+// Load query history on start
 document.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
 });
@@ -908,7 +1022,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function setServer(btn, server) {
     selectedServer = server;
     document.querySelectorAll(".srv-chip").forEach(b => b.classList.remove("active"));
-    btn.className = "srv-chip";
     btn.classList.add("active");
 }
 
@@ -944,7 +1057,7 @@ function saveToHistory(endpoint) {
     if (!endpoint) return;
     queryHistory = queryHistory.filter(e => e !== endpoint);
     queryHistory.unshift(endpoint);
-    if (queryHistory.length > 8) queryHistory.pop(); // Cache threshold
+    if (queryHistory.length > 8) queryHistory.pop();
     localStorage.setItem("ff_query_history", JSON.stringify(queryHistory));
     updateHistoryUI();
 }
@@ -953,6 +1066,7 @@ function clearHistory() {
     queryHistory = [];
     localStorage.removeItem("ff_query_history");
     updateHistoryUI();
+    displayToast("Cache flushed");
 }
 
 function updateStatusUI(status, hexColor) {
@@ -968,27 +1082,27 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-// Convert relative endpoints into working browser destination formats
-function processHtmlUrl(val) {
+// Maps paths dynamically
+function processHtmlUrl(val, isExplicitUrl = false) {
     val = val.trim();
     if (!val) return null;
 
-    // Direct filename replacements
     val = val.replace(/\.ff_extend/gi, '.jpg');
     val = val.replace(/\.ktx(p)?/gi, '.jpg');
 
     let val_lower = val.toLowerCase();
 
-    // 1. Return absolute URLs as is
+    // Standard absolute urls
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
         return { text: val, link: val };
     }
 
-    // 2. Map relative paths matching any extension (e.g. Local/IND/, test/, OB16/)
+    // Capture valid extensions or paths containing directory paths (like 'local/')
     const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
+    const hasSlashingPattern = val.includes("/") && (val.split("/").length > 1);
 
-    if (hasValidExtension) {
-        const cleanVal = val.replace(/^\/+/, ''); // Clean duplicate slashes
+    if (isExplicitUrl || hasValidExtension || hasSlashingPattern) {
+        const cleanVal = val.replace(/^\/+/, '');
         const cleanValLower = cleanVal.toLowerCase();
 
         let linkUrl = "";
@@ -1000,7 +1114,6 @@ function processHtmlUrl(val) {
         return { text: val, link: linkUrl };
     }
 
-    // 3. Map common social links
     const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
     if (social_domains.some(domain => val_lower.includes(domain))) {
         let linkUrl = val;
@@ -1039,7 +1152,6 @@ async function runAPI() {
     updateStatusUI("SCANNING", "var(--yellow)");
     resetSearchState();
 
-    // Trigger visual simulation progress logs inside monitor console
     const output = document.getElementById("output");
     output.innerHTML = `
     <div class="scanner-loader">
@@ -1048,17 +1160,17 @@ async function runAPI() {
             <div class="scanner-bar-fill" id="scannerProgress"></div>
         </div>
         <div class="scanner-log-panel" id="scannerLogs">
-            <div class="scanner-log-line">> Establishing secure tunnel responder handshake...</div>
+            <div class="scanner-log-line">> Establishing tunnel handshake handshake...</div>
         </div>
     </div>`;
 
     const logs = [
-        "Establishing secure tunnel responder handshake...",
-        "Querying lockRegion validation clusters...",
-        "LockRegion parsed successfully. Acquiring key token...",
-        "Token verification active. Building binary requests...",
-        "Pushing decrypted Garena client request body...",
-        "Decrypting incoming API protobuf response packets..."
+        "Establishing handshake connections...",
+        "Querying lockRegion validation configurations...",
+        "Validating region target parameters...",
+        "Token verification checks running...",
+        "Sending client decrypted packet bodies...",
+        "Parsing regional response binary files..."
     ];
 
     let progress = 0;
@@ -1096,13 +1208,13 @@ async function runAPI() {
         const finalFill = document.getElementById("scannerProgress");
         const finalTxt = document.getElementById("scannerStatus");
         if (finalFill) finalFill.style.width = `100%`;
-        if (finalTxt) finalTxt.innerText = `DECRYPTING PROTOBUF SCHEMAS: 100%`;
+        if (finalTxt) finalTxt.innerText = `PROCESSING RESPONSE PACKETS: 100%`;
 
         setTimeout(() => {
             try {
                 if (data.error) {
                     updateStatusUI("ERROR", "#ff4444");
-                    output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Engine Fault: ${data.error}</div>`;
+                    output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404;">Engine Fault: ${data.error}</div>`;
                     return;
                 }
 
@@ -1117,30 +1229,36 @@ async function runAPI() {
                 renderOutput(data);
             } catch (innerErr) {
                 updateStatusUI("FAULT", "#ff4444");
-                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Interface Render Fault: ${innerErr.message}</div>`;
+                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404;">Display Render Error: ${innerErr.message}</div>`;
             }
         }, 200);
 
     } catch (err) {
         clearInterval(interval);
         updateStatusUI("FAULT", "#ff4444");
-        output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 16px;">Network connection handshake termination reset.</div>`;
+        output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px; background:#0c0404;">Connection dropped. Please re-run request.</div>`;
     }
 }
 
 function copyCategoryUrls(category) {
     const urls = [];
-    const allCandidates = new Set([...(apiCachedData.urls || []), ...(apiCachedData.strings || [])]);
+    const allCandidates = new Set();
+    if (apiCachedData.urls) apiCachedData.urls.forEach(u => allCandidates.add({val: u, explicit: true}));
+    if (apiCachedData.strings) apiCachedData.strings.forEach(s => allCandidates.add({val: s, explicit: false}));
+
     allCandidates.forEach(cand => {
-        const parsed = processHtmlUrl(cand);
+        const parsed = processHtmlUrl(cand.val, cand.explicit);
         if (parsed && getCategory(parsed.link) === category) {
             urls.push(parsed.link);
         }
     });
 
     if (urls.length === 0) return;
-    navigator.clipboard.writeText(urls.join("\n"));
-    displayToast(`Copied all ${category.toUpperCase()} endpoints`);
+    
+    // Deduplicate
+    const uniqueUrls = [...new Set(urls)];
+    navigator.clipboard.writeText(uniqueUrls.join("\n"));
+    displayToast(`Copied ${uniqueUrls.length} ${category.toUpperCase()} links`);
 }
 
 function openLightbox(src) {
@@ -1160,16 +1278,17 @@ function renderOutput(data) {
 
     if (viewMode === "links") {
         let processedTuples = [];
-        const allCandidates = new Set([...(data.urls || []), ...(data.strings || [])]);
+        const allCandidates = [];
+        if (data.urls) data.urls.forEach(u => allCandidates.push({val: u, explicit: true}));
+        if (data.strings) data.strings.forEach(s => allCandidates.push({val: s, explicit: false}));
         
         allCandidates.forEach(cand => {
-            const parsed = processHtmlUrl(cand);
+            const parsed = processHtmlUrl(cand.val, cand.explicit);
             if (parsed) {
                 processedTuples.push(parsed);
             }
         });
 
-        // De-duplicate URLs based on absolute path
         const seen = new Set();
         processedTuples = processedTuples.filter(item => {
             const duplicate = seen.has(item.link);
@@ -1181,7 +1300,7 @@ function renderOutput(data) {
         currentLinksArray = processedTuples.map(item => item.link);
 
         if (processedTuples.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No endpoint URLs matched.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No mapped urls or asset paths found in this payload.</div>`;
             lastOutputText = "";
         } else {
             const grouped = { images: [], videos: [], audio: [], other: [] };
@@ -1191,13 +1310,15 @@ function renderOutput(data) {
 
             let finalHtml = "";
 
-            // 1. Render IMAGES Category
             if (grouped.images.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-images">
                     <div class="group-header">
-                        <span>IMAGES</span>
+                        <span>IMAGES / TEXTURES</span>
                         <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('images')">[Copy Group]</button>
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('images')">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                                Copy Group
+                            </button>
                             <span class="group-count" id="badge-images">${grouped.images.length}</span>
                         </div>
                     </div>`;
@@ -1210,7 +1331,6 @@ function renderOutput(data) {
                         </div>
                         <a href="${item.link}" target="_blank" class="url-href" onclick="event.stopPropagation();">${cleanDisplayPath}</a>
                         <div class="row-actions-block" onclick="event.stopPropagation();">
-                            <!-- Clean SVG copy vector -->
                             <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${item.link}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </div>
                     </div>`;
@@ -1219,13 +1339,15 @@ function renderOutput(data) {
                 finalHtml += sectionHtml;
             }
 
-            // 2. Render VIDEOS Category
             if (grouped.videos.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-videos">
                     <div class="group-header">
-                        <span>VIDEOS</span>
+                        <span>VIDEOS / CINEMATICS</span>
                         <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('videos')">[Copy Group]</button>
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('videos')">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                                Copy Group
+                            </button>
                             <span class="group-count" id="badge-videos">${grouped.videos.length}</span>
                         </div>
                     </div>`;
@@ -1246,13 +1368,15 @@ function renderOutput(data) {
                 finalHtml += sectionHtml;
             }
 
-            // 3. Render AUDIO Category
             if (grouped.audio.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-audio">
                     <div class="group-header">
-                        <span>AUDIO</span>
+                        <span>AUDIO ELEMENTS</span>
                         <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('audio')">[Copy Group]</button>
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('audio')">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                                Copy Group
+                            </button>
                             <span class="group-count" id="badge-audio">${grouped.audio.length}</span>
                         </div>
                     </div>`;
@@ -1273,13 +1397,15 @@ function renderOutput(data) {
                 finalHtml += sectionHtml;
             }
 
-            // 4. Render OTHER configs/endpoints
             if (grouped.other.length > 0) {
                 let sectionHtml = `<div class="group-block" id="block-other">
                     <div class="group-header">
-                        <span>OTHER / CONFIGS</span>
+                        <span>OTHER ENDPOINTS / CONFS</span>
                         <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('other')">[Copy Group]</button>
+                            <button class="group-copy-btn" onclick="copyCategoryUrls('other')">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                                Copy Group
+                            </button>
                             <span class="group-count" id="badge-other">${grouped.other.length}</span>
                         </div>
                     </div>`;
@@ -1304,7 +1430,7 @@ function renderOutput(data) {
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 16px;">No decoded protobuf strings found.</div>`;
+            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No extracted text or values found.</div>`;
             lastOutputText = "";
         } else {
             let html = "";
@@ -1340,13 +1466,6 @@ function copyOutput() {
     displayToast("Console content buffered");
 }
 
-function clearHistory() {
-    queryHistory = [];
-    localStorage.removeItem("ff_query_history");
-    updateHistoryUI();
-    displayToast("Cache flushed");
-}
-
 function clearOutput() {
     document.getElementById("output").innerHTML = "SYSTEM LOG: FLUSH COMPLETED";
     document.getElementById("stringCount").innerText = "0";
@@ -1370,7 +1489,6 @@ function downloadOutput() {
     a.click();
 }
 
-/* Node Searching & Real-time Filter-while-typing Logic */
 function resetSearchState() {
     searchMatches = [];
     currentMatchIndex = -1;
