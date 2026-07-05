@@ -6,6 +6,7 @@ import gzip
 import binascii
 import json
 import time
+import re
 from urllib.parse import urlparse
 
 app = Flask(__name__)
@@ -28,7 +29,7 @@ UID_PASSWORDS = {
     "bd": {"uid": "4139230703", "password": "6C2D5409593C61CFD31CDA18146054D05E72F261F24343CDEA75AEF38ADF5C95"}
 }
 
-# Regional domains
+# Regional API entry-points
 API_DOMAINS = {
     "ind": "https://client.ind.freefiremobile.com/",
     "mea": "https://clientbp.ggpolarbear.com/",
@@ -46,7 +47,7 @@ API_DOMAINS = {
     "bd": "https://clientbp.ggpolarbear.com/"
 }
 
-# Endpoint hex payloads mapping (without spaces)
+# Explicit mapped endpoint hex payloads
 ENDPOINT_HEX_PAYLOADS = {
     "LoginGetDesc": "19d87e64f15e9db87392bc99506f0b94",
     "LoginGetAccountInfo": "701ab6a8dcd2e32bde5efd87d0da7545",
@@ -71,7 +72,7 @@ VALID_EXTENSIONS = [
     "mp4", "mp3", "wav", "ogg", "webm"
 ]
 
-# Set up an HTTP session with automatic connection pooling and retry capabilities
+# Set up an HTTP session with connection pooling and automated retry capabilities
 http_session = requests.Session()
 retries = Retry(
     total=3,
@@ -91,7 +92,7 @@ def home():
 
 def get_release_version():
     current_time = time.time()
-    # Cache version for 1 hour (3600 seconds) to avoid breaking during running execution
+    # Cache version for 1 hour to prevent API throttling
     if VERSION_CACHE["version"] and (current_time - VERSION_CACHE["last_fetched"] < 3600):
         return VERSION_CACHE["version"]
     try:
@@ -105,27 +106,18 @@ def get_release_version():
     except Exception as e:
         print("Failed to fetch game version dynamically:", e)
         
-    # Return previously cached version if available, otherwise default fallback
     if VERSION_CACHE["version"]:
         return VERSION_CACHE["version"]
     return "OB53"
 
 
 def get_payload_for_endpoint(endpoint_name):
-    """
-    Cleans and retrieves the correct hexadecimal payload for the given endpoint name.
-    Falls back to the default hex payload if the endpoint is not explicitly mapped.
-    """
     if not endpoint_name:
         return "8533b7e1d34a5dfd9a830ee5cc36664e"
         
-    # Standardize string format
     clean_name = endpoint_name.strip()
-    
-    # Case-insensitive lookup match
     for endpoint, hex_val in ENDPOINT_HEX_PAYLOADS.items():
         if endpoint.lower() == clean_name.lower():
-            # Remove any possible space formatting
             return hex_val.replace(" ", "").lower()
             
     return "8533b7e1d34a5dfd9a830ee5cc36664e"
@@ -171,18 +163,17 @@ def run_script():
         api_name = request.args.get("name")
 
         if server not in UID_PASSWORDS:
-            return jsonify({"error": "Invalid server"})
+            return jsonify({"error": "Invalid server selection"})
 
         if not api_name:
-            return jsonify({"error": "Missing API name"})
+            return jsonify({"error": "Missing target API name parameter"})
 
-        # Handle either relative path, absolute path, or full URLs gracefully
+        # Normalize relative path vs absolute URLs
         if "://" in api_name:
             api_path = urlparse(api_name).path.lstrip("/")
         else:
             api_path = api_name.lstrip("/")
 
-        # Retrieve matching endpoint payload hex based on name
         clean_api_name = api_path.split("/")[-1]
         payload_hex = get_payload_for_endpoint(clean_api_name)
 
@@ -190,7 +181,7 @@ def run_script():
         token = get_token(server)
 
         if not token:
-            return jsonify({"error": "Token fetch failed"})
+            return jsonify({"error": f"Failed to acquire security token for {server.upper()}"})
 
         headers = {
             "Accept": "*/*",
@@ -214,16 +205,17 @@ def run_script():
                 timeout=25
             )
         except requests.exceptions.Timeout:
-            return jsonify({"error": f"Request to server timed out. Server region {server} is taking too long to respond."})
+            return jsonify({"error": f"Timeout connecting to Garena regional server: {server.upper()}"})
         except requests.exceptions.ConnectionError as ce:
-            return jsonify({"error": f"Failed to connect to the regional server. Region {server} might be unreachable. Detail: {str(ce)}"})
+            return jsonify({"error": f"Connection error communicating with {server.upper()}: {str(ce)}"})
 
+        # Handle token expiration on 401
         if response.status_code == 401:
             server_tokens[server] = None
             token = get_token(server)
 
             if not token:
-                return jsonify({"error": "Token refresh failed"})
+                return jsonify({"error": f"Token refresh failure on region {server.upper()}"})
 
             headers["Authorization"] = f"Bearer {token}"
 
@@ -235,9 +227,9 @@ def run_script():
                     timeout=25
                 )
             except requests.exceptions.Timeout:
-                return jsonify({"error": f"Request retry timed out on server {server}."})
+                return jsonify({"error": "Timeout on token verification retry request."})
             except requests.exceptions.ConnectionError as ce:
-                return jsonify({"error": f"Failed to connect during retry on server {server}."})
+                return jsonify({"error": f"Connection retry error: {str(ce)}"})
 
         response.raise_for_status()
         content = response.content
@@ -250,13 +242,16 @@ def run_script():
 
         decoded = content.decode("utf-8", errors="ignore")
 
-        # Decode response utilizing the external Protobuf decoding endpoint
+        # Extraction waterfall:
+        extracted_strings = set()
+
+        # Phase 1: Try Protobuf decoder
         protobuf_data = {}
         try:
             dec_res = http_session.post(
                 "https://protobuf-decoder-seven.vercel.app/decode",
                 json={"data": content.hex()},
-                timeout=15
+                timeout=12
             )
             if dec_res.status_code == 200:
                 protobuf_data = dec_res.json().get("protobuf", {})
@@ -266,9 +261,7 @@ def run_script():
                     except Exception:
                         protobuf_data = {}
         except Exception as e:
-            print("Protobuf decoder lookup failed:", e)
-
-        extracted_strings = set()
+            print("External Protobuf parsing bypass:", e)
 
         def extract_strings_from_protobuf(data):
             if isinstance(data, dict):
@@ -282,6 +275,55 @@ def run_script():
 
         extract_strings_from_protobuf(protobuf_data)
 
+        # Phase 2: Handle fallback if JSON data is sent as clean text instead of binary protobuf
+        try:
+            raw_json = json.loads(decoded)
+            def extract_from_json(obj):
+                if isinstance(obj, dict):
+                    for k, v in obj.items():
+                        if isinstance(k, str):
+                            extracted_strings.add(k)
+                        extract_from_json(v)
+                elif isinstance(obj, list):
+                    for item in obj:
+                        extract_from_json(item)
+                elif isinstance(obj, str):
+                    extracted_strings.add(obj)
+            extract_from_json(raw_json)
+        except Exception:
+            pass
+
+        # Phase 3: Fallback Unix 'strings' implementation on decrypted binary stream
+        def extract_ascii_strings(binary_data, min_len=4):
+            result = []
+            current = []
+            for byte in binary_data:
+                if 32 <= byte <= 126:  # Printable range
+                    current.append(chr(byte))
+                else:
+                    if len(current) >= min_len:
+                        result.append("".join(current))
+                    current = []
+            if len(current) >= min_len:
+                result.append("".join(current))
+            return result
+
+        for s in extract_ascii_strings(content):
+            cleaned = s.strip()
+            # Clean off basic system structural junk characters
+            if len(cleaned) >= 4 and not cleaned.startswith(("%%", "##", "$$")):
+                extracted_strings.add(cleaned)
+
+        # Phase 4: Fallback regex patterns directly matching potential relative asset folders or URLs
+        found_paths = re.findall(
+            r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)[\w\-_/]*)',
+            decoded,
+            re.IGNORECASE
+        )
+        for path in found_paths:
+            extracted_strings.add(path)
+
+        # Final sorting and isolation of URLs
         urls = set()
         for val in extracted_strings:
             val = val.strip()
@@ -290,17 +332,15 @@ def run_script():
 
             val_lower = val.lower()
 
-            # 1. Matches complete absolute URLs
             if val_lower.startswith(("http://", "https://")):
                 urls.add(val)
                 continue
 
-            # 2. Extract relative paths ending in valid extensions
-            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")):
+            # Check valid extensions or directories
+            if any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")) or ("local/" in val_lower):
                 urls.add(val)
                 continue
 
-            # 3. Match social domain references
             social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"]
             if any(domain in val_lower for domain in social_domains):
                 if not val_lower.startswith(("http://", "https://")):
