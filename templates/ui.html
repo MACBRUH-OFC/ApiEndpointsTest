@@ -620,7 +620,7 @@ function renderOutput(data) {
 
         let html = "";
         rawUrls.forEach(fullUrl => {
-            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp|ff_extend|ktxp)/i.test(fullUrl);
+            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp)/i.test(fullUrl);
 
             html += `
             <div class="url-card">
