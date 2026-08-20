@@ -53,7 +53,7 @@ ENDPOINT_HEX_PAYLOADS = {
 
 VERSION_CACHE = {"version": None}
 BASE_LINK = "https://dl.dir.freefiremobile.com/common/"
-VALID_EXTENSIONS = ("png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm", "ff_extend", "ktxp")
+VALID_EXTENSIONS = ("png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm")
 
 SESSION = requests.Session()
 retry_strategy = Retry(
@@ -131,8 +131,10 @@ def get_payload_for_endpoint(endpoint_name):
 
 def sanitize_and_format_url(val):
     """
-    Strips trailing binary garbage after file extension (e.g. .jpg0%068...)
-    and constructs clean Garena URLs.
+    1. Converts .ff_extend and .ktxp extensions to .jpg.
+    2. Strips trailing binary garbage after extension.
+    3. Cleans leading dashes/symbols before folder names (e.g. -OB38 -> OB38).
+    4. Prepends BASE_LINK for relative paths.
     """
     if not val or not isinstance(val, str):
         return None
@@ -141,12 +143,15 @@ def sanitize_and_format_url(val):
     if not cleaned:
         return None
 
-    ext_pattern = r'(\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp))'
+    # Convert .ff_extend and .ktxp to .jpg
+    cleaned = re.sub(r'\.ff_extend\b', '.jpg', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'\.ktxp\b', '.jpg', cleaned, flags=re.IGNORECASE)
+
+    ext_pattern = r'(\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm))'
     match = re.search(ext_pattern, cleaned, re.IGNORECASE)
 
     if not match:
         if cleaned.lower().startswith(("http://", "https://")):
-            # Strip non-printable ASCII bytes
             return re.sub(r'[^\x20-\x7E].*$', '', cleaned)
         return None
 
@@ -161,16 +166,21 @@ def sanitize_and_format_url(val):
         else:
             cleaned = cleaned[:ext_end_idx]
     else:
-        # Cut off binary garbage immediately after extension!
+        # Cut off binary garbage immediately after extension
         cleaned = cleaned[:ext_end_idx]
 
-    # 1. Absolute URL check
+    # Clean leading dashes inside absolute URLs (e.g. /common/-OB38/ -> /common/OB38/)
     if cleaned.lower().startswith(("http://", "https://")):
+        cleaned = re.sub(r'/(common|client)/\-+', r'/\1/', cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r'(https?://[^/]+/)\-+', r'\1', cleaned, flags=re.IGNORECASE)
         return cleaned
 
-    # 2. Relative Path formatting
-    clean_path = cleaned.lstrip('/')
+    # Clean leading dashes/symbols from relative path (e.g. -OB38/ -> OB38/)
+    clean_path = cleaned.lstrip('/- _*+%#@!&:=')
+    clean_path = re.sub(r'^\-+', '', clean_path)
+
     if clean_path.lower().startswith("common/"):
+        clean_path = re.sub(r'^common/\-+', 'common/', clean_path, flags=re.IGNORECASE)
         return "https://dl.dir.freefiremobile.com/" + clean_path
     else:
         return BASE_LINK + clean_path
@@ -272,7 +282,7 @@ def run_script():
         clean_strings = set()
         urls_set = set()
 
-        # Recursively extract strings from decoded Protobuf JSON
+        # Extract strings from Protobuf JSON
         def extract_from_json_obj(obj):
             if isinstance(obj, dict):
                 for val in obj.values():
@@ -295,9 +305,9 @@ def run_script():
 
         extract_from_json_obj(protobuf_data)
 
-        # Fallback regex search on raw ASCII string dump
+        # Regex search fallback on raw ASCII string dump
         found_paths = re.findall(
-            r'(https?://[^\s"\'()<>]+|[\w\-_]+(?:/[\w\-_]+)+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
+            r'(https?://[^\s"\'()<>]+|[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded_ascii,
             re.IGNORECASE
         )
