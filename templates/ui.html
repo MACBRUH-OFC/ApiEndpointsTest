@@ -6,83 +6,55 @@
 <title>Garena Web Engine Console</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
-    font-family: 'GFF';
-    src: url('https://dl.dir.freefiremobile.com/common/web_event/common/fonts/website/GFFLatinW05-Bold.woff') format('woff');
-}
-
 :root {
-    --yellow: #f5a623;
-    --yellow-glow: rgba(245, 166, 35, 0.25);
-    --bg: #0b0f19;
-    --panel: #111827;
-    --card: #1f2937;
-    --border: #374151;
-    --border-hover: #4b5563;
-    --text: #f3f4f6;
-    --muted: #9ca3af;
+    --primary: #ffb703;
+    --primary-glow: rgba(255, 183, 3, 0.3);
+    --accent: #00f5d4;
+    --accent-glow: rgba(0, 245, 212, 0.25);
+    --bg: #07090f;
+    --panel: #0d121d;
+    --card: #151c2c;
+    --border: #232d42;
+    --border-hover: #3b4a6b;
+    --text: #f1f5f9;
+    --muted: #8092b0;
     --success: #10b981;
-    --error: #ef4444;
+    --error: #f43f5e;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'JetBrains Mono', monospace;
     min-height: 100vh;
-    letter-spacing: -0.1px;
     padding-bottom: 60px;
+    background-image: radial-gradient(circle at 50% 0%, rgba(13, 18, 29, 0.8) 0%, var(--bg) 70%);
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #080b11;
-}
-::-webkit-scrollbar-thumb {
-    background: #1f2937;
-    border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--yellow);
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #05070a; }
+::-webkit-scrollbar-thumb { background: #1c2536; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-.wrapper {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 24px;
-}
+.wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 32px 20px; }
 
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 32px;
+    padding-bottom: 20px;
+    margin-bottom: 28px;
 }
 
-.brand-group {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.brand-logo {
-    height: 28px;
-    object-fit: contain;
-}
+.brand-group { display: flex; align-items: center; gap: 16px; }
+.brand-logo { height: 32px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,183,3,0.3)); }
 
 .badge {
     display: inline-flex;
@@ -92,37 +64,29 @@ header {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.8px;
-    color: var(--muted);
+    color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
-.dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--yellow);
-    box-shadow: 0 0 8px var(--yellow);
-}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
 .engine-title {
-    font-family: 'GFF', sans-serif;
-    font-size: 20px;
-    font-style: italic;
-    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
 }
-.engine-title span {
-    color: var(--yellow);
-}
+.engine-title span { color: var(--primary); }
 
 .dashboard-container {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .container-title {
@@ -131,579 +95,219 @@ header {
     text-transform: uppercase;
     color: var(--muted);
     letter-spacing: 1.2px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-left: 3px solid var(--yellow);
+    border-left: 3px solid var(--primary);
     padding-left: 10px;
 }
 
-.clear-history-btn {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--muted);
-    cursor: pointer;
-    transition: color 0.15s ease;
-}
-.clear-history-btn:hover {
-    color: var(--error);
-}
+.clear-history-btn { font-size: 10px; color: var(--muted); cursor: pointer; }
+.clear-history-btn:hover { color: var(--error); }
 
-.input-row {
-    position: relative;
-    margin-bottom: 14px;
-}
+.input-row { position: relative; margin-bottom: 14px; }
 
 .main-input {
     width: 100%;
     height: 52px;
-    background: #080b11;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 8px;
     color: #ffffff;
-    padding: 0 150px 0 16px;
+    padding: 0 160px 0 16px;
     font-size: 14px;
-    font-family: monospace;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s;
 }
-
-.main-input:focus {
-    border-color: var(--yellow);
-}
+.main-input:focus { border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow); }
 
 .run-action-btn {
     position: absolute;
     right: 6px;
     top: 6px;
     height: 40px;
-    padding: 0 20px;
-    background: var(--yellow);
+    padding: 0 24px;
+    background: var(--primary);
     border: none;
     border-radius: 6px;
-    color: #000000;
-    font-family: 'GFF', sans-serif;
-    font-size: 13px;
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
     font-weight: 900;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: all 0.15s;
 }
-.run-action-btn:hover {
-    background: #d98d1a;
-}
+.run-action-btn:hover { background: #e0a000; box-shadow: 0 0 15px var(--primary-glow); }
 
-.history-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
+.presets-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.preset-tag {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
 }
+.preset-tag:hover { color: var(--primary); border-color: var(--primary); }
 
+.history-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .history-pill {
-    padding: 5px 10px;
-    background: #080b11;
+    padding: 4px 10px;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 4px;
     font-size: 11px;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s ease;
-    font-family: monospace;
 }
-.history-pill:hover {
-    border-color: var(--yellow);
-    color: var(--yellow);
-}
+.history-pill:hover { border-color: var(--accent); color: var(--accent); }
 
-.server-selector {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 8px;
-}
-
+.server-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 6px; }
 .srv-chip {
-    height: 36px;
-    background: #080b11;
+    height: 34px;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--muted);
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    transition: all 0.15s;
 }
-.srv-chip:hover {
-    border-color: var(--border-hover);
-    color: #fff;
-}
-.srv-chip.active {
-    background: var(--yellow);
-    border-color: var(--yellow);
-    color: #000000;
-}
+.srv-chip:hover { border-color: var(--border-hover); color: #fff; }
+.srv-chip.active { background: var(--primary); border-color: var(--primary); color: #000; font-weight: 900; }
 
-.view-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
+.view-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .opt-toggle {
     height: 40px;
-    background: #080b11;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    transition: all 0.15s;
 }
-.opt-toggle:hover {
-    border-color: var(--border-hover);
-}
-.opt-toggle.active {
-    border-color: var(--yellow);
-    color: var(--yellow);
-    background: rgba(245, 166, 35, 0.05);
-}
+.opt-toggle:hover { border-color: var(--border-hover); }
+.opt-toggle.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
 
-.metrics-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .metric-card {
-    background: #080b11;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-left: 3px solid var(--border);
 }
-.metric-card.active-metric {
-    border-left-color: var(--yellow);
-}
+.metric-card.active-metric { border-left-color: var(--accent); }
+.metric-card .lbl { font-size: 10px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.metric-card .val { font-size: 18px; font-weight: 700; }
 
-.metric-card .lbl {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--muted);
-    letter-spacing: 0.8px;
-    margin-bottom: 4px;
-}
-
-.metric-card .val {
-    font-size: 24px;
-    font-weight: 700;
-    font-family: monospace;
-}
-
-.control-deck {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 14px;
-}
-
+.control-deck { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
 .search-wrapper {
     flex: 1;
     display: flex;
     align-items: center;
-    background: #080b11;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 0 12px;
-    height: 40px;
+    height: 38px;
 }
+.search-input { width: 100%; background: transparent; border: none; outline: none; color: #fff; font-size: 12px; }
 
-.search-input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ffffff;
-    font-size: 13px;
-    font-family: monospace;
-}
-
-.search-counter {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: monospace;
-    white-space: nowrap;
-    margin-right: 8px;
-}
-
-.search-nav {
-    display: flex;
-    gap: 4px;
-}
-
-.search-step-btn {
-    width: 24px;
-    height: 24px;
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-}
-.search-step-btn:hover:not(:disabled) {
-    color: #fff;
-    background: var(--card);
-}
-.search-step-btn:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
-}
-
-.utility-actions {
-    display: flex;
-    gap: 8px;
-}
-
+.utility-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .util-btn {
-    height: 40px;
-    padding: 0 14px;
-    background: #080b11;
+    height: 38px;
+    padding: 0 12px;
+    background: #05070a;
     border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: all 0.15s ease;
+    transition: all 0.15s;
 }
-.util-btn:hover {
-    border-color: var(--border-hover);
-    color: #ffffff;
-}
+.util-btn:hover { border-color: var(--primary); color: var(--primary); }
+.util-btn.accent { border-color: var(--accent); color: var(--accent); }
+.util-btn.accent:hover { background: var(--accent); color: #000; }
 
 .console-monitor {
     width: 100%;
-    height: 500px;
-    background: #080b11;
+    height: 520px;
+    background: #040609;
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: auto;
     color: var(--muted);
-    font-family: monospace;
+    font-size: 12px;
 }
 
-.group-block {
-    border-bottom: 1px solid var(--border);
-}
-.group-block:last-child {
-    border-bottom: none;
-}
-
+.group-block { border-bottom: 1px solid var(--border); }
 .group-header {
-    font-family: 'GFF', sans-serif;
+    font-family: 'Orbitron', sans-serif;
     font-size: 11px;
-    text-transform: uppercase;
-    color: var(--yellow);
-    letter-spacing: 1px;
-    padding: 12px 16px;
-    background: #05070c;
+    color: var(--primary);
+    padding: 10px 16px;
+    background: #080c14;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 10;
-}
-
-.group-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.group-copy-btn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    font-size: 9px;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 3px;
-    transition: all 0.15s ease;
-}
-.group-copy-btn:hover {
-    color: var(--yellow);
-    background: rgba(245, 166, 35, 0.05);
-}
-
-.group-count {
-    background: rgba(245, 166, 35, 0.08);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    color: var(--yellow);
-    border: 1px solid rgba(245, 166, 35, 0.15);
+    z-index: 5;
 }
 
 .url-row {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid #111827;
-    font-family: monospace;
-    font-size: 13px;
+    padding: 8px 16px;
+    border-bottom: 1px solid #0d131f;
     word-break: break-all;
-    background: #04060a;
 }
-.url-row:last-child {
-    border-bottom: none;
-}
-
-.url-href {
-    color: #60a5fa;
-    text-decoration: none;
-    transition: color 0.1s ease;
-}
-.url-href:hover {
-    color: #93c5fd;
-    text-decoration: underline;
-}
-
-.row-actions-block {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-left: 12px;
-    flex-shrink: 0;
-}
-
-.copy-svg-icon {
-    width: 14px;
-    height: 14px;
-    color: var(--muted);
-    cursor: pointer;
-    transition: color 0.15s ease, transform 0.1s ease;
-}
-.copy-svg-icon:hover {
-    color: var(--yellow);
-    transform: scale(1.1);
-}
+.url-href { color: #60a5fa; text-decoration: none; }
+.url-href:hover { text-decoration: underline; color: #93c5fd; }
 
 .media-preview-container {
-    flex-shrink: 0;
-    margin-right: 12px;
-    width: 44px;
-    height: 44px;
-    background: #000000;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 40px; height: 40px; background: #000; border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden; margin-right: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
 }
+.img-preview-thumb { max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; }
 
-.img-preview-thumb, .video-preview-thumb {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    cursor: pointer;
-    display: block;
-    transition: filter 0.15s ease;
-}
-.img-preview-thumb:hover, .video-preview-thumb:hover {
-    filter: brightness(1.2);
-}
+.decoded-row { padding: 8px 16px; border-bottom: 1px solid #0d131f; color: #d1d5db; word-break: break-all; }
+pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-space: pre-wrap; word-break: break-all; }
 
-.audio-preview-player {
-    height: 28px;
-    width: 140px;
-    border-radius: 4px;
-    background: #000000;
-}
+mark.search-match { background-color: var(--primary); color: #000; }
 
-.decoded-row {
-    padding: 10px 16px;
-    border-bottom: 1px solid #111827;
-    font-family: monospace;
-    font-size: 13px;
-    color: #d1d5db;
-    word-break: break-all;
-    background: #04060a;
-}
-.decoded-row:last-child {
-    border-bottom: none;
-}
-
-mark.search-match {
-    background-color: var(--yellow);
-    color: #000000;
-    border-radius: 1px;
-}
-mark.search-match.match-active {
-    background-color: #f59e0b;
-    color: #ffffff;
-}
-
-.scanner-loader {
-    padding: 30px;
-    text-align: center;
-    font-family: monospace;
-}
-
-.scanner-text {
-    font-size: 13px;
-    letter-spacing: 1px;
-    color: var(--yellow);
-    margin-bottom: 16px;
-    animation: pulseBlink 1.5s infinite alternate;
-}
-
-@keyframes pulseBlink {
-    0% { opacity: 0.6; }
-    100% { opacity: 1; }
-}
-
-.scanner-bar-container {
-    width: 100%;
-    max-width: 320px;
-    height: 8px;
-    background: #1f2937;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin: 0 auto;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 24px;
-}
-
-.scanner-bar-fill {
-    width: 0%;
-    height: 100%;
-    background: var(--yellow);
-    box-shadow: 0 0 10px var(--yellow);
-    transition: width 0.1s linear;
-}
-
-.scanner-log-panel {
-    text-align: left;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 450px;
-    font-size: 11px;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    background: #080b11;
-    padding: 12px;
-    border-radius: 6px;
-    height: 120px;
-    overflow: hidden;
-}
-
-.scanner-log-line {
-    margin-bottom: 6px;
-    animation: slideInUp 0.15s ease-out;
-}
-
-@keyframes slideInUp {
-    from { transform: translateY(5px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.lightbox-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.lightbox-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-}
-
-.lightbox-content img {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #000000;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 24px;
-    cursor: pointer;
-}
+.scanner-loader { padding: 40px; text-align: center; }
+.scanner-bar-fill { width: 0%; height: 6px; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
+.scanner-bar-container { width: 300px; height: 6px; background: #151c2c; border-radius: 3px; margin: 16px auto; overflow: hidden; }
 
 .toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #ffffff;
-    color: #000000;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.2s ease;
-    z-index: 1000;
-    pointer-events: none;
+    position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: #000;
+    padding: 10px 18px; border-radius: 6px; font-weight: 800; opacity: 0; transition: opacity 0.2s; pointer-events: none;
 }
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
+.toast.show { opacity: 1; }
 
 @media (max-width: 768px) {
-    header { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .control-deck { flex-direction: column; align-items: stretch; gap: 8px; }
-    .server-selector { grid-template-columns: repeat(4, 1fr); }
-    .metrics-row { grid-template-columns: 1fr; gap: 8px; }
+    .metrics-row, .view-options { grid-template-columns: repeat(2, 1fr); }
+    .control-deck { flex-direction: column; align-items: stretch; }
 }
 </style>
 </head>
 <body>
 
 <div class="wrapper">
-
-    <!-- Header Block -->
     <header>
         <div class="brand-group">
             <img src="https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png" class="brand-logo" alt="FF">
@@ -715,23 +319,31 @@ mark.search-match.match-active {
         <div class="engine-title">API <span>TOOL</span></div>
     </header>
 
-    <!-- Pipeline target configurations -->
     <div class="dashboard-container">
         <div class="container-title">
-            <span>Target Pipeline Input</span>
+            <span>Target Pipeline Endpoint</span>
             <span class="clear-history-btn" onclick="clearHistory()">Clear History</span>
         </div>
+        
+        <div class="presets-row">
+            <span style="font-size: 10px; color: var(--muted); margin-right: 4px; align-self: center;">Quick Presets:</span>
+            <span class="preset-tag" onclick="setEndpoint('LoginGetDesc')">LoginGetDesc</span>
+            <span class="preset-tag" onclick="setEndpoint('LoginGetAccountInfo')">LoginGetAccountInfo</span>
+            <span class="preset-tag" onclick="setEndpoint('GetMailList')">GetMailList</span>
+            <span class="preset-tag" onclick="setEndpoint('GetLimitedEventOpenInfo')">GetLimitedEventOpenInfo</span>
+            <span class="preset-tag" onclick="setEndpoint('GetBPAllDescs')">GetBPAllDescs</span>
+        </div>
+
         <div class="input-row">
-            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint path string (e.g. LoginGetDesc)...">
+            <input type="text" id="apiName" class="main-input" placeholder="Enter endpoint name string (e.g., LoginGetDesc)...">
             <button class="run-action-btn" onclick="runAPI()">SCAN ENGINE</button>
         </div>
 
         <div class="history-row" id="historyContainer"></div>
     </div>
 
-    <!-- Server selector list -->
     <div class="dashboard-container">
-        <div class="container-title">Target Region Cluster</div>
+        <div class="container-title">Target Server Region</div>
         <div class="server-selector" id="serverSelectorGrid">
             <button class="srv-chip active" onclick="setServer(this,'ind')">IND</button>
             <button class="srv-chip" onclick="setServer(this,'mea')">MEA</button>
@@ -750,81 +362,54 @@ mark.search-match.match-active {
         </div>
     </div>
 
-    <!-- Display perspectives switcher -->
     <div class="dashboard-container">
-        <div class="container-title">Output Perspective View</div>
+        <div class="container-title">Output View Perspective</div>
         <div class="view-options">
-            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                LINKS ONLY
-            </button>
-            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
-                DECODED RESPONSE
-            </button>
-            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                RAW RESPONSE
-            </button>
+            <button class="opt-toggle active" id="btn-links" onclick="setViewMode('links')">LINKS ONLY</button>
+            <button class="opt-toggle" id="btn-decoded" onclick="setViewMode('decoded')">DECODED TEXT</button>
+            <button class="opt-toggle" id="btn-json" onclick="setViewMode('json')">PROTOBUF TREE</button>
+            <button class="opt-toggle" id="btn-raw" onclick="setViewMode('raw')">RAW RESPONSE</button>
         </div>
     </div>
 
-    <!-- Execution state indicators -->
     <div class="dashboard-container">
         <div class="container-title">Execution State Metrics</div>
         <div class="metrics-row">
-            <div class="metric-card active-metric" id="metric-strings">
-                <div class="lbl">Total Extracted Strings</div>
+            <div class="metric-card active-metric">
+                <div class="lbl">Extracted Strings</div>
                 <div class="val" id="stringCount">0</div>
             </div>
-            <div class="metric-card active-metric" id="metric-links">
+            <div class="metric-card active-metric">
                 <div class="lbl">Discovered Links</div>
                 <div class="val" id="linkCount">0</div>
             </div>
-            <div class="metric-card active-metric" id="metric-status">
+            <div class="metric-card active-metric">
+                <div class="lbl">Payload Size / Speed</div>
+                <div class="val" id="payloadMeta">0 KB / 0ms</div>
+            </div>
+            <div class="metric-card active-metric">
                 <div class="lbl">Engine Status</div>
                 <div class="val" id="statusText" style="color: var(--muted);">IDLE</div>
             </div>
         </div>
     </div>
 
-    <!-- Monitor Output Container -->
     <div class="dashboard-container">
         <div class="container-title">Console Output Monitor</div>
         <div class="control-deck">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
-                <span class="search-counter" id="searchCount">0/0</span>
-                <div class="search-nav">
-                    <button class="search-step-btn" id="prevSearchBtn" onclick="navigateSearch(-1)" disabled>▲</button>
-                    <button class="search-step-btn" id="nextSearchBtn" onclick="navigateSearch(1)" disabled>▼</button>
-                </div>
             </div>
             
             <div class="utility-actions">
-                <button class="util-btn" onclick="copyOutput()">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                    Copy
-                </button>
-                <button class="util-btn" onclick="downloadOutput()">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    Download
-                </button>
-                <button class="util-btn" onclick="clearOutput()">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    Reset
-                </button>
+                <button class="util-btn accent" onclick="downloadRawDat()">⬇ Download .DAT</button>
+                <button class="util-btn" onclick="downloadOutput()">💾 Export File</button>
+                <button class="util-btn" onclick="copyOutput()">📋 Copy</button>
+                <button class="util-btn" onclick="clearOutput()">🧹 Reset</button>
             </div>
         </div>
 
-        <div class="console-monitor" id="output">SYSTEM LOG: READY DEVICE OVERFLOW</div>
-    </div>
-</div>
-
-<div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
-    <div class="lightbox-content" onclick="event.stopPropagation()">
-        <img id="lightboxImage" src="" alt="Preview">
-        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <div class="console-monitor" id="output">SYSTEM LOG: ENGINE READY</div>
     </div>
 </div>
 
@@ -834,37 +419,21 @@ mark.search-match.match-active {
 let selectedServer = "ind";
 let viewMode = "links"; 
 let lastOutputText = "";
-let currentLinksArray = [];
 let apiCachedData = null;
 let releaseVersion = "OB53";
-
-let searchMatches = [];
-let currentMatchIndex = -1;
-
 let queryHistory = JSON.parse(localStorage.getItem("ff_query_history") || "[]");
 
 const BASE_LINK = "https://dl.dir.freefiremobile.com/common/";
-
-const VALID_EXTENSIONS = [
-    "png", "jpg", "jpeg", "webp", "gif",
-    "bmp", "ktx", "html", "json",
-    "mp4", "mp3", "wav", "ogg", "webm"
-];
+const VALID_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm"];
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchReleaseVersion();
     updateHistoryUI();
 });
 
-// Strictly sanitizes text context injection preventing parsing breakage
 function escapeHtml(str) {
     if (typeof str !== 'string') return '';
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 async function fetchReleaseVersion() {
@@ -873,17 +442,15 @@ async function fetchReleaseVersion() {
         const data = await res.json();
         if (data.version) {
             releaseVersion = data.version;
-            localStorage.setItem("ff_release_version", releaseVersion);
             document.getElementById("versionBadge").innerText = `VERSION: ${releaseVersion}`;
         }
     } catch (e) {
-        console.error("Using persistent fallback release version configuration", e);
-        const saved = localStorage.getItem("ff_release_version");
-        if (saved) {
-            releaseVersion = saved;
-            document.getElementById("versionBadge").innerText = `VERSION: ${releaseVersion}`;
-        }
+        console.warn("Using fallback version configuration");
     }
+}
+
+function setEndpoint(name) {
+    document.getElementById("apiName").value = name;
 }
 
 function setServer(btn, server) {
@@ -896,18 +463,16 @@ function setViewMode(mode) {
     viewMode = mode;
     document.querySelectorAll(".opt-toggle").forEach(b => b.classList.remove("active"));
     document.getElementById(`btn-${mode}`).classList.add("active");
-    if (apiCachedData) {
-        renderOutput(apiCachedData);
-    }
+    if (apiCachedData) renderOutput(apiCachedData);
 }
 
 function updateHistoryUI() {
     const container = document.getElementById("historyContainer");
     if (queryHistory.length === 0) {
-        container.innerHTML = `<span style="color: var(--muted); font-style: italic; font-size:11px;">No scan history stored.</span>`;
+        container.innerHTML = `<span style="color: var(--muted); font-size:11px;">No scan history stored.</span>`;
         return;
     }
-    container.innerHTML = `<span style="color: var(--muted); font-size:10px; font-weight:700; margin-right:4px; text-transform:uppercase;">Recent Scans:</span>`;
+    container.innerHTML = `<span style="color: var(--muted); font-size:10px; font-weight:700;">RECENT:</span>`;
     queryHistory.forEach(endpoint => {
         const pill = document.createElement("button");
         pill.className = "history-pill";
@@ -936,12 +501,6 @@ function clearHistory() {
     displayToast("History cleared");
 }
 
-function updateStatusUI(status, hexColor) {
-    const el = document.getElementById("statusText");
-    el.innerText = status;
-    el.style.color = hexColor || "var(--text)";
-}
-
 function displayToast(msg) {
     const toast = document.getElementById("toastNotifier");
     toast.innerText = msg;
@@ -949,61 +508,21 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-function processHtmlUrl(val, isExplicitUrl = false) {
-    val = val.trim();
-    if (!val) return null;
-
-    val = val.replace(/\.ff_extend/gi, '.jpg');
-    val = val.replace(/\.ktx(p)?/gi, '.jpg');
-
+function processHtmlUrl(val) {
+    val = val.trim().replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
     let val_lower = val.toLowerCase();
 
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
         return { text: val, link: val };
     }
 
-    const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext)) || val_lower.endsWith('.ff_extend') || val_lower.endsWith('.ktxp');
-    const looksLikePath = val.includes("/") && (val.split("/").length > 1);
-
-    if (isExplicitUrl || hasValidExtension || looksLikePath) {
+    const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext));
+    if (hasValidExtension || val.includes("/")) {
         const cleanVal = val.replace(/^\/+/, '');
-        const cleanValLower = cleanVal.toLowerCase();
-
-        let linkUrl = "";
-        if (cleanValLower.startsWith("common/")) {
-            linkUrl = "https://dl.dir.freefiremobile.com/" + cleanVal;
-        } else {
-            linkUrl = BASE_LINK + cleanVal;
-        }
+        const linkUrl = cleanVal.toLowerCase().startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + cleanVal : BASE_LINK + cleanVal;
         return { text: val, link: linkUrl };
     }
-
-    const social_domains = ["instagram.com", "discord.gg", "youtube.com", "youtu.be", "facebook.com", "twitter.com", "x.com", "whatsapp.com", "linktr.ee"];
-    if (social_domains.some(domain => val_lower.includes(domain))) {
-        let linkUrl = val;
-        if (!val_lower.startsWith("http://") && !val_lower.startsWith("https://")) {
-            linkUrl = "https://" + val;
-        }
-        return { text: val, link: linkUrl };
-    }
-
     return null;
-}
-
-function getCategory(url) {
-    const lower = url.toLowerCase();
-    if (/\.(png|jpg|jpeg|webp|gif|bmp)/i.test(lower)) return "images";
-    if (/\.(mp4|webm)/i.test(lower)) return "videos";
-    if (/\.(mp3|wav|ogg)/i.test(lower)) return "audio";
-    return "other";
-}
-
-function getDisplayPath(fullLink) {
-    const basePrefix = "https://dl.dir.freefiremobile.com/common/";
-    if (fullLink.startsWith(basePrefix)) {
-        return fullLink.substring(basePrefix.length);
-    }
-    return fullLink;
 }
 
 async function runAPI() {
@@ -1013,520 +532,171 @@ async function runAPI() {
         return;
     }
 
-    updateStatusUI("SCANNING", "var(--yellow)");
-    resetSearchState();
+    document.getElementById("statusText").innerText = "SCANNING";
+    document.getElementById("statusText").style.color = "var(--primary)";
 
     const output = document.getElementById("output");
     output.innerHTML = `
     <div class="scanner-loader">
-        <div class="scanner-text" id="scannerStatus">INITIATING PIPELINE SCAN: 0%</div>
-        <div class="scanner-bar-container">
-            <div class="scanner-bar-fill" id="scannerProgress"></div>
-        </div>
-        <div class="scanner-log-panel" id="scannerLogs">
-            <div class="scanner-log-line">> Establishing server handshake configurations...</div>
-        </div>
+        <div style="color: var(--primary); font-weight:800;" id="scannerStatus">SCANNING PIPELINE...</div>
+        <div class="scanner-bar-container"><div class="scanner-bar-fill" id="scannerProgress"></div></div>
     </div>`;
 
-    const logs = [
-        "Establishing handshake connections...",
-        "Querying lockRegion validation configurations...",
-        "Validating regional target parameters...",
-        "Token verification checks running...",
-        "Sending client decrypted packet bodies...",
-        "Parsing decoded server protobuf files..."
-    ];
-
-    let progress = 0;
-    let logIndex = 0;
+    let progress = 10;
     const interval = setInterval(() => {
-        if (progress < 92) {
-            progress += Math.floor(Math.random() * 12) + 6;
-            if (progress > 92) progress = 92;
-            
+        if (progress < 90) {
+            progress += 15;
             const fill = document.getElementById("scannerProgress");
-            const txt = document.getElementById("scannerStatus");
-            const logBox = document.getElementById("scannerLogs");
-            
             if (fill) fill.style.width = `${progress}%`;
-            if (txt) txt.innerText = `SCANNING TARGET PIPELINE: ${progress}%`;
-            
-            if (logBox && logIndex < logs.length && progress > (logIndex * 15)) {
-                const line = document.createElement("div");
-                line.className = "scanner-log-line";
-                line.innerText = `> ${logs[logIndex]}`;
-                logBox.appendChild(line);
-                logBox.scrollTop = logBox.scrollHeight;
-                logIndex++;
-            }
         }
-    }, 120);
+    }, 100);
 
     try {
-        let endpoint = `/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}&version=${releaseVersion}`;
-        const res = await fetch(endpoint);
+        const res = await fetch(`/run_script?server=${selectedServer}&name=${encodeURIComponent(apiName)}&version=${releaseVersion}`);
         const data = await res.json();
-
         clearInterval(interval);
-        
-        const finalFill = document.getElementById("scannerProgress");
-        const finalTxt = document.getElementById("scannerStatus");
-        if (finalFill) finalFill.style.width = `100%`;
-        if (finalTxt) finalTxt.innerText = `PROCESSING RESPONSE PACKETS: 100%`;
 
-        setTimeout(() => {
-            try {
-                if (data.error) {
-                    updateStatusUI("ERROR", "#ff4444");
-                    output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px;">Engine Fault: ${escapeHtml(data.error)}</div>`;
-                    return;
-                }
+        if (data.error) {
+            document.getElementById("statusText").innerText = "ERROR";
+            document.getElementById("statusText").style.color = "var(--error)";
+            output.innerHTML = `<div style="color:var(--error); padding:20px;">Fault Error: ${escapeHtml(data.error)}</div>`;
+            return;
+        }
 
-                document.getElementById("stringCount").innerText = data.count || 0;
-                document.getElementById("linkCount").innerText = data.raw_count || 0;
-                updateStatusUI("ONLINE", "#10b981");
+        document.getElementById("stringCount").innerText = data.count || 0;
+        document.getElementById("linkCount").innerText = data.raw_count || 0;
+        document.getElementById("payloadMeta").innerText = `${(data.byte_size / 1024).toFixed(1)} KB / ${data.execution_ms}ms`;
+        document.getElementById("statusText").innerText = "ONLINE";
+        document.getElementById("statusText").style.color = "var(--success)";
 
-                currentLinksArray = data.urls || [];
-                apiCachedData = data; 
-                
-                saveToHistory(apiName);
-                renderOutput(data);
-            } catch (innerErr) {
-                updateStatusUI("FAULT", "#ff4444");
-                output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px;">Display Render Error: ${escapeHtml(innerErr.message)}</div>`;
-            }
-        }, 200);
+        apiCachedData = data; 
+        saveToHistory(apiName);
+        renderOutput(data);
 
     } catch (err) {
         clearInterval(interval);
-        updateStatusUI("FAULT", "#ff4444");
-        output.innerHTML = `<div style="color:#ff4444; font-family:monospace; padding: 24px;">Connection interrupted. Please rescan.</div>`;
+        document.getElementById("statusText").innerText = "FAULT";
+        document.getElementById("statusText").style.color = "var(--error)";
+        output.innerHTML = `<div style="color:var(--error); padding:20px;">Connection Failed. Check Backend Instance.</div>`;
     }
-}
-
-function copyCategoryUrls(category) {
-    const urls = [];
-    const allCandidates = [];
-    if (apiCachedData.urls) apiCachedData.urls.forEach(u => allCandidates.push({val: u, explicit: true}));
-    if (apiCachedData.strings) apiCachedData.strings.forEach(s => allCandidates.push({val: s, explicit: false}));
-
-    allCandidates.forEach(cand => {
-        const parsed = processHtmlUrl(cand.val, cand.explicit);
-        if (parsed && getCategory(parsed.link) === category) {
-            urls.push(parsed.link);
-        }
-    });
-
-    if (urls.length === 0) return;
-    
-    const uniqueUrls = [...new Set(urls)];
-    navigator.clipboard.writeText(uniqueUrls.join("\n"));
-    displayToast(`Copied ${uniqueUrls.length} ${category.toUpperCase()} links`);
-}
-
-function openLightbox(src) {
-    const lightbox = document.getElementById("imageLightbox");
-    const img = document.getElementById("lightboxImage");
-    img.src = src;
-    lightbox.style.display = "flex";
-}
-
-function closeLightbox() {
-    document.getElementById("imageLightbox").style.display = "none";
 }
 
 function renderOutput(data) {
     const output = document.getElementById("output");
-    output.innerHTML = ""; 
+    output.innerHTML = "";
 
     if (viewMode === "links") {
-        let processedTuples = [];
-        const allCandidates = [];
-        if (data.urls) data.urls.forEach(u => allCandidates.push({val: u, explicit: true}));
-        if (data.strings) data.strings.forEach(s => allCandidates.push({val: s, explicit: false}));
-        
-        allCandidates.forEach(cand => {
-            const parsed = processHtmlUrl(cand.val, cand.explicit);
-            if (parsed) {
-                processedTuples.push(parsed);
-            }
+        let items = [];
+        (data.urls || []).forEach(u => {
+            const p = processHtmlUrl(u);
+            if (p) items.push(p);
         });
 
-        const seen = new Set();
-        processedTuples = processedTuples.filter(item => {
-            const duplicate = seen.has(item.link);
-            seen.add(item.link);
-            return !duplicate;
-        });
-
-        processedTuples.sort((a, b) => a.text.localeCompare(b.text));
-        currentLinksArray = processedTuples.map(item => item.link);
-
-        if (processedTuples.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No mapped urls or asset paths found in payload.</div>`;
+        if (items.length === 0) {
+            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No media asset URLs discovered in payload response.</div>`;
             lastOutputText = "";
-        } else {
-            const grouped = { images: [], videos: [], audio: [], other: [] };
-            processedTuples.forEach(item => {
-                grouped[getCategory(item.link)].push(item);
-            });
-
-            let finalHtml = "";
-
-            if (grouped.images.length > 0) {
-                let sectionHtml = `<div class="group-block" id="block-images">
-                    <div class="group-header">
-                        <span>IMAGES / TEXTURES</span>
-                        <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('images')">Copy Group</button>
-                            <span class="group-count" id="badge-images">${grouped.images.length}</span>
-                        </div>
-                    </div>`;
-                grouped.images.forEach(item => {
-                    const cleanDisplayPath = getDisplayPath(item.link);
-                    const escapedPath = escapeHtml(cleanDisplayPath);
-                    const escapedLink = escapeHtml(item.link);
-
-                    sectionHtml += `
-                    <div class="url-row" data-url="${escapedPath}">
-                        <div class="media-preview-container">
-                            <img src="${escapedLink}" class="img-preview-thumb" loading="lazy" onclick="openLightbox('${escapedLink}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
-                        </div>
-                        <a href="${escapedLink}" target="_blank" class="url-href" onclick="event.stopPropagation();">${escapedPath}</a>
-                        <div class="row-actions-block" onclick="event.stopPropagation();">
-                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${escapedLink}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        </div>
-                    </div>`;
-                });
-                sectionHtml += `</div>`;
-                finalHtml += sectionHtml;
-            }
-
-            if (grouped.videos.length > 0) {
-                let sectionHtml = `<div class="group-block" id="block-videos">
-                    <div class="group-header">
-                        <span>VIDEOS / CINEMATICS</span>
-                        <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('videos')">Copy Group</button>
-                            <span class="group-count" id="badge-videos">${grouped.videos.length}</span>
-                        </div>
-                    </div>`;
-                grouped.videos.forEach(item => {
-                    const cleanDisplayPath = getDisplayPath(item.link);
-                    const escapedPath = escapeHtml(cleanDisplayPath);
-                    const escapedLink = escapeHtml(item.link);
-
-                    sectionHtml += `
-                    <div class="url-row" data-url="${escapedPath}">
-                        <div class="media-preview-container">
-                            <video src="${escapedLink}" class="video-preview-thumb" preload="metadata" muted loop onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>
-                        </div>
-                        <a href="${escapedLink}" target="_blank" class="url-href" onclick="event.stopPropagation();">${escapedPath}</a>
-                        <div class="row-actions-block" onclick="event.stopPropagation();">
-                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${escapedLink}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        </div>
-                    </div>`;
-                });
-                sectionHtml += `</div>`;
-                finalHtml += sectionHtml;
-            }
-
-            if (grouped.audio.length > 0) {
-                let sectionHtml = `<div class="group-block" id="block-audio">
-                    <div class="group-header">
-                        <span>AUDIO ELEMENTS</span>
-                        <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('audio')">Copy Group</button>
-                            <span class="group-count" id="badge-audio">${grouped.audio.length}</span>
-                        </div>
-                    </div>`;
-                grouped.audio.forEach(item => {
-                    const cleanDisplayPath = getDisplayPath(item.link);
-                    const escapedPath = escapeHtml(cleanDisplayPath);
-                    const escapedLink = escapeHtml(item.link);
-
-                    sectionHtml += `
-                    <div class="url-row" data-url="${escapedPath}">
-                        <div class="media-preview-container">
-                            <audio src="${escapedLink}" controls class="audio-preview-player" onclick="event.stopPropagation();"></audio>
-                        </div>
-                        <a href="${escapedLink}" target="_blank" class="url-href" onclick="event.stopPropagation();">${escapedPath}</a>
-                        <div class="row-actions-block" onclick="event.stopPropagation();">
-                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${escapedLink}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        </div>
-                    </div>`;
-                });
-                sectionHtml += `</div>`;
-                finalHtml += sectionHtml;
-            }
-
-            if (grouped.other.length > 0) {
-                let sectionHtml = `<div class="group-block" id="block-other">
-                    <div class="group-header">
-                        <span>OTHER ENDPOINTS / CONFS</span>
-                        <div class="group-meta">
-                            <button class="group-copy-btn" onclick="copyCategoryUrls('other')">Copy Group</button>
-                            <span class="group-count" id="badge-other">${grouped.other.length}</span>
-                        </div>
-                    </div>`;
-                grouped.other.forEach(item => {
-                    const cleanDisplayPath = getDisplayPath(item.link);
-                    const escapedPath = escapeHtml(cleanDisplayPath);
-                    const escapedLink = escapeHtml(item.link);
-
-                    sectionHtml += `
-                    <div class="url-row" data-url="${escapedPath}">
-                        <a href="${escapedLink.startsWith('http') ? escapedLink : '#'}" target="_blank" class="url-href" onclick="event.stopPropagation();">${escapedPath}</a>
-                        <div class="row-actions-block" onclick="event.stopPropagation();">
-                            <svg class="copy-svg-icon" viewBox="0 0 24 24" onclick="copyIndividualText('${escapedLink}')"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        </div>
-                    </div>`;
-                });
-                sectionHtml += `</div>`;
-                finalHtml += sectionHtml;
-            }
-
-            output.innerHTML = finalHtml;
-            lastOutputText = processedTuples.map(item => item.link).join("\n");
+            return;
         }
+
+        let html = `<div class="group-block"><div class="group-header"><span>DISCOVERED LINKS (${items.length})</span></div>`;
+        items.forEach(item => {
+            const escapedLink = escapeHtml(item.link);
+            html += `
+            <div class="url-row">
+                <a href="${escapedLink}" target="_blank" class="url-href">${escapedLink}</a>
+            </div>`;
+        });
+        html += `</div>`;
+        output.innerHTML = html;
+        lastOutputText = items.map(i => i.link).join("\n");
     } 
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="color:var(--muted); font-style:italic; padding: 24px;">No extracted text or values found.</div>`;
+            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No extracted text strings available.</div>`;
             lastOutputText = "";
-        } else {
-            let html = "";
-            strings.forEach(str => {
-                let cleanStr = str.replace(/\.ff_extend/gi, '.jpg');
-                cleanStr = cleanStr.replace(/\.ktx(p)?/gi, '.jpg');
-                const escapedText = escapeHtml(cleanStr);
-
-                html += `
-                <div class="decoded-row" data-text="${escapedText}">
-                    <span class="decoded-text">${escapedText}</span>
-                </div>`;
-            });
-            output.innerHTML = html;
-            lastOutputText = strings.map(str => str.replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg')).join("\n");
+            return;
         }
+        output.innerHTML = strings.map(s => `<div class="decoded-row">${escapeHtml(s)}</div>`).join("");
+        lastOutputText = strings.join("\n");
     } 
+    else if (viewMode === "json") {
+        const jsonStr = JSON.stringify(data.protobuf || {}, null, 2);
+        output.innerHTML = `<pre class="json-view">${escapeHtml(jsonStr)}</pre>`;
+        lastOutputText = jsonStr;
+    }
     else if (viewMode === "raw") {
         lastOutputText = data.raw_response || "";
         output.textContent = lastOutputText;
     }
-    
-    performSearch();
 }
 
-function copyIndividualText(text) {
-    navigator.clipboard.writeText(text);
-    displayToast("URL buffered to clipboard");
+function downloadRawDat() {
+    if (!apiCachedData || !apiCachedData.raw_b64) {
+        alert("No payload cached. Run a scan first.");
+        return;
+    }
+    const byteCharacters = atob(apiCachedData.raw_b64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+    
+    const fileName = `${apiCachedData.endpoint || 'endpoint'}_${selectedServer}.dat`;
+    
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    displayToast(`Downloaded ${fileName}`);
+}
+
+function downloadOutput() {
+    if (!lastOutputText) return;
+    const ext = viewMode === "json" ? "json" : "txt";
+    const fileName = `${(apiCachedData && apiCachedData.endpoint) || 'response'}_${selectedServer}.${ext}`;
+    
+    const blob = new Blob([lastOutputText], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    a.click();
+    displayToast(`Downloaded ${fileName}`);
 }
 
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
-    displayToast("Console content buffered");
+    displayToast("Output copied to clipboard");
 }
 
 function clearOutput() {
-    document.getElementById("output").innerHTML = "SYSTEM LOG: FLUSH COMPLETED";
+    document.getElementById("output").innerText = "SYSTEM LOG: FLUSH COMPLETED";
     document.getElementById("stringCount").innerText = "0";
     document.getElementById("linkCount").innerText = "0";
+    document.getElementById("payloadMeta").innerText = "0 KB / 0ms";
     document.getElementById("apiName").value = "";
-    document.getElementById("searchBox").value = "";
-    updateStatusUI("IDLE", "var(--muted)");
+    document.getElementById("statusText").innerText = "IDLE";
+    document.getElementById("statusText").style.color = "var(--muted)";
     lastOutputText = "";
     apiCachedData = null;
-    currentLinksArray = [];
-    resetSearchState();
     displayToast("Console cleared");
-}
-
-function downloadOutput() {
-    if (!lastOutputText) return;
-    const blob = new Blob([lastOutputText], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `ff_api_logs_${selectedServer}.log`;
-    a.click();
-}
-
-function resetSearchState() {
-    searchMatches = [];
-    currentMatchIndex = -1;
-    document.getElementById("searchCount").innerText = "0/0";
-    document.getElementById("prevSearchBtn").disabled = true;
-    document.getElementById("nextSearchBtn").disabled = true;
 }
 
 function performSearch() {
     const query = document.getElementById("searchBox").value.trim().toLowerCase();
-    const output = document.getElementById("output");
-    
-    if (viewMode === "links") {
-        if (!apiCachedData) return;
-        const groups = output.querySelectorAll(".group-block");
-        let visibleCount = 0;
-        
-        groups.forEach(group => {
-            const rows = group.querySelectorAll(".url-row");
-            let groupVisibleCount = 0;
-            
-            rows.forEach(row => {
-                const url = row.getAttribute("data-url") || "";
-                const hrefElement = row.querySelector(".url-href");
-                
-                if (hrefElement) {  // Strict safety guards
-                    if (!query) {
-                        row.style.display = "flex";
-                        hrefElement.innerHTML = escapeHtml(url);
-                        groupVisibleCount++;
-                    } else if (url.toLowerCase().includes(query)) {
-                        row.style.display = "flex";
-                        groupVisibleCount++;
-                        const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                        hrefElement.innerHTML = escapeHtml(url).replace(regex, `<mark class="search-match">$1</mark>`);
-                    } else {
-                        row.style.display = "none";
-                    }
-                }
-            });
-            
-            if (groupVisibleCount > 0) {
-                group.style.display = "block";
-                const badge = group.querySelector(".group-count");
-                if (badge) badge.innerText = groupVisibleCount;
-                visibleCount += groupVisibleCount;
-            } else {
-                group.style.display = "none";
-            }
-        });
-        
-        searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
-        updateSearchStats(visibleCount, query);
-    } 
-    else if (viewMode === "decoded") {
-        if (!apiCachedData) return;
-        const rows = output.querySelectorAll(".decoded-row");
-        let visibleCount = 0;
-        
-        rows.forEach(row => {
-            const text = row.getAttribute("data-text") || "";
-            const textElement = row.querySelector(".decoded-text");
-            
-            if (textElement) {  // Strict safety guards
-                if (!query) {
-                    row.style.display = "block";
-                    textElement.innerHTML = escapeHtml(text);
-                    visibleCount++;
-                } else if (text.toLowerCase().includes(query)) {
-                    row.style.display = "block";
-                    visibleCount++;
-                    const regex = new RegExp(`(${escapePattern(query)})`, "gi");
-                    textElement.innerHTML = escapeHtml(text).replace(regex, `<mark class="search-match">$1</mark>`);
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
-        
-        searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
-        updateSearchStats(visibleCount, query);
-    } 
-    else if (viewMode === "raw") {
-        if (!query) {
-            resetSearchState();
-            output.textContent = lastOutputText;
-            return;
-        }
-
-        output.textContent = lastOutputText;
-        highlightNodes(output, query);
-        searchMatches = Array.from(output.querySelectorAll("mark.search-match"));
-        
-        if (searchMatches.length > 0) {
-            currentMatchIndex = 0;
-            updateSearchStatsUI();
-            applyFocusHighlight();
+    const rows = document.querySelectorAll(".url-row, .decoded-row");
+    rows.forEach(row => {
+        if (!query || row.innerText.toLowerCase().includes(query)) {
+            row.style.display = "flex";
         } else {
-            currentMatchIndex = -1;
-            updateSearchStatsUI();
+            row.style.display = "none";
         }
-    }
-}
-
-function updateSearchStats(visibleCount, query) {
-    const total = viewMode === "links" ? (currentLinksArray.length) : (apiCachedData ? apiCachedData.strings.length : 0);
-    if (!query) {
-        document.getElementById("searchCount").innerText = `${total}/${total}`;
-        resetSearchState();
-    } else {
-        const matchLen = searchMatches.length;
-        document.getElementById("searchCount").innerText = `Filtered: ${visibleCount} | Matches: ${matchLen}`;
-        const state = matchLen === 0;
-        document.getElementById("prevSearchBtn").disabled = state;
-        document.getElementById("nextSearchBtn").disabled = state;
-        if (matchLen > 0) {
-            currentMatchIndex = 0;
-            applyFocusHighlight();
-        } else {
-            currentMatchIndex = -1;
-        }
-    }
-}
-
-function highlightNodes(root, token) {
-    const regex = new RegExp(`(${escapePattern(token)})`, "gi");
-    function parser(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-            if (node.textContent.match(regex)) {
-                const wrapper = document.createElement("span");
-                wrapper.innerHTML = node.textContent.replace(regex, `<mark class="search-match">$1</mark>`);
-                node.parentNode.replaceChild(wrapper, node);
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'MARK' && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
-            for (let i = node.childNodes.length - 1; i >= 0; i--) {
-                parser(node.childNodes[i]);
-            }
-        }
-    }
-    parser(root);
-}
-
-function escapePattern(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function updateSearchStatsUI() {
-    const len = searchMatches.length;
-    const cur = len > 0 ? currentMatchIndex + 1 : 0;
-    document.getElementById("searchCount").innerText = `${cur}/${len}`;
-    const state = len === 0;
-    document.getElementById("prevSearchBtn").disabled = state;
-    document.getElementById("nextSearchBtn").disabled = state;
-}
-
-function applyFocusHighlight() {
-    searchMatches.forEach(el => el.classList.remove("match-active"));
-    if (currentMatchIndex >= 0 && currentMatchIndex < searchMatches.length) {
-        const target = searchMatches[currentMatchIndex];
-        target.classList.add("match-active");
-        target.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    }
-}
-
-function navigateSearch(offset) {
-    if (searchMatches.length === 0) return;
-    currentMatchIndex += offset;
-    if (currentMatchIndex >= searchMatches.length) currentMatchIndex = 0;
-    if (currentMatchIndex < 0) currentMatchIndex = searchMatches.length - 1;
-    updateSearchStatsUI();
-    applyFocusHighlight();
+    });
 }
 </script>
 
