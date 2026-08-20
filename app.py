@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, Response
+from flask import Flask, jsonify, request, render_template
 import requests
 import gzip
 import zlib
@@ -128,31 +128,34 @@ def get_payload_for_endpoint(endpoint_name):
     return ENDPOINT_HEX_PAYLOADS.get(clean_name, "19d87e64f15e9db87392bc99506f0b94")
 
 
-def clean_garena_url_path(val):
-    if not val or not isinstance(val, str):
+def sanitize_garena_path(path):
+    """
+    Cleans unwanted prefixes like 'en;hi*(', 'pt;es#', 'zh-TW*', or language tags before valid asset paths
+    (e.g., OB49/CSH/NewbieRing/NewbieRingIND_en.png).
+    """
+    if not path:
         return ""
 
-    # Fix language prefixes like "en;hi*(OB49/CSH/..." -> "OB49/CSH/..."
-    ob_match = re.search(r'(OB\d+[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)', val, re.IGNORECASE)
-    if ob_match:
-        val = ob_match.group(1)
-    else:
-        path_match = re.search(r'([A-Za-z0-9\-_]+/[A-Za-z0-9\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)', val, re.IGNORECASE)
-        if path_match:
-            val = path_match.group(1)
-
-    # Strip version suffix counters like .png123 -> .png
+    # Remove extension numbers (e.g. .png12 -> .png)
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
         r'.\1',
-        val,
+        path,
         flags=re.IGNORECASE
-    )
+    ).strip('"\'* \t\n\r')
 
-    # Strip junk boundary characters
-    cleaned = re.sub(r'^[^\w/]+', '', cleaned)
-    cleaned = cleaned.strip(';*()[]{}<>"\' \t\n\r')
+    # Look for OB version pattern (e.g., OB49/, OB53/)
+    ob_match = re.search(r'(OB\d+/.+)', cleaned, re.IGNORECASE)
+    if ob_match:
+        return ob_match.group(1)
 
+    # Look for explicit clean relative paths
+    path_match = re.search(r'([\w\-_]+(?:/[\w\-_]+)+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp))', cleaned, re.IGNORECASE)
+    if path_match:
+        return path_match.group(1)
+
+    # Strip dirty prefix before first valid folder letter
+    cleaned = re.sub(r'^[a-zA-Z0-9_\-;*()$%#@!&+=]+(?=[\w\-_]+/[\w\-_/]+\.)', '', cleaned)
     return cleaned
 
 
@@ -226,7 +229,7 @@ def run_script():
             raw_payload = binascii.unhexlify(payload_hex)
             response = SESSION.post(url, headers=headers, data=raw_payload, timeout=20)
         except requests.exceptions.Timeout:
-            return jsonify({"error": f"Timeout connecting to Garena edge node [{server.upper()}]"}), 504
+            return jsonify({"error": f"Timeout connecting to Garena server [{server.upper()}]"}), 504
         except requests.exceptions.RequestException as req_err:
             return jsonify({"error": f"Garena Connection Fault: {str(req_err)}"}), 502
 
@@ -241,7 +244,7 @@ def run_script():
 
         raw_bytes = decompress_data(response.content)
         if not raw_bytes:
-            return jsonify({"error": "Empty payload byte stream returned."}), 204
+            return jsonify({"error": "Empty payload stream returned."}), 204
 
         raw_hex = raw_bytes.hex()
         raw_b64 = base64.b64encode(raw_bytes).decode("utf-8")
@@ -280,7 +283,7 @@ def run_script():
         if len(current) >= 4:
             extracted_strings.add("".join(current))
 
-        # Regex discovery
+        # Regex path discovery
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded_ascii,
@@ -293,7 +296,7 @@ def run_script():
         urls = set()
 
         for val in extracted_strings:
-            clean_str = clean_garena_url_path(val)
+            clean_str = sanitize_garena_path(val)
             if not clean_str or len(clean_str) < 3:
                 continue
             clean_strings.add(clean_str)
@@ -326,7 +329,7 @@ def run_script():
         })
 
     except Exception as e:
-        return jsonify({"error": f"Internal Script Runtime Error: {str(e)}"}), 500
+        return jsonify({"error": f"Internal Script Error: {str(e)}"}), 500
 
 
 @app.after_request
