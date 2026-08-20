@@ -450,9 +450,6 @@ let apiCachedData = null;
 let releaseVersion = "OB53";
 let queryHistory = JSON.parse(localStorage.getItem("ff_query_history") || "[]");
 
-const BASE_LINK = "https://dl.dir.freefiremobile.com/common/";
-const VALID_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm"];
-
 document.addEventListener("DOMContentLoaded", () => {
     fetchReleaseVersion();
     updateHistoryUI();
@@ -533,28 +530,6 @@ function displayToast(msg) {
     toast.innerText = msg;
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 1800);
-}
-
-function cleanGarenaUrl(val) {
-    val = val.trim();
-    // Strip trailing extensions numbers
-    val = val.replace(/\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$/i, '.$1');
-    val = val.replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
-
-    let val_lower = val.toLowerCase();
-    if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
-        return val;
-    }
-
-    // Clean prefix garbage before OB or clean paths
-    const obMatch = val.match(/(OB\d+\/.+)/i);
-    if (obMatch) val = obMatch[1];
-    else {
-        val = val.replace(/^[a-zA-Z0-9_\-;*()$%#@!&+=]+(?=[\w\-_]+\/[\w\-_/]+\.)/, '');
-    }
-
-    const cleanVal = val.replace(/^\/+/, '');
-    return cleanVal.toLowerCase().startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + cleanVal : BASE_LINK + cleanVal;
 }
 
 function openLightbox(src) {
@@ -644,12 +619,8 @@ function renderOutput(data) {
         }
 
         let html = "";
-        let cleanUrlsList = [];
-
-        rawUrls.forEach(u => {
-            const fullUrl = cleanGarenaUrl(u);
-            cleanUrlsList.push(fullUrl);
-            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp)/i.test(fullUrl);
+        rawUrls.forEach(fullUrl => {
+            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp|ff_extend|ktxp)/i.test(fullUrl);
 
             html += `
             <div class="url-card">
@@ -664,7 +635,7 @@ function renderOutput(data) {
         });
 
         output.innerHTML = html;
-        lastOutputText = cleanUrlsList.join("\n");
+        lastOutputText = rawUrls.join("\n");
     } 
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
