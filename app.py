@@ -104,7 +104,7 @@ def get_release_version():
             return version
     except Exception:
         pass
-    return "OB53"  # Fallback OB version
+    return "OB53"
 
 
 def get_token(region_data, release_version):
@@ -128,14 +128,32 @@ def get_payload_for_endpoint(endpoint_name):
     return ENDPOINT_HEX_PAYLOADS.get(clean_name, "19d87e64f15e9db87392bc99506f0b94")
 
 
-def normalize_garena_path(path):
+def clean_garena_url_path(val):
+    if not val or not isinstance(val, str):
+        return ""
+
+    # Fix language prefixes like "en;hi*(OB49/CSH/..." -> "OB49/CSH/..."
+    ob_match = re.search(r'(OB\d+[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)', val, re.IGNORECASE)
+    if ob_match:
+        val = ob_match.group(1)
+    else:
+        path_match = re.search(r'([A-Za-z0-9\-_]+/[A-Za-z0-9\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)', val, re.IGNORECASE)
+        if path_match:
+            val = path_match.group(1)
+
+    # Strip version suffix counters like .png123 -> .png
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
         r'.\1',
-        path,
+        val,
         flags=re.IGNORECASE
     )
-    return cleaned.strip('"\'* \t\n\r')
+
+    # Strip junk boundary characters
+    cleaned = re.sub(r'^[^\w/]+', '', cleaned)
+    cleaned = cleaned.strip(';*()[]{}<>"\' \t\n\r')
+
+    return cleaned
 
 
 def decode_protobuf(raw_hex):
@@ -196,7 +214,7 @@ def run_script():
 
         token = get_token(region_data, release_version)
         if not token:
-            return jsonify({"error": f"Authentication JWT token generation failed for {server.upper()}"}), 401
+            return jsonify({"error": f"Authentication token generation failed for {server.upper()}"}), 401
 
         headers = BASE_HEADERS.copy()
         headers["Authorization"] = f"Bearer {token}"
@@ -250,7 +268,7 @@ def run_script():
 
         extract_strings_recursively(protobuf_data)
 
-        # ASCII parsing fallback
+        # ASCII parsing
         current = []
         for byte in raw_bytes:
             if 32 <= byte <= 126:
@@ -262,7 +280,7 @@ def run_script():
         if len(current) >= 4:
             extracted_strings.add("".join(current))
 
-        # Regex path discovery
+        # Regex discovery
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded_ascii,
@@ -275,7 +293,7 @@ def run_script():
         urls = set()
 
         for val in extracted_strings:
-            clean_str = normalize_garena_path(val)
+            clean_str = clean_garena_url_path(val)
             if not clean_str or len(clean_str) < 3:
                 continue
             clean_strings.add(clean_str)
@@ -288,7 +306,6 @@ def run_script():
 
         urls_list = sorted(list(urls))
         execution_time_ms = round((time.time() - start_time) * 1000, 2)
-
         clean_endpoint_filename = re.sub(r'[^a-zA-Z0-9_\-]', '_', clean_api_name)
 
         return jsonify({
