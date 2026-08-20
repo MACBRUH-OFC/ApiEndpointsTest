@@ -242,7 +242,7 @@ header {
 
 .console-monitor {
     width: 100%;
-    height: 520px;
+    height: 540px;
     background: #040609;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -273,25 +273,56 @@ header {
     padding: 8px 16px;
     border-bottom: 1px solid #0d131f;
     word-break: break-all;
+    gap: 12px;
 }
-.url-href { color: #60a5fa; text-decoration: none; }
+
+.media-preview-box {
+    width: 48px;
+    height: 48px;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+.img-thumb:hover { transform: scale(1.1); }
+
+.url-href { color: #60a5fa; text-decoration: none; flex: 1; }
 .url-href:hover { text-decoration: underline; color: #93c5fd; }
 
-.media-preview-container {
-    width: 40px; height: 40px; background: #000; border: 1px solid var(--border);
-    border-radius: 4px; overflow: hidden; margin-right: 12px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+.btn-copy-small {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    cursor: pointer;
 }
-.img-preview-thumb { max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; }
+.btn-copy-small:hover { color: var(--primary); border-color: var(--primary); }
 
 .decoded-row { padding: 8px 16px; border-bottom: 1px solid #0d131f; color: #d1d5db; word-break: break-all; }
 pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-space: pre-wrap; word-break: break-all; }
 
-mark.search-match { background-color: var(--primary); color: #000; }
+.scanner-loader { padding: 60px 20px; text-align: center; }
+.scanner-bar-container { width: 280px; height: 6px; background: #151c2c; border-radius: 3px; margin: 16px auto; overflow: hidden; }
+.scanner-bar-fill { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
 
-.scanner-loader { padding: 40px; text-align: center; }
-.scanner-bar-fill { width: 0%; height: 6px; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
-.scanner-bar-container { width: 300px; height: 6px; background: #151c2c; border-radius: 3px; margin: 16px auto; overflow: hidden; }
+.lightbox-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 9999;
+}
+.lightbox-modal img { max-width: 90%; max-height: 85vh; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 
 .toast {
     position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: #000;
@@ -326,7 +357,7 @@ mark.search-match { background-color: var(--primary); color: #000; }
         </div>
         
         <div class="presets-row">
-            <span style="font-size: 10px; color: var(--muted); margin-right: 4px; align-self: center;">Quick Presets:</span>
+            <span style="font-size: 10px; color: var(--muted); margin-right: 4px; align-self: center;">Presets:</span>
             <span class="preset-tag" onclick="setEndpoint('LoginGetDesc')">LoginGetDesc</span>
             <span class="preset-tag" onclick="setEndpoint('LoginGetAccountInfo')">LoginGetAccountInfo</span>
             <span class="preset-tag" onclick="setEndpoint('GetMailList')">GetMailList</span>
@@ -384,7 +415,7 @@ mark.search-match { background-color: var(--primary); color: #000; }
                 <div class="val" id="linkCount">0</div>
             </div>
             <div class="metric-card active-metric">
-                <div class="lbl">Payload Size / Speed</div>
+                <div class="lbl">Payload / Speed</div>
                 <div class="val" id="payloadMeta">0 KB / 0ms</div>
             </div>
             <div class="metric-card active-metric">
@@ -413,6 +444,10 @@ mark.search-match { background-color: var(--primary); color: #000; }
     </div>
 </div>
 
+<div class="lightbox-modal" id="lightboxModal" onclick="this.style.display='none'">
+    <img id="lightboxImg" src="" alt="Full Preview">
+</div>
+
 <div class="toast" id="toastNotifier">Copied to clipboard</div>
 
 <script>
@@ -434,6 +469,28 @@ document.addEventListener("DOMContentLoaded", () => {
 function escapeHtml(str) {
     if (typeof str !== 'string') return '';
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function cleanGarenaPathJS(val) {
+    if (!val) return "";
+    val = val.trim();
+
+    // Fix language prefixes like "en;hi*(OB49/CSH/..." -> "OB49/CSH/..."
+    const obMatch = val.match(/(OB\d+[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)/i);
+    if (obMatch) {
+        val = obMatch[1];
+    } else {
+        const pathMatch = val.match(/([A-Za-z0-9\-_]+/[A-Za-z0-9\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)/i);
+        if (pathMatch) {
+            val = pathMatch[1];
+        }
+    }
+
+    // Strip version suffix counters like .png123 -> .png
+    val = val.replace(/\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$/i, '.$1');
+    val = val.replace(/^\/+/, '');
+    val = val.replace(/^[^a-zA-Z0-9/]+/, '');
+    return val.trim();
 }
 
 async function fetchReleaseVersion() {
@@ -509,20 +566,30 @@ function displayToast(msg) {
 }
 
 function processHtmlUrl(val) {
-    val = val.trim().replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
-    let val_lower = val.toLowerCase();
+    val = cleanGarenaPathJS(val).replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
+    if (!val) return null;
 
+    let val_lower = val.toLowerCase();
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
         return { text: val, link: val };
     }
 
     const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext));
     if (hasValidExtension || val.includes("/")) {
-        const cleanVal = val.replace(/^\/+/, '');
-        const linkUrl = cleanVal.toLowerCase().startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + cleanVal : BASE_LINK + cleanVal;
+        const linkUrl = val_lower.startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + val : BASE_LINK + val;
         return { text: val, link: linkUrl };
     }
     return null;
+}
+
+function clearPastState() {
+    document.getElementById("stringCount").innerText = "0";
+    document.getElementById("linkCount").innerText = "0";
+    document.getElementById("payloadMeta").innerText = "0 KB / 0ms";
+    document.getElementById("statusText").innerText = "CLEARING...";
+    document.getElementById("statusText").style.color = "var(--muted)";
+    apiCachedData = null;
+    lastOutputText = "";
 }
 
 async function runAPI() {
@@ -532,13 +599,16 @@ async function runAPI() {
         return;
     }
 
+    // Clear past results instantly before starting scanner animation
+    clearPastState();
+
     document.getElementById("statusText").innerText = "SCANNING";
     document.getElementById("statusText").style.color = "var(--primary)";
 
     const output = document.getElementById("output");
     output.innerHTML = `
     <div class="scanner-loader">
-        <div style="color: var(--primary); font-weight:800;" id="scannerStatus">SCANNING PIPELINE...</div>
+        <div style="color: var(--primary); font-weight:800; font-family:'Orbitron';" id="scannerStatus">SCANNING PIPELINE...</div>
         <div class="scanner-bar-container"><div class="scanner-bar-fill" id="scannerProgress"></div></div>
     </div>`;
 
@@ -581,6 +651,13 @@ async function runAPI() {
     }
 }
 
+function showLightbox(src) {
+    const modal = document.getElementById("lightboxModal");
+    const img = document.getElementById("lightboxImg");
+    img.src = src;
+    modal.style.display = "flex";
+}
+
 function renderOutput(data) {
     const output = document.getElementById("output");
     output.innerHTML = "";
@@ -601,9 +678,16 @@ function renderOutput(data) {
         let html = `<div class="group-block"><div class="group-header"><span>DISCOVERED LINKS (${items.length})</span></div>`;
         items.forEach(item => {
             const escapedLink = escapeHtml(item.link);
+            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp)/i.test(item.link);
+
             html += `
             <div class="url-row">
+                ${isImage ? `
+                <div class="media-preview-box">
+                    <img src="${escapedLink}" class="img-thumb" onclick="showLightbox('${escapedLink}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
+                </div>` : ''}
                 <a href="${escapedLink}" target="_blank" class="url-href">${escapedLink}</a>
+                <button class="btn-copy-small" onclick="navigator.clipboard.writeText('${escapedLink}'); displayToast('URL Copied');">Copy</button>
             </div>`;
         });
         html += `</div>`;
@@ -617,8 +701,8 @@ function renderOutput(data) {
             lastOutputText = "";
             return;
         }
-        output.innerHTML = strings.map(s => `<div class="decoded-row">${escapeHtml(s)}</div>`).join("");
-        lastOutputText = strings.join("\n");
+        output.innerHTML = strings.map(s => `<div class="decoded-row">${escapeHtml(cleanGarenaPathJS(s))}</div>`).join("");
+        lastOutputText = strings.map(s => cleanGarenaPathJS(s)).join("\n");
     } 
     else if (viewMode === "json") {
         const jsonStr = JSON.stringify(data.protobuf || {}, null, 2);
@@ -675,15 +759,9 @@ function copyOutput() {
 }
 
 function clearOutput() {
+    clearPastState();
     document.getElementById("output").innerText = "SYSTEM LOG: FLUSH COMPLETED";
-    document.getElementById("stringCount").innerText = "0";
-    document.getElementById("linkCount").innerText = "0";
-    document.getElementById("payloadMeta").innerText = "0 KB / 0ms";
     document.getElementById("apiName").value = "";
-    document.getElementById("statusText").innerText = "IDLE";
-    document.getElementById("statusText").style.color = "var(--muted)";
-    lastOutputText = "";
-    apiCachedData = null;
     displayToast("Console cleared");
 }
 
