@@ -129,42 +129,51 @@ def get_payload_for_endpoint(endpoint_name):
     return ENDPOINT_HEX_PAYLOADS.get(clean_name, "19d87e64f15e9db87392bc99506f0b94")
 
 
-def format_garena_url(path_str):
+def sanitize_and_format_url(val):
     """
-    Constructs accurate Garena URLs:
-    - Leaves absolute URLs (e.g., https://dl-tata.freefireind.in/...) untouched.
-    - Prepends BASE_LINK to relative paths (e.g., Local/IND/..., OB49/CSH/...).
+    Strips trailing binary garbage after file extension (e.g. .jpg0%068...)
+    and constructs clean Garena URLs.
     """
-    if not path_str or not isinstance(path_str, str):
+    if not val or not isinstance(val, str):
         return None
 
-    cleaned = path_str.strip('\'"* \t\n\r')
+    cleaned = val.strip('\'"* \t\n\r')
+    if not cleaned:
+        return None
 
-    # Remove trailing extension digits (e.g. .png123 -> .png)
-    cleaned = re.sub(
-        r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
-        r'.\1',
-        cleaned,
-        flags=re.IGNORECASE
-    )
+    ext_pattern = r'(\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp))'
+    match = re.search(ext_pattern, cleaned, re.IGNORECASE)
+
+    if not match:
+        if cleaned.lower().startswith(("http://", "https://")):
+            # Strip non-printable ASCII bytes
+            return re.sub(r'[^\x20-\x7E].*$', '', cleaned)
+        return None
+
+    ext_end_idx = match.end()
+    remainder = cleaned[ext_end_idx:]
+
+    # Keep valid query string (e.g., ?lang=en or #section)
+    if remainder.startswith("?") or remainder.startswith("#"):
+        valid_query = re.match(r'^[\?#a-zA-Z0-9_\-=&%.]+', remainder)
+        if valid_query:
+            cleaned = cleaned[:ext_end_idx] + valid_query.group(0)
+        else:
+            cleaned = cleaned[:ext_end_idx]
+    else:
+        # Cut off binary garbage immediately after extension!
+        cleaned = cleaned[:ext_end_idx]
 
     # 1. Absolute URL check
     if cleaned.lower().startswith(("http://", "https://")):
         return cleaned
 
+    # 2. Relative Path formatting
     clean_path = cleaned.lstrip('/')
-    path_lower = clean_path.lower()
-
-    # 2. Check if valid path structure
-    has_valid_ext = any(path_lower.endswith(f".{ext}") for ext in VALID_EXTENSIONS)
-    
-    if has_valid_ext or "/" in clean_path:
-        if path_lower.startswith("common/"):
-            return "https://dl.dir.freefiremobile.com/" + clean_path
-        else:
-            return BASE_LINK + clean_path
-
-    return None
+    if clean_path.lower().startswith("common/"):
+        return "https://dl.dir.freefiremobile.com/" + clean_path
+    else:
+        return BASE_LINK + clean_path
 
 
 def decode_protobuf(raw_hex):
@@ -260,54 +269,43 @@ def run_script():
 
         protobuf_data = decode_protobuf(raw_hex)
 
-        extracted_strings = set()
+        clean_strings = set()
+        urls_set = set()
 
-        def extract_strings_recursively(obj):
+        # Recursively extract strings from decoded Protobuf JSON
+        def extract_from_json_obj(obj):
             if isinstance(obj, dict):
                 for val in obj.values():
-                    extract_strings_recursively(val)
+                    extract_from_json_obj(val)
             elif isinstance(obj, list):
                 for item in obj:
-                    extract_strings_recursively(item)
+                    extract_from_json_obj(item)
             elif isinstance(obj, str):
-                extracted_strings.add(obj)
-                if obj.strip().startswith(("{", "[")):
+                s_val = obj.strip()
+                if s_val.startswith(("{", "[")):
                     try:
-                        extract_strings_recursively(json.loads(obj))
+                        extract_from_json_obj(json.loads(s_val))
+                        return
                     except Exception:
                         pass
+                formatted = sanitize_and_format_url(s_val)
+                if formatted:
+                    clean_strings.add(s_val)
+                    urls_set.add(formatted)
 
-        extract_strings_recursively(protobuf_data)
+        extract_from_json_obj(protobuf_data)
 
-        # ASCII parsing
-        current = []
-        for byte in raw_bytes:
-            if 32 <= byte <= 126:
-                current.append(chr(byte))
-            else:
-                if len(current) >= 4:
-                    extracted_strings.add("".join(current))
-                current = []
-        if len(current) >= 4:
-            extracted_strings.add("".join(current))
-
-        # Regex path discovery
+        # Fallback regex search on raw ASCII string dump
         found_paths = re.findall(
             r'(https?://[^\s"\'()<>]+|[\w\-_]+(?:/[\w\-_]+)+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded_ascii,
             re.IGNORECASE
         )
         for path in found_paths:
-            extracted_strings.add(path)
-
-        clean_strings = set()
-        urls_set = set()
-
-        for val in extracted_strings:
-            formatted_url = format_garena_url(val)
-            if formatted_url:
-                clean_strings.add(val.strip())
-                urls_set.add(formatted_url)
+            formatted = sanitize_and_format_url(path)
+            if formatted:
+                clean_strings.add(path.strip())
+                urls_set.add(formatted)
 
         urls_list = sorted(list(urls_set))
         execution_time_ms = round((time.time() - start_time) * 1000, 2)
