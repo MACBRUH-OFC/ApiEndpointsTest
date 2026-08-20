@@ -52,7 +52,8 @@ ENDPOINT_HEX_PAYLOADS = {
 }
 
 VERSION_CACHE = {"version": None}
-VALID_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm"]
+BASE_LINK = "https://dl.dir.freefiremobile.com/common/"
+VALID_EXTENSIONS = ("png", "jpg", "jpeg", "webp", "gif", "bmp", "ktx", "html", "json", "mp4", "mp3", "wav", "ogg", "webm", "ff_extend", "ktxp")
 
 SESSION = requests.Session()
 retry_strategy = Retry(
@@ -128,35 +129,42 @@ def get_payload_for_endpoint(endpoint_name):
     return ENDPOINT_HEX_PAYLOADS.get(clean_name, "19d87e64f15e9db87392bc99506f0b94")
 
 
-def sanitize_garena_path(path):
+def format_garena_url(path_str):
     """
-    Cleans unwanted prefixes like 'en;hi*(', 'pt;es#', 'zh-TW*', or language tags before valid asset paths
-    (e.g., OB49/CSH/NewbieRing/NewbieRingIND_en.png).
+    Constructs accurate Garena URLs:
+    - Leaves absolute URLs (e.g., https://dl-tata.freefireind.in/...) untouched.
+    - Prepends BASE_LINK to relative paths (e.g., Local/IND/..., OB49/CSH/...).
     """
-    if not path:
-        return ""
+    if not path_str or not isinstance(path_str, str):
+        return None
 
-    # Remove extension numbers (e.g. .png12 -> .png)
+    cleaned = path_str.strip('\'"* \t\n\r')
+
+    # Remove trailing extension digits (e.g. .png123 -> .png)
     cleaned = re.sub(
         r'\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$',
         r'.\1',
-        path,
+        cleaned,
         flags=re.IGNORECASE
-    ).strip('"\'* \t\n\r')
+    )
 
-    # Look for OB version pattern (e.g., OB49/, OB53/)
-    ob_match = re.search(r'(OB\d+/.+)', cleaned, re.IGNORECASE)
-    if ob_match:
-        return ob_match.group(1)
+    # 1. Absolute URL check
+    if cleaned.lower().startswith(("http://", "https://")):
+        return cleaned
 
-    # Look for explicit clean relative paths
-    path_match = re.search(r'([\w\-_]+(?:/[\w\-_]+)+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp))', cleaned, re.IGNORECASE)
-    if path_match:
-        return path_match.group(1)
+    clean_path = cleaned.lstrip('/')
+    path_lower = clean_path.lower()
 
-    # Strip dirty prefix before first valid folder letter
-    cleaned = re.sub(r'^[a-zA-Z0-9_\-;*()$%#@!&+=]+(?=[\w\-_]+/[\w\-_/]+\.)', '', cleaned)
-    return cleaned
+    # 2. Check if valid path structure
+    has_valid_ext = any(path_lower.endswith(f".{ext}") for ext in VALID_EXTENSIONS)
+    
+    if has_valid_ext or "/" in clean_path:
+        if path_lower.startswith("common/"):
+            return "https://dl.dir.freefiremobile.com/" + clean_path
+        else:
+            return BASE_LINK + clean_path
+
+    return None
 
 
 def decode_protobuf(raw_hex):
@@ -285,7 +293,7 @@ def run_script():
 
         # Regex path discovery
         found_paths = re.findall(
-            r'(https?://[^\s"\'()<>]+|[\w\-_]+/[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
+            r'(https?://[^\s"\'()<>]+|[\w\-_]+(?:/[\w\-_]+)+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)',
             decoded_ascii,
             re.IGNORECASE
         )
@@ -293,21 +301,15 @@ def run_script():
             extracted_strings.add(path)
 
         clean_strings = set()
-        urls = set()
+        urls_set = set()
 
         for val in extracted_strings:
-            clean_str = sanitize_garena_path(val)
-            if not clean_str or len(clean_str) < 3:
-                continue
-            clean_strings.add(clean_str)
+            formatted_url = format_garena_url(val)
+            if formatted_url:
+                clean_strings.add(val.strip())
+                urls_set.add(formatted_url)
 
-            val_lower = clean_str.lower()
-            if val_lower.startswith(("http://", "https://")):
-                urls.add(clean_str)
-            elif any(f".{ext}" in val_lower for ext in VALID_EXTENSIONS) or val_lower.endswith((".ff_extend", ".ktxp")) or "local/" in val_lower:
-                urls.add(clean_str)
-
-        urls_list = sorted(list(urls))
+        urls_list = sorted(list(urls_set))
         execution_time_ms = round((time.time() - start_time) * 1000, 2)
         clean_endpoint_filename = re.sub(r'[^a-zA-Z0-9_\-]', '_', clean_api_name)
 
