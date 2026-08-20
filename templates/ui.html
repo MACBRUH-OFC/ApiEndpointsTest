@@ -12,7 +12,7 @@
 <style>
 :root {
     --primary: #ffb703;
-    --primary-glow: rgba(255, 183, 3, 0.3);
+    --primary-glow: rgba(255, 183, 3, 0.35);
     --accent: #00f5d4;
     --accent-glow: rgba(0, 245, 212, 0.25);
     --bg: #07090f;
@@ -34,7 +34,7 @@ body {
     font-family: 'JetBrains Mono', monospace;
     min-height: 100vh;
     padding-bottom: 60px;
-    background-image: radial-gradient(circle at 50% 0%, rgba(13, 18, 29, 0.8) 0%, var(--bg) 70%);
+    background-image: radial-gradient(circle at 50% 0%, rgba(13, 18, 29, 0.9) 0%, var(--bg) 70%);
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -242,7 +242,7 @@ header {
 
 .console-monitor {
     width: 100%;
-    height: 540px;
+    height: 520px;
     background: #040609;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -251,78 +251,70 @@ header {
     font-size: 12px;
 }
 
-.group-block { border-bottom: 1px solid var(--border); }
-.group-header {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    color: var(--primary);
+.url-card {
+    display: flex;
+    align-items: center;
     padding: 10px 16px;
-    background: #080c14;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-}
-
-.url-row {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
     border-bottom: 1px solid #0d131f;
-    word-break: break-all;
-    gap: 12px;
+    gap: 14px;
+    background: #080c14;
+    transition: background 0.15s;
 }
+.url-card:hover { background: #0f1624; }
 
-.media-preview-box {
+.preview-thumb-box {
     width: 48px;
     height: 48px;
     background: #000;
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
-    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
-.img-thumb {
-    width: 100%;
-    height: 100%;
+.preview-thumb-box img {
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     cursor: pointer;
-    transition: transform 0.15s;
 }
-.img-thumb:hover { transform: scale(1.1); }
 
-.url-href { color: #60a5fa; text-decoration: none; flex: 1; }
+.url-info { flex: 1; overflow: hidden; }
+.url-href { color: #60a5fa; text-decoration: none; word-break: break-all; font-size: 12px; }
 .url-href:hover { text-decoration: underline; color: #93c5fd; }
 
-.btn-copy-small {
-    background: transparent;
+.url-action-btn {
+    background: var(--card);
     border: 1px solid var(--border);
-    color: var(--muted);
     border-radius: 4px;
+    color: var(--muted);
     padding: 4px 8px;
     font-size: 10px;
     cursor: pointer;
+    transition: all 0.15s;
 }
-.btn-copy-small:hover { color: var(--primary); border-color: var(--primary); }
+.url-action-btn:hover { border-color: var(--primary); color: var(--primary); }
 
 .decoded-row { padding: 8px 16px; border-bottom: 1px solid #0d131f; color: #d1d5db; word-break: break-all; }
 pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-space: pre-wrap; word-break: break-all; }
 
-.scanner-loader { padding: 60px 20px; text-align: center; }
+.scanner-loader { padding: 50px 20px; text-align: center; }
 .scanner-bar-container { width: 280px; height: 6px; background: #151c2c; border-radius: 3px; margin: 16px auto; overflow: hidden; }
 .scanner-bar-fill { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
 
+/* Lightbox Modal */
 .lightbox-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 9999;
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
 }
-.lightbox-modal img { max-width: 90%; max-height: 85vh; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+.lightbox-modal img { max-width: 90%; max-height: 90vh; border: 1px solid var(--border); border-radius: 8px; }
 
 .toast {
     position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: #000;
@@ -415,7 +407,7 @@ pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-spac
                 <div class="val" id="linkCount">0</div>
             </div>
             <div class="metric-card active-metric">
-                <div class="lbl">Payload / Speed</div>
+                <div class="lbl">Payload Size / Speed</div>
                 <div class="val" id="payloadMeta">0 KB / 0ms</div>
             </div>
             <div class="metric-card active-metric">
@@ -425,11 +417,11 @@ pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-spac
         </div>
     </div>
 
-    <div class="dashboard-container">
+    <div class="dashboard-container" id="consoleMonitorSection">
         <div class="container-title">Console Output Monitor</div>
         <div class="control-deck">
             <div class="search-wrapper">
-                <input type="text" class="search-input" id="searchBox" placeholder="Filter / Search output..." oninput="performSearch()">
+                <input type="text" class="search-input" id="searchBox" placeholder="Filter output..." oninput="performSearch()">
             </div>
             
             <div class="utility-actions">
@@ -444,8 +436,8 @@ pre.json-view { padding: 16px; color: var(--accent); font-size: 11px; white-spac
     </div>
 </div>
 
-<div class="lightbox-modal" id="lightboxModal" onclick="this.style.display='none'">
-    <img id="lightboxImg" src="" alt="Full Preview">
+<div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="Full View">
 </div>
 
 <div class="toast" id="toastNotifier">Copied to clipboard</div>
@@ -471,28 +463,6 @@ function escapeHtml(str) {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function cleanGarenaPathJS(val) {
-    if (!val) return "";
-    val = val.trim();
-
-    // Fix language prefixes like "en;hi*(OB49/CSH/..." -> "OB49/CSH/..."
-    const obMatch = val.match(/(OB\d+[\w\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)/i);
-    if (obMatch) {
-        val = obMatch[1];
-    } else {
-        const pathMatch = val.match(/([A-Za-z0-9\-_]+/[A-Za-z0-9\-_/]+\.(?:png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)(?:\d+)?)/i);
-        if (pathMatch) {
-            val = pathMatch[1];
-        }
-    }
-
-    // Strip version suffix counters like .png123 -> .png
-    val = val.replace(/\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$/i, '.$1');
-    val = val.replace(/^\/+/, '');
-    val = val.replace(/^[^a-zA-Z0-9/]+/, '');
-    return val.trim();
-}
-
 async function fetchReleaseVersion() {
     try {
         const res = await fetch("/get_version");
@@ -502,7 +472,7 @@ async function fetchReleaseVersion() {
             document.getElementById("versionBadge").innerText = `VERSION: ${releaseVersion}`;
         }
     } catch (e) {
-        console.warn("Using fallback version configuration");
+        console.warn("Using fallback version");
     }
 }
 
@@ -526,7 +496,7 @@ function setViewMode(mode) {
 function updateHistoryUI() {
     const container = document.getElementById("historyContainer");
     if (queryHistory.length === 0) {
-        container.innerHTML = `<span style="color: var(--muted); font-size:11px;">No scan history stored.</span>`;
+        container.innerHTML = `<span style="color: var(--muted); font-size:11px;">No scan history.</span>`;
         return;
     }
     container.innerHTML = `<span style="color: var(--muted); font-size:10px; font-weight:700;">RECENT:</span>`;
@@ -565,54 +535,64 @@ function displayToast(msg) {
     setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-function processHtmlUrl(val) {
-    val = cleanGarenaPathJS(val).replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
-    if (!val) return null;
+function cleanGarenaUrl(val) {
+    val = val.trim();
+    // Strip trailing extensions numbers
+    val = val.replace(/\.(png|jpg|jpeg|webp|gif|bmp|ktx|html|json|mp4|mp3|wav|ogg|webm|ff_extend|ktxp)\d+$/i, '.$1');
+    val = val.replace(/\.ff_extend/gi, '.jpg').replace(/\.ktx(p)?/gi, '.jpg');
 
     let val_lower = val.toLowerCase();
     if (val_lower.startsWith("http://") || val_lower.startsWith("https://")) {
-        return { text: val, link: val };
+        return val;
     }
 
-    const hasValidExtension = VALID_EXTENSIONS.some(ext => val_lower.endsWith('.' + ext));
-    if (hasValidExtension || val.includes("/")) {
-        const linkUrl = val_lower.startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + val : BASE_LINK + val;
-        return { text: val, link: linkUrl };
+    // Clean prefix garbage before OB or clean paths
+    const obMatch = val.match(/(OB\d+\/.+)/i);
+    if (obMatch) val = obMatch[1];
+    else {
+        val = val.replace(/^[a-zA-Z0-9_\-;*()$%#@!&+=]+(?=[\w\-_]+\/[\w\-_/]+\.)/, '');
     }
-    return null;
+
+    const cleanVal = val.replace(/^\/+/, '');
+    return cleanVal.toLowerCase().startsWith("common/") ? "https://dl.dir.freefiremobile.com/" + cleanVal : BASE_LINK + cleanVal;
 }
 
-function clearPastState() {
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightboxModal").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightboxModal").style.display = "none";
+}
+
+function resetResultsUI() {
     document.getElementById("stringCount").innerText = "0";
     document.getElementById("linkCount").innerText = "0";
     document.getElementById("payloadMeta").innerText = "0 KB / 0ms";
-    document.getElementById("statusText").innerText = "CLEARING...";
-    document.getElementById("statusText").style.color = "var(--muted)";
-    apiCachedData = null;
-    lastOutputText = "";
-}
-
-async function runAPI() {
-    const apiName = document.getElementById("apiName").value.trim();
-    if (!apiName) {
-        alert("Enter a target endpoint path string.");
-        return;
-    }
-
-    // Clear past results instantly before starting scanner animation
-    clearPastState();
-
-    document.getElementById("statusText").innerText = "SCANNING";
+    document.getElementById("statusText").innerText = "SCANNING...";
     document.getElementById("statusText").style.color = "var(--primary)";
 
     const output = document.getElementById("output");
     output.innerHTML = `
     <div class="scanner-loader">
-        <div style="color: var(--primary); font-weight:800; font-family:'Orbitron';" id="scannerStatus">SCANNING PIPELINE...</div>
+        <div style="color: var(--primary); font-weight:800;" id="scannerStatus">INITIATING PIPELINE SCAN...</div>
         <div class="scanner-bar-container"><div class="scanner-bar-fill" id="scannerProgress"></div></div>
     </div>`;
 
-    let progress = 10;
+    document.getElementById("consoleMonitorSection").scrollIntoView({ behavior: 'smooth' });
+}
+
+async function runAPI() {
+    const apiName = document.getElementById("apiName").value.trim();
+    if (!apiName) {
+        alert("Enter an endpoint path string.");
+        return;
+    }
+
+    resetResultsUI();
+
+    let progress = 15;
     const interval = setInterval(() => {
         if (progress < 90) {
             progress += 15;
@@ -629,7 +609,7 @@ async function runAPI() {
         if (data.error) {
             document.getElementById("statusText").innerText = "ERROR";
             document.getElementById("statusText").style.color = "var(--error)";
-            output.innerHTML = `<div style="color:var(--error); padding:20px;">Fault Error: ${escapeHtml(data.error)}</div>`;
+            document.getElementById("output").innerHTML = `<div style="color:var(--error); padding:20px;">Fault Error: ${escapeHtml(data.error)}</div>`;
             return;
         }
 
@@ -647,15 +627,8 @@ async function runAPI() {
         clearInterval(interval);
         document.getElementById("statusText").innerText = "FAULT";
         document.getElementById("statusText").style.color = "var(--error)";
-        output.innerHTML = `<div style="color:var(--error); padding:20px;">Connection Failed. Check Backend Instance.</div>`;
+        document.getElementById("output").innerHTML = `<div style="color:var(--error); padding:20px;">Connection Interrupted. Check backend status.</div>`;
     }
-}
-
-function showLightbox(src) {
-    const modal = document.getElementById("lightboxModal");
-    const img = document.getElementById("lightboxImg");
-    img.src = src;
-    modal.style.display = "flex";
 }
 
 function renderOutput(data) {
@@ -663,46 +636,45 @@ function renderOutput(data) {
     output.innerHTML = "";
 
     if (viewMode === "links") {
-        let items = [];
-        (data.urls || []).forEach(u => {
-            const p = processHtmlUrl(u);
-            if (p) items.push(p);
-        });
-
-        if (items.length === 0) {
-            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No media asset URLs discovered in payload response.</div>`;
+        const rawUrls = data.urls || [];
+        if (rawUrls.length === 0) {
+            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No media asset URLs found.</div>`;
             lastOutputText = "";
             return;
         }
 
-        let html = `<div class="group-block"><div class="group-header"><span>DISCOVERED LINKS (${items.length})</span></div>`;
-        items.forEach(item => {
-            const escapedLink = escapeHtml(item.link);
-            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp)/i.test(item.link);
+        let html = "";
+        let cleanUrlsList = [];
+
+        rawUrls.forEach(u => {
+            const fullUrl = cleanGarenaUrl(u);
+            cleanUrlsList.push(fullUrl);
+            const isImage = /\.(png|jpg|jpeg|webp|gif|bmp)/i.test(fullUrl);
 
             html += `
-            <div class="url-row">
-                ${isImage ? `
-                <div class="media-preview-box">
-                    <img src="${escapedLink}" class="img-thumb" onclick="showLightbox('${escapedLink}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">
-                </div>` : ''}
-                <a href="${escapedLink}" target="_blank" class="url-href">${escapedLink}</a>
-                <button class="btn-copy-small" onclick="navigator.clipboard.writeText('${escapedLink}'); displayToast('URL Copied');">Copy</button>
+            <div class="url-card">
+                <div class="preview-thumb-box">
+                    ${isImage ? `<img src="${escapeHtml(fullUrl)}" loading="lazy" onclick="openLightbox('${escapeHtml(fullUrl)}')" onerror="this.src='https://dl.dir.freefiremobile.com/common/web_event/official2/dist/client/img/full_logo.969f536.png'">` : '🔗'}
+                </div>
+                <div class="url-info">
+                    <a href="${escapeHtml(fullUrl)}" target="_blank" class="url-href">${escapeHtml(fullUrl)}</a>
+                </div>
+                <button class="url-action-btn" onclick="navigator.clipboard.writeText('${escapeHtml(fullUrl)}'); displayToast('Link copied');">Copy</button>
             </div>`;
         });
-        html += `</div>`;
+
         output.innerHTML = html;
-        lastOutputText = items.map(i => i.link).join("\n");
+        lastOutputText = cleanUrlsList.join("\n");
     } 
     else if (viewMode === "decoded") {
         const strings = data.strings || [];
         if (strings.length === 0) {
-            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No extracted text strings available.</div>`;
+            output.innerHTML = `<div style="padding:20px; color:var(--muted);">No strings extracted.</div>`;
             lastOutputText = "";
             return;
         }
-        output.innerHTML = strings.map(s => `<div class="decoded-row">${escapeHtml(cleanGarenaPathJS(s))}</div>`).join("");
-        lastOutputText = strings.map(s => cleanGarenaPathJS(s)).join("\n");
+        output.innerHTML = strings.map(s => `<div class="decoded-row">${escapeHtml(s)}</div>`).join("");
+        lastOutputText = strings.join("\n");
     } 
     else if (viewMode === "json") {
         const jsonStr = JSON.stringify(data.protobuf || {}, null, 2);
@@ -729,7 +701,6 @@ function downloadRawDat() {
     const blob = new Blob([byteArray], { type: 'application/octet-stream' });
     
     const fileName = `${apiCachedData.endpoint || 'endpoint'}_${selectedServer}.dat`;
-    
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = fileName;
@@ -755,19 +726,25 @@ function downloadOutput() {
 function copyOutput() {
     if (!lastOutputText) return;
     navigator.clipboard.writeText(lastOutputText);
-    displayToast("Output copied to clipboard");
+    displayToast("Copied to clipboard");
 }
 
 function clearOutput() {
-    clearPastState();
     document.getElementById("output").innerText = "SYSTEM LOG: FLUSH COMPLETED";
+    document.getElementById("stringCount").innerText = "0";
+    document.getElementById("linkCount").innerText = "0";
+    document.getElementById("payloadMeta").innerText = "0 KB / 0ms";
     document.getElementById("apiName").value = "";
+    document.getElementById("statusText").innerText = "IDLE";
+    document.getElementById("statusText").style.color = "var(--muted)";
+    lastOutputText = "";
+    apiCachedData = null;
     displayToast("Console cleared");
 }
 
 function performSearch() {
     const query = document.getElementById("searchBox").value.trim().toLowerCase();
-    const rows = document.querySelectorAll(".url-row, .decoded-row");
+    const rows = document.querySelectorAll(".url-card, .decoded-row");
     rows.forEach(row => {
         if (!query || row.innerText.toLowerCase().includes(query)) {
             row.style.display = "flex";
